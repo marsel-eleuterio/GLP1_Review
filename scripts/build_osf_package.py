@@ -23,6 +23,7 @@ FILES = [
     ("docs/plano_de_estudo.pdf", "1_documents"),
     ("docs/plano_de_estudo.md", "1_documents"),
     ("docs/preregistro_osf_v2.md", "1_documents"),
+    ("docs/decisoes_q20_q22.md", "1_documents"),
     ("docs/revisao_da_literatura.pdf", "1_documents"),
     ("piloto", "2_pilot"),
     ("scripts/brfss_microdata.py", "3_code"),
