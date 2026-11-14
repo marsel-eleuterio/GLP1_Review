@@ -49,6 +49,9 @@ extend-exclude = ["initial_docs", "piloto", "scripts/brfss_microdata.py", "scrip
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+"scripts/build_osf_package.py" = ["E501"]  # Markdown table in the package README
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"

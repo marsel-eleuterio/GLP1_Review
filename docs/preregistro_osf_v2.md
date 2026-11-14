@@ -70,10 +70,10 @@ All sources are free. BRFSS, MEPS, CMS, CDC open data, Census and ACS files are 
 
 - BRFSS: https://www.cdc.gov/brfss/annual_data/annual_YEAR.html (files LLCPYEARXPT.zip). On 14 November 2026 www.cdc.gov refused every automated request (HTTP 403) and web.archive.org was unreachable, so the files were obtained from the Hugging Face dataset jamesjiadazhan/BRFSS, revision 6e0af4750a9622dc297421924aab450774c00a2f: a column-for-column Parquet conversion of the CDC annual files (no recoding), made from Internet Archive captures of the CDC URLs (26 July 2026 for 2011–2024, 18 September 2026 for 2025). The CDC URL and the MD5 of each original zip are recorded in provenance_hf.csv.
 - MEPS: https://meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-NUMBER (Stata files)
-- Medicare Part D by geography and drug: https://data.cms.gov/data-api/v1/dataset/c8ea3f8e-3a09-4fea-86f2-8902fb4b0920/data
+- Medicare Part D by geography and drug: https://data.cms.gov/data-api/v1/dataset/c8ea3f8e-3a09-4fea-86f2-8902fb4b0920/data (2024; earlier years have their own dataset ids, listed in provenance_cms.csv)
 - Medicaid State Drug Utilization Data: https://catalog.data.gov/dataset/state-drug-utilization-data-2025
 - CDC open data: https://catalog.data.gov/dataset/nutrition-physical-activity-and-obesity-behavioral-risk-factor-surveillance-system
-- Download scripts (brfss_microdata.py, meps_microdata.py, brfss_hf_download.py, brfss_extract_parquet.py), the MEPS SHA-256 manifest and the BRFSS provenance file (provenance_hf.csv) are in this OSF project: [OSF link].
+- Download scripts (brfss_microdata.py, meps_microdata.py, brfss_hf_download.py, brfss_extract_parquet.py, cms_glp1_download.py, census_download.py), the MEPS SHA-256 manifest and the provenance files of BRFSS, CMS and Census/ACS are in this OSF project: [OSF link].
 
 ### Q8. Download and access dates
 
@@ -82,8 +82,8 @@ Marsel Eleutério, the only author:
 - Aggregated tables used in the pilot (CDC open data, Census estimates, the CMS-derived state tables published by The RX Index, KFF and Gallup reports): accessed 12–13 November 2026.
 - BRFSS microdata 2011–2025: downloaded 14 November 2026 (route in Q7). Validated the same day against the CDC open-data aggregates: 792 state-years compared, mean absolute difference 0.025 pp, maximum 0.12 pp; the national series matches within 0.05 pp in every year.
 - MEPS files: downloaded 14 November 2026 from meps.ahrq.gov (16 Stata files; SHA-256 manifest in the OSF project). Codebook checks: 24 of 24 comparable counts match, no mismatch.
-- Medicare Part D and Medicaid files from CMS: downloaded [date].
-- ACS PUMS: [date, before any BMI analysis].
+- Medicare Part D and Medicaid files from CMS: downloaded 14 November 2026 through the official APIs (cms_glp1_download.py). Medicare Part D by Geography and Drug 2019–2024: all state-level rows (2024 file released 21 May 2026). Medicaid State Drug Utilization Data 2021–2025 (versions of 13 July 2026): GLP-1 rows selected by product-name prefix, every name kept listed for review. Medicaid and CHIP monthly enrollment 2021–2025. Every row count matches the API count; dataset ids, release dates and SHA-256 in provenance_cms.csv.
+- ACS PUMS: 1-year person files 2011–2019, experimental 2020 and 2021–2024 downloaded 14 November 2026, before any BMI analysis, and reduced to post-stratification cell counts (census_download.py; the 2025 file is not yet released, so 2024 is used for 2025 as stated in Q19). Census state population estimates, Vintage 2025, downloaded the same day. SHA-256 in provenance_census.csv.
 
 ### Q9. Data collection and representativeness
 

@@ -23,6 +23,7 @@ dados_brutos/**
 !dados_brutos/**/
 !dados_brutos/**/manifest_sha256.csv
 !dados_brutos/**/provenance_*.csv
+!dados_brutos/cms/medicaid_sdud_product_names.csv
 dados_limpos/
 resultados/
 *.XPT
