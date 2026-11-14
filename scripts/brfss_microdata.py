@@ -52,9 +52,12 @@ FIPS = {1: "AL", 2: "AK", 4: "AZ", 5: "AR", 6: "CA", 8: "CO", 9: "CT", 10: "DE",
 # output name -> candidate source columns, first one present wins
 CANDIDATES = {
     "state": ["_STATE"], "wt": ["_LLCPWT"], "psu": ["_PSU"], "strat": ["_STSTR"],
-    "bmi5": ["_BMI5"], "bmicat": ["_BMI5CAT"], "age5": ["_AGEG5YR"], "sex": ["_SEX", "SEXVAR"],
+    # 2026-11-14: SEX (2011-17) and SEX1 (2018) added; same codes as _SEX (1 male, 2 female) plus 7/9 DK/refused
+    "bmi5": ["_BMI5"], "bmicat": ["_BMI5CAT"], "age5": ["_AGEG5YR"], "sex": ["_SEX", "SEXVAR", "SEX1", "SEX"],
     "race": ["_IMPRACE"], "educ": ["_EDUCAG"], "income": ["_INCOMG1", "_INCOMG"],
-    "diab_raw": ["DIABETE4", "DIABETE3", "DIABETE2"], "plan_raw": ["_HLTHPL1", "_HLTHPLN", "HLTHPLN1"],
+    # 2026-11-14: _HLTHPL2 (2024-25) added; same codes as _HLTHPL1/_HLTHPLN (1 insured, 2 not, 9 DK/missing)
+    "diab_raw": ["DIABETE4", "DIABETE3", "DIABETE2"],
+    "plan_raw": ["_HLTHPL2", "_HLTHPL1", "_HLTHPLN", "HLTHPLN1"],
     "htm4": ["HTM4"], "wtkg3": ["WTKG3"],
 }
 

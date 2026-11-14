@@ -67,12 +67,27 @@ Uma reedição posterior de algum arquivo pelo CDC não estaria refletida.
 | Variável | Achado | Consequência |
 | --- | --- | --- |
 | diabetes | `DIABETE3` em 2011-2018, `DIABETE4` a partir de 2019 | Resposta para Q12, Q19 e Q23: a pergunta muda de nome em 2019 |
-| sexo | Vazio em 2011-2018: o nome é `SEX` (2011-2017) e `SEX1` (2018), fora da lista do script | Corrigir antes de usar sexo (H2, secundário) |
-| raça | Vazio em 2015-2016: `_IMPRACE` não existe nesses anos (há `_RACE`) | Conferir no codebook |
-| plano de saúde | Vazio em 2024-2025: renomeado para `_HLTHPL2` | Corrigir antes de usar plano (H2, secundário) |
+| sexo | Vazio em 2011-2018: o nome era `SEX` (2011-2017) e `SEX1` (2018) | **Corrigido** (ver abaixo) |
+| plano de saúde | Vazio em 2024-2025: renomeado para `_HLTHPL2` | **Corrigido** (ver abaixo) |
+| raça | Vazio em 2015-2016: `_IMPRACE` não existe nesses anos | **Mantido vazio** (ver abaixo) |
 
-Os três buracos vêm da lista `CANDIDATES` do `brfss_microdata.py`. Corrigir significa alterar o script
-citado no pré-registro, então a correção deve entrar num commit próprio, com o motivo, antes do registro.
+### Alteração no `brfss_microdata.py` (14/nov/2026, antes do registro)
+
+A lista `CANDIDATES` do script original não cobria esses nomes. Diferenças em relação ao
+`initial_docs/scripts/brfss_microdata.py`:
+
+- **`sex`:** acrescentados `SEX1` e `SEX`. Os códigos, conferidos no dicionário do CDC, são os mesmos de
+  `_SEX` (1 masculino, 2 feminino). `SEX` e `SEX1` têm ainda 7 e 9 (não sabe, recusou), que precisam ser
+  tratados como faltantes na análise.
+- **`plan_raw`:** acrescentado `_HLTHPL2`. Mesmos códigos e proporções de `_HLTHPL1`/`_HLTHPLN` (1 tem
+  plano, 2 não tem, 9 não sabe ou faltante). Até 2020 a fonte é a pergunta bruta `HLTHPLN1` (1, 2, 7, 9),
+  como já estava no script original.
+- **`race`:** sem alteração. Em 2015-2016 só existe `_RACE`, com 9 categorias sem imputação, enquanto
+  `_IMPRACE` tem 6 categorias imputadas. Misturar as duas quebraria a série. Raça não entra nas hipóteses;
+  se for usada na pós-estratificação (H1), tratar 2015-2016 à parte.
+
+Depois da alteração: selftest ok, extração sem colunas faltando (fora raça 2015-2016), validação
+inalterada (792 pares estado-ano, máxima de 0,12 ponto).
 
 ## Ainda a escrever
 
