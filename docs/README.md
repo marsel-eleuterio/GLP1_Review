@@ -8,6 +8,7 @@ acontecem; ao atualizar, substitua o arquivo aqui e registre no commit.
 | [plano_de_estudo](plano_de_estudo.md) (.md e .pdf) | Plano de estudo, com os ajustes da revisão da literatura | https://claude.ai/artifact/FR5vRnExpkyoARUPSPtre8 |
 | [preregistro_osf_rascunho](preregistro_osf_rascunho.md) (.md e .pdf) | As 25 respostas do pré-registro (Secondary Data Preregistration), em inglês | https://claude.ai/artifact/CNLPEMmVjupDYkQfUGnb6p |
 | [revisao_da_literatura](revisao_da_literatura.md) (.md e .pdf) | Revisão da literatura, fechada em 14/nov | https://claude.ai/artifact/KjoyDLWaMUG6ZkTsDUeTuX |
+| [preregistro_osf_v2](preregistro_osf_v2.md) | **Versão de trabalho** do pré-registro (14/nov), com os resultados dos scripts preenchidos. A v1 fica intacta | — |
 | [pacote_de_trabalho](pacote_de_trabalho.md) | LEIAME original do pacote: ordem de trabalho, conferências e passos do OSF | — |
 
 Nos .md, os dois gráficos do plano aparecem só como legenda; eles estão no PDF.
