@@ -12,14 +12,14 @@ Revisto em 14 de novembro de 2026 com base na [revisão da literatura](https://c
 
 Oito itens dependem de você ou dos scripts. O resto pode ser colado como está, depois da sua revisão.
 
-- [ ] Criar seu ORCID (grátis) e colocá-lo em Q2
+- [x] Criar seu ORCID (grátis) e colocá-lo em Q2 (0009-0008-0021-8866)
 - [x] Rodar os scripts do pacote projeto_glp1.zip (download, extract e validate) e anotar as datas de download em Q8 (14/nov; BRFSS por rota alternativa, ver Q7 e Q8)
 - [x] Copiar do inventory.txt do MEPS, para Q13 e Q21, quantos adultos têm IMC nas duas medidas e quantos começaram GLP-1 em cada painel; com isso o poder da H6 é recalculado (89 iniciantes na análise principal; H6 fica no grupo confirmatório)
 - [x] Conferir no coverage_report.csv do BRFSS em que ano a pergunta de diabetes muda de nome (Q12, Q19 e Q23): 2019
 - [x] Revisar os efeitos mínimos de interesse (Q20) e a regra de veredito (Q22): são escolhas suas e ficam congeladas no registro (14/nov: mínimos mantidos; apoio e contradição unilaterais; ver `decisoes_q20_q22.md`)
 - [ ] Ler os artigos originais citados em Q4, Q18, Q19 e Q20 e conferir os números: vários vieram de resumos de imprensa ou das editoras
 - [ ] Decidir se mantém a declaração de uso de IA em Q18 (recomendo manter)
-- [ ] Subir no projeto do OSF o plano em PDF, o código do piloto e os scripts de download antes de clicar em Register
+- [ ] Subir no projeto do OSF o plano em PDF, o código do piloto e os scripts de download antes de clicar em Register (pacote pronto em `resultados/osf_glp1_2026-11-14.zip`. **Bloqueado em 14/nov:** a conta do OSF, criada via ORCID, dá "Account not valid" no login; aguardando resposta do suporte, support@osf.io. Falta também o link do projeto na Q7)
 
 ## Part 1. Study information
 
@@ -29,7 +29,7 @@ Is the break in the US adult obesity trend a GLP-1 effect? Preregistered signatu
 
 ### Q2. Authors
 
-Marsel Eleutério, independent researcher. ORCID: [add].
+Marsel Eleutério, independent researcher. ORCID: https://orcid.org/0009-0008-0021-8866.
 
 ### Q3. Research questions
 
