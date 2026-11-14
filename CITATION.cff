@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite it as below."
+title: "Is the break in the US adult obesity trend a GLP-1 effect?"
+type: software
+authors:
+  - family-names: "Eleutério"
+    given-names: "Marsel"
+version: 0.1.0
+date-released: 2026-11-14
+license:
+  - MIT        # code
+  - CC-BY-4.0  # study documents (docs/)
+repository-code: "https://github.com/marsel-eleuterio/GLP1_Review"
+keywords:
+  - GLP-1 receptor agonists
+  - obesity
+  - BRFSS
+  - MEPS
+  - preregistration
+  - difference-in-differences

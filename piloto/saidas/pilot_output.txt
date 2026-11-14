@@ -1,0 +1,205 @@
+=== 1. CHECKSUMS vs server-side aggregates (sum of values, count, sum of n) ===
+2011: sum=1434.6 (api 1434.6)  count=52 (api 52)  sum_n=941400 (api 941400)  rows=55  OK
+2012: sum=1452.7 (api 1452.7)  count=52 (api 52)  sum_n=884460 (api 884460)  rows=55  OK
+2013: sum=1517.4 (api 1517.4)  count=53 (api 53)  sum_n=920736 (api 920736)  rows=55  OK
+2014: sum=1575.7 (api 1575.7)  count=54 (api 54)  sum_n=859845 (api 859845)  rows=55  OK
+2015: sum=1583.4 (api 1583.4)  count=54 (api 54)  sum_n=803374 (api 803374)  rows=55  OK
+2016: sum=1640.5 (api 1640.5)  count=55 (api 55)  sum_n=885166 (api 885166)  rows=55  OK
+2017: sum=1657.9 (api 1657.9)  count=54 (api 54)  sum_n=822587 (api 822587)  rows=55  OK
+2018: sum=1690.0 (api 1690.0)  count=54 (api 54)  sum_n=798196 (api 798196)  rows=55  OK
+2019: sum=1698.8 (api 1698.8)  count=53 (api 53)  sum_n=756138 (api 756138)  rows=55  OK
+2020: sum=1732.7 (api 1732.7)  count=54 (api 54)  sum_n=714442 (api 714442)  rows=55  OK
+2021: sum=1811.0 (api 1811.0)  count=54 (api 54)  sum_n=777045 (api 777045)  rows=55  OK
+2022: sum=1854.1 (api 1854.1)  count=55 (api 55)  sum_n=783875 (api 783875)  rows=55  OK
+2023: sum=1782.7 (api 1782.7)  count=53 (api 53)  sum_n=777816 (api 777816)  rows=55  OK
+2024: sum=1836.4 (api 1836.4)  count=54 (api 54)  sum_n=822375 (api 822375)  rows=55  OK
+2025: sum=1718.3 (api 1718.3)  count=51 (api 51)  sum_n=641688 (api 641688)  rows=55  OK
+ALL CHECKSUMS OK
+
+missing state-years: [('CA', 2025), ('FL', 2021), ('KY', 2023), ('MS', 2025), ('NJ', 2019), ('NV', 2025), ('PA', 2023), ('TN', 2024)]
+adult-pop weights (Census, July 2024): sum over 50 states + DC = 266,978,268 (US row 266,978,268) -> OK; total-pop check: 340,110,988 vs 340,110,988; CA share=0.116
+
+=== 2. NATIONAL SERIES ===
+      us_row  wmean_available  fe_adjusted  n_states
+2011    27.4            27.41        27.41        51
+2012    27.7            27.65        27.65        51
+2013    28.3            28.27        28.27        51
+2014    28.9            28.86        28.86        51
+2015    28.9            28.84        28.84        51
+2016    29.6            29.55        29.55        51
+2017    30.1            30.04        30.04        51
+2018    30.9            30.92        30.92        51
+2019    31.4            31.33        31.22        50
+2020    31.9            31.88        31.88        51
+2021    33.0            32.97        32.80        50
+2022    33.3            33.27        33.27        51
+2023    32.8            32.71        32.81        49
+2024    33.1            33.02        33.11        50
+2025    33.5            33.42        32.90        48
+
+-- break vs trend (obesity, %) --
+US row, trend 2011-2019 : slope=0.498 pp/yr, resid SD=0.19 | 2023: proj=33.23 gap=-0.43 (pred SE 0.29) | 2024: proj=33.73 gap=-0.63 (pred SE 0.30) | 2025: proj=34.23 gap=-0.73 (pred SE 0.32)
+FE-adj,  trend 2011-2019 : slope=0.488 pp/yr, resid SD=0.21 | 2023: proj=33.10 gap=-0.29 (pred SE 0.30) | 2024: proj=33.59 gap=-0.48 (pred SE 0.32) | 2025: proj=34.08 gap=-1.18 (pred SE 0.34)
+US row, trend 2011-2022 : slope=0.548 pp/yr, resid SD=0.26 | 2023: proj=33.68 gap=-0.88 (pred SE 0.30) | 2024: proj=34.23 gap=-1.13 (pred SE 0.31) | 2025: proj=34.78 gap=-1.28 (pred SE 0.32)
+FE-adj,  trend 2011-2022 : slope=0.541 pp/yr, resid SD=0.25 | 2023: proj=33.57 gap=-0.76 (pred SE 0.30) | 2024: proj=34.11 gap=-1.00 (pred SE 0.31) | 2025: proj=34.65 gap=-1.75 (pred SE 0.32)
+FE-adj, pre-2020 slope continued from the 2022 level: 2023: proj=33.76 gap=-0.95 | 2024: proj=34.25 gap=-1.14 | 2025: proj=34.73 gap=-1.83
+  adj_1119: 2025 gap -1.18 pp  ~ -3.1 million adults (using 267M adults)
+  adj_1122: 2025 gap -1.75 pp  ~ -4.7 million adults (using 267M adults)
+  level-2022 + pre slope: 2025 gap -1.83 pp ~ -4.9 million
+
+-- overweight (BMI 25-29.9), US row --
+overweight, trend 2011-2019: slope=-0.082 pp/yr, resid SD=0.19 | 2023: proj=34.75 gap=-0.05 (pred SE 0.27) | 2024: proj=34.66 gap=+0.04 (pred SE 0.29) | 2025: proj=34.58 gap=+0.12 (pred SE 0.31)
+overweight, trend 2011-2022: slope=-0.130 pp/yr, resid SD=0.24 | 2023: proj=34.31 gap=+0.39 (pred SE 0.28) | 2024: proj=34.18 gap=+0.52 (pred SE 0.29) | 2025: proj=34.05 gap=+0.65 (pred SE 0.30)
+not overweight/obese, trend 2011-2019: slope=-0.417 pp/yr, resid SD=0.18 | 2023: proj=32.02 gap=+0.48 (pred SE 0.26) | 2024: proj=31.61 gap=+0.59 (pred SE 0.28) | 2025: proj=31.19 gap=+0.61 (pred SE 0.30)
+not overweight/obese, trend 2011-2022: slope=-0.418 pp/yr, resid SD=0.18 | 2023: proj=32.01 gap=+0.49 (pred SE 0.21) | 2024: proj=31.59 gap=+0.61 (pred SE 0.22) | 2025: proj=31.17 gap=+0.63 (pred SE 0.22)
+year        2019  2020  2021  2022  2023  2024  2025
+obese       31.4  31.9  33.0  33.3  32.8  33.1  33.5
+overweight  35.2  34.8  34.4  34.1  34.7  34.7  34.7
+neither     33.4  33.3  32.6  32.6  32.5  32.2  31.8
+
+=== 3. AGE AND SEX (US rows; 2025 lacks CA/MS/NV, 2024 lacks TN) ===
+             ob2022  ob2024  ob2025  d22_24  d22_25  d2122_2425  slope_pre  gap24_tr1119  gap25_tr1119  gap2425_tr1122  ow_gap2425_tr1119  gallup_use  kff_use
+age                                                                                                                                                           
+18 - 24        20.5    20.9    19.7     0.4    -0.8       -0.30       0.46          0.19         -1.47           -1.56              -0.68        6.70      4.0
+25 - 34        32.2    33.2    32.6     1.0     0.4        0.80       0.50          1.38          0.28           -0.57               0.42        8.15      7.5
+35 - 44        37.4    36.8    38.5    -0.6     1.1        0.55       0.53         -0.48          0.69           -0.83              -0.25       12.90     11.0
+45 - 54        39.9    39.0    40.6    -0.9     0.7        0.20       0.67         -1.63         -0.69           -1.67              -0.58       16.60     16.5
+55 - 64        37.4    37.9    38.1     0.5     0.7        0.25       0.38          0.29          0.11           -0.62               0.76       17.00     22.0
+65 or older    30.6    29.6    30.1    -1.0    -0.5       -0.20       0.50         -2.36         -2.36           -1.70               0.26       11.10      9.0
+  corr(d22_24, use): Gallup-mapped r=-0.40 | KFF-mapped r=-0.12   (n=6 age groups)
+  corr(d22_25, use): Gallup-mapped r=+0.67 | KFF-mapped r=+0.64   (n=6 age groups)
+  corr(d2122_2425, use): Gallup-mapped r=+0.14 | KFF-mapped r=+0.19   (n=6 age groups)
+  corr(gap24_tr1119, use): Gallup-mapped r=-0.36 | KFF-mapped r=-0.12   (n=6 age groups)
+  corr(gap25_tr1119, use): Gallup-mapped r=+0.28 | KFF-mapped r=+0.36   (n=6 age groups)
+  corr(gap2425_tr1122, use): Gallup-mapped r=+0.09 | KFF-mapped r=+0.28   (n=6 age groups)
+  Gallup's own 5 age groups: corr(change 2022-25, use 2025) r=-0.76; without 65+: r=-1.00
+
+obesity by sex (US row):
+year    2019  2020  2021  2022  2023  2024  2025
+sex                                             
+Female  32.1  32.1  33.7  34.1  33.5  34.0  34.3
+Male    30.6  31.7  32.3  32.6  32.1  32.2  32.7
+  Female: change 2022->2025 +0.2; 2022->2024 -0.1; gap vs 2011-19 trend: 2024 -0.60, 2025 -0.90 (slope 0.60)
+  Male: change 2022->2025 +0.1; 2022->2024 -0.4; gap vs 2011-19 trend: 2024 -0.55, 2025 -0.44 (slope 0.39)
+
+=== 4. STATE DOSE-RESPONSE ===
+Medicaid table: max |rate - recomputed| = 0.05 | sum Rx = 11193556 (page: 11,193,556)
+Medicare tables: claims_2024 equal across the two tables: True | share col equal to Medicaid-page col: True | national share sums to 99.41
+Medicare CAGR recomputed vs page: max abs diff = 0.05
+
+state outcomes, summary (pp):
+       d_2122_2425   se_d  d_1922_2425  d_22_25  dev_2425_tr1119  dev_2425_tr1122  pl_d_1516_1819  pl_dev_1819_tr1116
+count        51.00  51.00        51.00    48.00            51.00            51.00           51.00               51.00
+mean          0.13   0.87         0.94    -0.24            -0.91            -1.23            2.06                0.63
+std           1.15   0.25         0.99     1.55             1.52             1.20            1.13                1.54
+min          -2.25   0.45        -0.98    -4.50            -5.60            -4.00           -0.80               -3.53
+max           2.65   1.80         3.50     3.70             2.25             1.82            4.25                3.99
+pop-weighted mean of d_2122_2425: -0.02 | of dev_2425_tr1119: -0.77 | of dev_2425_tr1122: -1.29
+
+exposures, summary:
+       allpayer_rx_per100  medicare_share  medicaid_per1000  medicare_claims_per_adult
+count               50.00           51.00             51.00                      51.00
+mean                13.24            1.30            138.52                       8.29
+std                  4.04            0.16             71.49                       2.21
+min                  5.10            1.02             32.60                       4.89
+max                 24.20            1.76            304.00                      14.13
+
+correlations among exposures and with lagged obesity level (2015-19):
+                           allpayer_rx_per100  medicare_share  medicaid_per1000  medicare_claims_per_adult  lag_1519
+allpayer_rx_per100                       1.00            0.54              0.11                       0.82      0.77
+medicare_share                           0.54            1.00             -0.07                       0.45      0.34
+medicaid_per1000                         0.11           -0.07              1.00                       0.26      0.02
+medicare_claims_per_adult                0.82            0.45              0.26                       1.00      0.77
+lag_1519                                 0.77            0.34              0.02                       0.77      1.00
+
+regressions: outcome ~ z(exposure) [+ covariate]; slope = pp of obesity per 1 SD of exposure; permutation p (Freedman-Lane, 20,000)
+           outcome                  exposure     covs  n  slope_per_sd  se_hc3  se_ols  perm_p  pearson  spearman  cv_exposure
+       d_2122_2425        allpayer_rx_per100        - 50        -0.330   0.165   0.161   0.046   -0.284    -0.238        0.305
+       d_2122_2425        allpayer_rx_per100 lag_1519 50        -0.492   0.248   0.255   0.059   -0.284    -0.238        0.305
+       d_1922_2425        allpayer_rx_per100        - 50        -0.379   0.140   0.133   0.006   -0.380    -0.311        0.305
+           d_22_25        allpayer_rx_per100        - 47        -0.233   0.328   0.231   0.320   -0.149    -0.014        0.297
+   dev_2425_tr1119        allpayer_rx_per100        - 50        -0.928   0.207   0.175   0.000   -0.607    -0.572        0.305
+   dev_2425_tr1119        allpayer_rx_per100 lag_1519 50        -0.431   0.329   0.264   0.112   -0.607    -0.572        0.305
+   dev_2425_tr1122        allpayer_rx_per100        - 50        -0.626   0.159   0.148   0.000   -0.520    -0.401        0.305
+     dev_25_tr1119        allpayer_rx_per100        - 47        -0.890   0.349   0.203   0.000   -0.548    -0.488        0.297
+    pl_d_1516_1819        allpayer_rx_per100        - 50        -0.061   0.171   0.165   0.712   -0.053    -0.059        0.305
+pl_dev_1819_tr1116        allpayer_rx_per100        - 50        -0.398   0.184   0.213   0.070   -0.260    -0.285        0.305
+    pl_d_1213_1516        allpayer_rx_per100        - 50         0.346   0.112   0.128   0.008    0.365     0.347        0.305
+       d_2122_2425            medicare_share        - 51        -0.175   0.206   0.163   0.287   -0.152    -0.037        0.122
+       d_2122_2425            medicare_share lag_1519 51        -0.132   0.209   0.174   0.453   -0.152    -0.037        0.122
+       d_1922_2425            medicare_share        - 51        -0.235   0.167   0.137   0.097   -0.238    -0.120        0.122
+           d_22_25            medicare_share        - 48        -0.154   0.313   0.227   0.498   -0.099     0.022        0.126
+   dev_2425_tr1119            medicare_share        - 51        -0.408   0.180   0.210   0.059   -0.267    -0.197        0.122
+   dev_2425_tr1119            medicare_share lag_1519 51        -0.080   0.167   0.179   0.657   -0.267    -0.197        0.122
+   dev_2425_tr1122            medicare_share        - 51        -0.328   0.187   0.165   0.055   -0.273    -0.122        0.122
+     dev_25_tr1119            medicare_share        - 48        -0.477   0.235   0.227   0.046   -0.296    -0.207        0.126
+    pl_d_1516_1819            medicare_share        - 51        -0.236   0.207   0.158   0.145   -0.209    -0.106        0.122
+pl_dev_1819_tr1116            medicare_share        - 51        -0.371   0.284   0.213   0.090   -0.241    -0.092        0.122
+    pl_d_1213_1516            medicare_share        - 51         0.297   0.167   0.130   0.030    0.310     0.135        0.122
+       d_2122_2425          medicaid_per1000        - 51        -0.052   0.162   0.165   0.755   -0.045    -0.056        0.516
+       d_2122_2425          medicaid_per1000 lag_1519 51        -0.048   0.163   0.164   0.773   -0.045    -0.056        0.516
+       d_1922_2425          medicaid_per1000        - 51        -0.167   0.144   0.139   0.234   -0.169    -0.182        0.516
+           d_22_25          medicaid_per1000        - 48        -0.166   0.204   0.227   0.468   -0.107    -0.050        0.520
+   dev_2425_tr1119          medicaid_per1000        - 51        -0.035   0.210   0.218   0.874   -0.023     0.023        0.516
+   dev_2425_tr1119          medicaid_per1000 lag_1519 51        -0.012   0.164   0.169   0.942   -0.023     0.023        0.516
+   dev_2425_tr1122          medicaid_per1000        - 51        -0.114   0.178   0.171   0.503   -0.095    -0.074        0.516
+     dev_25_tr1119          medicaid_per1000        - 48        -0.198   0.219   0.236   0.402   -0.123    -0.082        0.520
+    pl_d_1516_1819          medicaid_per1000        - 51         0.268   0.133   0.157   0.095    0.237     0.262        0.516
+pl_dev_1819_tr1116          medicaid_per1000        - 51         0.496   0.174   0.208   0.020    0.322     0.313        0.516
+    pl_d_1213_1516          medicaid_per1000        - 51        -0.209   0.111   0.133   0.125   -0.219    -0.192        0.516
+       d_2122_2425 medicare_claims_per_adult        - 51        -0.345   0.155   0.157   0.032   -0.299    -0.256        0.266
+       d_2122_2425 medicare_claims_per_adult lag_1519 51        -0.523   0.228   0.247   0.041   -0.299    -0.256        0.266
+       d_1922_2425 medicare_claims_per_adult        - 51        -0.380   0.127   0.130   0.005   -0.385    -0.333        0.266
+           d_22_25 medicare_claims_per_adult        - 48        -0.381   0.328   0.221   0.090   -0.246    -0.126        0.263
+   dev_2425_tr1119 medicare_claims_per_adult        - 51        -0.819   0.242   0.184   0.000   -0.538    -0.504        0.266
+   dev_2425_tr1119 medicare_claims_per_adult lag_1519 51        -0.162   0.287   0.264   0.543   -0.538    -0.504        0.266
+   dev_2425_tr1122 medicare_claims_per_adult        - 51        -0.608   0.150   0.148   0.000   -0.506    -0.418        0.266
+     dev_25_tr1119 medicare_claims_per_adult        - 48        -0.833   0.334   0.204   0.000   -0.516    -0.437        0.263
+    pl_d_1516_1819 medicare_claims_per_adult        - 51         0.094   0.194   0.161   0.562    0.083     0.164        0.266
+pl_dev_1819_tr1116 medicare_claims_per_adult        - 51        -0.106   0.224   0.219   0.631   -0.069    -0.059        0.266
+    pl_d_1213_1516 medicare_claims_per_adult        - 51         0.193   0.127   0.134   0.155    0.202     0.149        0.266
+
+power check: expected slope if the whole national gap were proportional to exposure (slope = G x CV)
+  G=-1.0 pp, allpayer_rx_per100        : expected slope -0.31 pp/SD vs SE 0.18 -> expected z=1.74, power~41%
+  G=-1.0 pp, medicare_share            : expected slope -0.12 pp/SD vs SE 0.21 -> expected z=0.58, power~9%
+  G=-1.0 pp, medicaid_per1000          : expected slope -0.52 pp/SD vs SE 0.22 -> expected z=2.37, power~66%
+  G=-1.0 pp, medicare_claims_per_adult : expected slope -0.27 pp/SD vs SE 0.18 -> expected z=1.45, power~31%
+  G=-1.5 pp, allpayer_rx_per100        : expected slope -0.46 pp/SD vs SE 0.18 -> expected z=2.61, power~74%
+  G=-1.5 pp, medicare_share            : expected slope -0.18 pp/SD vs SE 0.21 -> expected z=0.87, power~14%
+  G=-1.5 pp, medicaid_per1000          : expected slope -0.77 pp/SD vs SE 0.22 -> expected z=3.56, power~94%
+  G=-1.5 pp, medicare_claims_per_adult : expected slope -0.40 pp/SD vs SE 0.18 -> expected z=2.18, power~59%
+  G=-2.0 pp, allpayer_rx_per100        : expected slope -0.61 pp/SD vs SE 0.18 -> expected z=3.48, power~94%
+  G=-2.0 pp, medicare_share            : expected slope -0.24 pp/SD vs SE 0.21 -> expected z=1.17, power~21%
+  G=-2.0 pp, medicaid_per1000          : expected slope -1.03 pp/SD vs SE 0.22 -> expected z=4.74, power~100%
+  G=-2.0 pp, medicare_claims_per_adult : expected slope -0.53 pp/SD vs SE 0.18 -> expected z=2.90, power~83%
+
+terciles of all-payer Rx per 100 residents (2024):
+           n    use  lag_level  base_2122  post_2425  d_2122_2425  dev_tr1119  dev_tr1122  placebo_d
+terc                                                                                                
+low use   17   9.14      27.88      31.26      31.54         0.28        0.01       -0.75       2.19
+mid use   16  12.89      30.21      33.29      33.25        -0.04       -1.03       -1.38       2.15
+high use  17  17.67      34.05      36.74      36.88         0.14       -1.81       -1.65       1.86
+
+states sorted by all-payer use: top 10 and bottom 10
+    allpayer_rx_per100  base_2122  post_2425  d_2122_2425  dev_2425_tr1119
+WV                24.2      40.80      39.40        -1.40            -5.60
+KY                22.0      39.00      38.00        -1.00            -2.77
+LA                20.3      39.35      37.40        -1.95            -1.45
+OK                19.5      39.70      37.45        -2.25            -2.36
+AL                19.3      39.10      39.30         0.20            -0.93
+MS                18.7      39.30      40.40         1.10            -3.01
+ND                17.8      35.30      37.95         2.65            -1.55
+AK                17.4      32.80      33.50         0.70            -2.00
+AR                17.3      38.05      37.80        -0.25            -2.71
+PA                17.1      33.35      33.85         0.50            -0.87
+    allpayer_rx_per100  base_2122  post_2425  d_2122_2425  dev_2425_tr1119
+HI                 5.1      25.45      26.70         1.25            -0.12
+NV                 7.4      32.40      34.20         1.80             2.09
+RI                 7.5      30.45      31.20         0.75            -0.75
+CO                 7.8      25.05      25.35         0.30            -0.12
+OR                 7.9      30.65      33.10         2.45             0.97
+AZ                 8.1      32.25      32.80         0.55            -2.01
+UT                 8.5      31.00      30.40        -0.60            -0.27
+WA                 9.0      30.25      31.25         1.00             1.34
+CA                 9.5      27.85      29.10         1.25             2.08
+MD                 9.6      33.75      32.90        -0.85            -1.88

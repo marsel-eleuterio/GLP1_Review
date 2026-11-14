@@ -1,0 +1,53 @@
+[project]
+name = "glp1-review"
+version = "0.1.0"
+description = "Is the break in the US adult obesity trend a GLP-1 effect? Pre-registered secondary-data study (BRFSS, MEPS, CMS)."
+readme = "README.md"
+license = { file = "LICENSE" }  # code: MIT; documents in docs/ are CC BY 4.0 (LICENSE-docs)
+authors = [{ name = "Marsel Eleutério" }]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "requests>=2.32",
+    "tqdm>=4.66",
+    "pyreadstat>=1.2",
+]
+
+[project.optional-dependencies]
+# Bayesian models and figures (after OSF registration)
+analysis = [
+    "pymc>=5.16",
+    "arviz>=0.19",
+    "matplotlib>=3.9",
+    "statsmodels>=0.14",
+    "pyarrow>=17",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.6",
+    "pre-commit>=3.8",
+    "ipykernel>=6.29",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/glp1_review"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+# pilot and microdata scripts are kept exactly as delivered (cited in the OSF pre-registration)
+extend-exclude = ["initial_docs", "piloto", "scripts/brfss_microdata.py", "scripts/meps_microdata.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

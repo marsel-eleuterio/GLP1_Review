@@ -1,0 +1,45 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# --- Environments ---
+.venv/
+venv/
+.env
+.env.*
+
+# --- Microdata and generated outputs (large, re-downloadable; never commit) ---
+# Keep the sha256 manifests: they go to OSF and document what was downloaded.
+dados_brutos/**
+!dados_brutos/**/
+!dados_brutos/**/manifest_sha256.csv
+dados_limpos/
+resultados/
+*.XPT
+*.xpt
+*.zip
+!/projeto_glp1.zip
+*.dta
+*.sas7bdat
+*.parquet
+
+# --- Editors / OS ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Claude Code local settings ---
+.claude/settings.local.json
