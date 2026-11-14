@@ -12,6 +12,7 @@ dependencies = [
     "requests>=2.32",
     "tqdm>=4.66",
     "pyreadstat>=1.2",
+    "pyarrow>=26.0.1",
 ]
 
 [project.optional-dependencies]
