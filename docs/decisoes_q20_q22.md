@@ -93,3 +93,10 @@ Marsel Eleutério escolheu:
 Aplicado na v2: Q21 (poder unilateral, sem ajuste e no primeiro passo de Holm, e P(contradita) com
 efeito zero) e Q22 (definições de apoiada, contradita e inconclusiva, com a justificativa). Q20 e o
 veredito geral não mudaram.
+
+## Outras escolhas confirmadas (14/nov/2026)
+
+- **Raça e etnia em 2015-2016 no BRFSS:** `_IMPRACE` não existe nesses anos. Entra como categoria "não
+  disponível" nos modelos que ajustam por raça; sensibilidade: modelos sem raça e etnia (Q12).
+- **Pós-estratificação pelo ACS:** só adultos fora de instituições, porque o BRFSS entrevista apenas
+  domicílios (Q16; `census_download.py`).

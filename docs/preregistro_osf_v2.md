@@ -134,7 +134,7 @@ No exclusions beyond the source coding in the primary analysis. BRFSS _BMI5 is a
 
 ### Q16. Sampling weights
 
-Yes. BRFSS: _LLCPWT with _STSTR and _PSU (strata nested within year) and Taylor linearization for H2, NC1 and the direct state estimates used in H4; H3 uses a rescaled bootstrap of PSUs within strata. The MRP model for H1 is fitted to unweighted cell counts and post-stratified to ACS population counts, which takes the place of the survey weights; the weighted direct series is reported alongside. MEPS: person weights (PERWTyyF) for use rates, the self-administered questionnaire weight for cross-sectional BMI, and LSAQWT (LONGWT if LSAQWT is absent from HC-236) for H6, always with VARSTR and VARPSU.
+Yes. BRFSS: _LLCPWT with _STSTR and _PSU (strata nested within year) and Taylor linearization for H2, NC1 and the direct state estimates used in H4; H3 uses a rescaled bootstrap of PSUs within strata. The MRP model for H1 is fitted to unweighted cell counts and post-stratified to ACS population counts (adults 18+ in the 50 states and DC, excluding people in institutional group quarters, whom BRFSS does not sample; cells built by census_download.py), which takes the place of the survey weights; the weighted direct series is reported alongside. MEPS: person weights (PERWTyyF) for use rates, the self-administered questionnaire weight for cross-sectional BMI, and LSAQWT (LONGWT if LSAQWT is absent from HC-236) for H6, always with VARSTR and VARPSU.
 
 ## Part 4. Knowledge of data
 
