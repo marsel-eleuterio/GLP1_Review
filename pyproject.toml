@@ -23,6 +23,7 @@ analysis = [
     "matplotlib>=3.9",
     "statsmodels>=0.14",
     "pyarrow>=17",
+    "nutpie>=0.16.8",
 ]
 
 [dependency-groups]
@@ -48,9 +49,7 @@ extend-exclude = ["initial_docs", "piloto", "scripts/brfss_microdata.py", "scrip
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
-
-[tool.ruff.lint.per-file-ignores]
-"scripts/build_osf_package.py" = ["E501"]  # Markdown table in the package README
+ignore = ["E501"]  # line length is enforced by `ruff format`; docstrings and Markdown text may run longer
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

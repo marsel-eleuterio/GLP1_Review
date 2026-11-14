@@ -100,3 +100,21 @@ veredito geral não mudaram.
   disponível" nos modelos que ajustam por raça; sensibilidade: modelos sem raça e etnia (Q12).
 - **Pós-estratificação pelo ACS:** só adultos fora de instituições, porque o BRFSS entrevista apenas
   domicílios (Q16; `census_download.py`).
+
+## H2 em duas etapas e regra de empate (14/nov/2026)
+
+Encontrados ao testar o código das análises em dados simulados (`tests/test_h2.py`):
+
+- **Incerteza da H2.** O erro-padrão de desenho de uma regressão única mede só o erro de amostragem e ignora os
+  choques de ano na diferença por diabetes (o DP residual de 0,08 que a Q21 usa no poder). Com ~400 mil
+  entrevistas por ano, o intervalo sairia estreito demais. Além disso, κ (troca da pergunta em 2019) ficaria
+  estimado por um ano só. **Decisão:** inferência em duas etapas (diferença por ano, depois tendência + κ em
+  2011-2019 projetada para 2023-2025, Student-t com 6 graus de liberdade), como na H1. A regressão única fica
+  como resultado secundário. Na simulação com choques de ano, a regressão única perde a cobertura e a de duas
+  etapas mantém. Poder da H2 recalculado na Q21: 26% em −0,2, 53% em −0,3 e 79% em −0,4 no primeiro passo de
+  Holm.
+- **Empate na Q22.** Estimativa significativamente negativa, mas comprovadamente menor que o mínimo de
+  interesse: **contradita**.
+- **NC2 da H2.** A janela placebo pré-registrada (desvio em 2017-2019) inclui 2019, o ano da troca da pergunta de
+  diabetes, e κ não pode ser estimado dentro dela. **Decisão:** para a H2, o desvio placebo é medido em
+  2017-2018 (tendência em 2011-2015). A NC2 da H1 continua em 2017-2019.
