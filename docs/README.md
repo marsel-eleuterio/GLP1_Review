@@ -1,36 +1,44 @@
-# Documentos do estudo
+# Study documents
 
-Cópias de 14/nov/2026, tiradas de `initial_docs/`. As versões vivas ficam online e é lá que as edições
-acontecem; ao atualizar, substitua o arquivo aqui e registre no commit.
-
-| Arquivo | Conteúdo | Versão online |
+| File | Content | Language |
 | --- | --- | --- |
-| [plano_de_estudo](plano_de_estudo.md) (.md e .pdf) | Plano de estudo, com os ajustes da revisão da literatura | https://claude.ai/artifact/FR5vRnExpkyoARUPSPtre8 |
-| [preregistro_osf_rascunho](preregistro_osf_rascunho.md) (.md e .pdf) | As 25 respostas do pré-registro (Secondary Data Preregistration), em inglês | https://claude.ai/artifact/CNLPEMmVjupDYkQfUGnb6p |
-| [revisao_da_literatura](revisao_da_literatura.md) (.md e .pdf) | Revisão da literatura, fechada em 14/nov | https://claude.ai/artifact/KjoyDLWaMUG6ZkTsDUeTuX |
-| [preregistro_osf_v2](preregistro_osf_v2.md) | **Versão de trabalho** do pré-registro (14/nov), com os resultados dos scripts preenchidos. A v1 fica intacta | — |
-| [pacote_de_trabalho](pacote_de_trabalho.md) | LEIAME original do pacote: ordem de trabalho, conferências e passos do OSF | — |
+| [preregistro_osf_v2](preregistro_osf_v2.md) | **Working version of the OSF pre-registration** (25 answers of the Secondary Data Preregistration template), with the script results filled in and the decisions of 14 November 2026 applied | English |
+| [decision_log](decision_log.md) | Every change from the first draft, with its reason (effect sizes, inference rules, H1 model, H2 inference, NC2 window, H4 inference) | English |
+| [implementation_notes](implementation_notes.md) | Steps the pre-registration does not fully specify and the choice the analysis code makes | English |
+| [h0_sources](h0_sources.md) | H0 source reconciliation, published-estimates part, with [figures/h0_published_series.png](figures/h0_published_series.png) | English |
+| [preregistro_osf_rascunho](preregistro_osf_rascunho.md) (.md and .pdf) | First pre-registration draft (13-14 November 2026), kept unchanged | English answers, Portuguese notes |
+| [plano_de_estudo](plano_de_estudo.md) (.md and .pdf) | Study plan, with the literature-review adjustments | Portuguese (original) |
+| [revisao_da_literatura](revisao_da_literatura.md) (.md and .pdf) | Literature review, closed on 14 November 2026 | Portuguese (original) |
+| [pacote_de_trabalho](pacote_de_trabalho.md) | README of the original work package: work order, checks and OSF steps | Portuguese (original) |
 
-Nos .md, os dois gráficos do plano aparecem só como legenda; eles estão no PDF.
+The study is published in English (arXiv stat.AP, with a Portuguese summary for outreach). The plan, the literature
+review and the work-package README are the original Portuguese documents and are kept as they were. In the .md
+versions the two charts of the plan appear only as captions; they are in the PDF.
 
-Licença: os documentos desta pasta estão sob [CC BY 4.0](../LICENSE-docs) (uso e adaptação livres, com
-atribuição a Marsel Eleutério). O código do repositório segue a licença MIT ([LICENSE](../LICENSE)).
+The original documents also exist online, where earlier edits were made:
+plan https://claude.ai/artifact/FR5vRnExpkyoARUPSPtre8,
+pre-registration draft https://claude.ai/artifact/CNLPEMmVjupDYkQfUGnb6p,
+literature review https://claude.ai/artifact/KjoyDLWaMUG6ZkTsDUeTuX.
 
-`pacote_de_trabalho.md` descreve o pacote original. Os caminhos dele (`scripts\`, `piloto\`,
-`dados_brutos\`, `dados_limpos\`) valem neste repositório; os comandos `python ...` viram
-`uv run python ...` (ver o README da raiz).
+License: the documents in this folder are under [CC BY 4.0](../LICENSE-docs) (free use and adaptation, with
+attribution to Marsel Eleutério). The code is under MIT ([LICENSE](../LICENSE)).
 
-## De onde veio cada arquivo
+`pacote_de_trabalho.md` describes the original package. Its paths (`scripts\`, `piloto\`, `dados_brutos\`,
+`dados_limpos\`) hold in this repository; its `python ...` commands become `uv run python ...` (see the root
+README and `scripts/README.md`).
 
-`initial_docs/` é o conteúdo de `projeto_glp1.zip` (pacote de 14/nov/2026), extraído com a estrutura
-original. As duas fontes são imutáveis. Os arquivos do projeto são cópias idênticas, byte a byte:
+## Provenance of each file
 
-| Em `initial_docs/` | No projeto |
+`initial_docs/` is the content of `projeto_glp1.zip` (work package of 14 November 2026), extracted with its original
+structure. Both are immutable. The project files below are byte-identical copies:
+
+| In `initial_docs/` | In the project |
 | --- | --- |
 | `LEIAME.md` | `docs/pacote_de_trabalho.md` |
-| `docs/*` | `docs/*` (mesmos nomes) |
-| `piloto/**` | `piloto/**` (mesmos nomes) |
-| `scripts/brfss_microdata.py`, `scripts/meps_microdata.py` | `scripts/` (mesmos nomes) |
+| `docs/*` | `docs/*` (same names) |
+| `piloto/**` | `piloto/**` (same names) |
+| `scripts/brfss_microdata.py`, `scripts/meps_microdata.py` | `scripts/` (same names; `brfss_microdata.py` later changed, see `scripts/README.md`) |
 
-Histórico: a primeira versão de `initial_docs/` (14/nov, manhã) era uma cópia achatada do pacote, com
-nomes e conteúdos trocados e 5 arquivos faltando. Ela foi substituída pela extração do zip no mesmo dia.
+History: the first version of `initial_docs/` (morning of 14 November 2026) was a flattened copy of the package,
+with file names and contents mismatched and 5 files missing. It was replaced by the extraction of the zip the same
+day.

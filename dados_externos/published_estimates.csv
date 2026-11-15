@@ -1,0 +1,35 @@
+source,measure,population,group,period,value_pct,se,derivation,verified,location,url,accessed,note
+Gallup,obesity,adults 18+,total,2022,39.9,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,"record high; n=3,035, Jan 11-17 2022, MoE +-2.0"
+Gallup,obesity,adults 18+,total,2025,37.0,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,"n=16,946, Feb/May-Jun/Aug-Sep 2025, MoE +-0.9"
+Gallup,obesity,adults 18+,total,2026,36.8,,published,yes,text,https://news.gallup.com/poll/712157/glp-usage-reaches-new-high.aspx,2026-11-14,"n=10,091, Feb-Mar and May-Jun 2026; updated 2026-09-08 after reweighting; the study plan recorded 36.4 in a table that the current page no longer shows"
+Gallup,obesity,adults 18+,age 40-49,2025,43.3,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,down 4.3 points since 2022
+Gallup,obesity,adults 18+,age 40-49,2022,47.6,,derived: 2025 level + 4.3,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,derived from the published 2025 level and change
+Gallup,obesity,adults 18+,age 50-64,2025,42.8,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,down 5.0 points since 2022
+Gallup,obesity,adults 18+,age 50-64,2022,47.8,,derived: 2025 level + 5.0,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,derived from the published 2025 level and change
+Gallup,obesity,adults 18+,men,2025,35.2,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,down 2.3 points since 2022
+Gallup,obesity,adults 18+,men,2022,37.5,,derived: 2025 level + 2.3,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,derived from the published 2025 level and change
+Gallup,obesity,adults 18+,women,2025,38.8,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,down 3.5 points since 2022
+Gallup,obesity,adults 18+,women,2022,42.3,,derived: 2025 level + 3.5,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,derived from the published 2025 level and change
+Gallup,obesity change 2022-2025,adults 18+,age 30-39,2022-2025,-2.2,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,levels not stated
+Gallup,obesity change 2022-2025,adults 18+,age 40-49,2022-2025,-4.3,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,obesity change 2022-2025,adults 18+,age 50-64,2022-2025,-5.0,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,obesity change 2022-2025,adults 18+,age 18-29,2022-2025,,,published (qualitative),yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,"""essentially unchanged""; no value given"
+Gallup,obesity change 2022-2025,adults 18+,age 65+,2022-2025,0.8,,literature review (docs/revisao_da_literatura.md),no,not found in text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,"text says only ""essentially unchanged""; +0.8 probably read from the interactive chart; confirm before citing"
+Gallup,glp1 use for weight loss,adults 18+,total,2024-02,5.8,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,total,2025,12.4,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,age 40-49,2025,16.2,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,age 50-64,2025,17.0,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,age 65+,2025,11.1,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,women,2025,15.2,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,men,2025,9.7,,published,yes,text,https://news.gallup.com/poll/696599/obesity-rate-declining.aspx,2026-11-14,
+Gallup,glp1 use for weight loss,adults 18+,total,2026,11,,published,yes,text,https://news.gallup.com/poll/712157/glp-usage-reaches-new-high.aspx,2026-11-14,currently taking
+NHANES,obesity (age-adjusted),adults 20+,total,2013-2014,37.7,0.9,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,measured height and weight
+NHANES,obesity (age-adjusted),adults 20+,total,2015-2016,39.6,1.6,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,
+NHANES,obesity (age-adjusted),adults 20+,total,2017-2020,41.9,1.2,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,2017-March 2020 combined cycle (pandemic)
+NHANES,obesity (age-adjusted),adults 20+,total,2021-2023,40.3,1.9,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,"Aug 2021-Aug 2023; n=5,929; ""did not change significantly"" since 2013-2014"
+NHANES,obesity,adults 20+,age 20-39,2021-2023,35.5,3.0,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,
+NHANES,obesity,adults 20+,age 40-59,2021-2023,46.4,1.8,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,
+NHANES,obesity,adults 20+,age 60+,2021-2023,38.9,1.5,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,
+NHANES,obesity,adults 20+,men,2021-2023,39.2,1.9,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,
+NHANES,obesity,adults 20+,women,2021-2023,41.3,2.2,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,
+NHANES,severe obesity (age-adjusted),adults 20+,total,2021-2023,9.7,0.7,published,yes,table,https://www.cdc.gov/nchs/products/databriefs/db508.htm,2026-11-14,BMI >= 40; 7.7 in 2013-2014

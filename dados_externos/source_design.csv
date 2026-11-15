@@ -1,0 +1,11 @@
+aspect,BRFSS,Gallup,NHANES
+Sponsor,CDC with state health departments,Gallup (private),CDC / National Center for Health Statistics
+Frame and recruitment,"Random-digit dialing, landline and cell phone (since 2011)",Probability-based Gallup Panel (recruited panel),"Area probability sample of households, in-person"
+Mode,Telephone interview (CATI),Web self-administered,In-person interview plus mobile examination center
+Height and weight,"Self-reported: ""About how much do you weigh without shoes?"" / ""About how tall are you without shoes?"" (2024 codebook)",Self-reported (wording not published in the articles),Measured by trained staff
+Age range,18+,18+,20+ (published estimates)
+Annual sample,"About 350,000-510,000 records (356,158 in 2025)","3,035 (2022); 5,577 (2024); 16,946 (2025); 10,091 (2026, obesity)","5,929 adults in Aug 2021-Aug 2023 (two-year cycle)"
+Fieldwork timing,Continuous over the calendar year,"A few weeks per year (Jan 2022; Mar 2024; Feb, May-Jun, Aug-Sep 2025; Feb-Mar, May-Jun 2026)",Two-year cycles; 2017-March 2020 cut short by the pandemic
+Weighting,"Raking to age, sex, race and ethnicity, education, marital status, home tenure and phone ownership","Nonresponse weights to CPS on gender, age, race, Hispanic ethnicity, education, region; revised in Sep 2026",Exam weights; published total age-adjusted to the 2000 Census
+Geography,All states (some missing in some years: NJ 2019; FL 2021; KY and PA 2023; TN 2024; CA MS NV 2025),National,National
+Known direction of bias,Self-report understates obesity relative to measurement; bias varies with mode (Chapel et al. 2014),Self-report understates obesity; web vs telephone differences possible,Reference standard (measured)

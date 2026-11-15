@@ -1,25 +1,30 @@
-# Pré-registro OSF: GLP-1 e a curva da obesidade nos EUA (rascunho, versão 2)
+# OSF pre-registration: GLP-1 and the US adult obesity curve (draft, version 2)
 
-2026-11-14 · Marsel Eleutério
+14 November 2026 · Marsel Eleutério
 
-Versão 2, de 14/nov/2026: preenche os campos que dependiam dos scripts de download (Q7, Q8, Q10, Q12, Q13, Q18, Q21, Q23) com os resultados de 14/nov, e muda a regra de decisão da família confirmatória para testes unilaterais (Q21, Q22; ver `decisoes_q20_q22.md`). A versão 1, intacta, está em `preregistro_osf_rascunho.md`; as diferenças estão no histórico do git.
+Version 2 fills the fields that depended on the download scripts (Q7, Q8, Q10, Q12, Q13, Q18, Q21, Q23) with the
+results of 14 November 2026 and revises the inference and model choices listed in `decision_log.md` (Q19, Q21,
+Q22, Q23). Version 1 is kept unchanged in `preregistro_osf_rascunho.md`; the differences are in the git history.
 
-Rascunho em inglês das 25 respostas do modelo Secondary Data Preregistration do OSF, na ordem do formulário, para revisar e colar campo a campo. O que está entre colchetes depende de você ou do resultado dos scripts de download.
+Draft of the 25 answers of the OSF Secondary Data Preregistration template, in the order of the form, to be
+reviewed and pasted field by field. Text in brackets is still to be completed.
 
-Revisto em 14 de novembro de 2026 com base na [revisão da literatura](https://claude.ai/artifact/KjoyDLWaMUG6ZkTsDUeTuX): novo título, hipóteses H0 e H2 a H6, e as respostas Q3, Q13, Q18 a Q20, Q22, Q24 e Q25, além das referências.
+## Before submitting
 
-## Antes de enviar
-
-Oito itens dependem de você ou dos scripts. O resto pode ser colado como está, depois da sua revisão.
-
-- [x] Criar seu ORCID (grátis) e colocá-lo em Q2 (0009-0008-0021-8866)
-- [x] Rodar os scripts do pacote projeto_glp1.zip (download, extract e validate) e anotar as datas de download em Q8 (14/nov; BRFSS por rota alternativa, ver Q7 e Q8)
-- [x] Copiar do inventory.txt do MEPS, para Q13 e Q21, quantos adultos têm IMC nas duas medidas e quantos começaram GLP-1 em cada painel; com isso o poder da H6 é recalculado (89 iniciantes na análise principal; H6 fica no grupo confirmatório)
-- [x] Conferir no coverage_report.csv do BRFSS em que ano a pergunta de diabetes muda de nome (Q12, Q19 e Q23): 2019
-- [x] Revisar os efeitos mínimos de interesse (Q20) e a regra de veredito (Q22): são escolhas suas e ficam congeladas no registro (14/nov: mínimos mantidos; apoio e contradição unilaterais; ver `decisoes_q20_q22.md`)
-- [ ] Ler os artigos originais citados em Q4, Q18, Q19 e Q20 e conferir os números: vários vieram de resumos de imprensa ou das editoras
-- [ ] Decidir se mantém a declaração de uso de IA em Q18 (recomendo manter)
-- [ ] Subir no projeto do OSF o plano em PDF, o código do piloto e os scripts de download antes de clicar em Register (pacote pronto em `resultados/osf_glp1_2026-11-14.zip`. **Bloqueado em 14/nov:** a conta do OSF, criada via ORCID, dá "Account not valid" no login; aguardando resposta do suporte, support@osf.io. Falta também o link do projeto na Q7)
+- [x] ORCID in Q2 (0009-0008-0021-8866)
+- [x] Run the download, extract and validate scripts and record the download dates in Q8 (14 November 2026; BRFSS
+  through an alternative route, see Q7 and Q8)
+- [x] Copy the MEPS case counts into Q13 and Q21 and recompute H6 power (89 initiators in the primary sample; H6
+  stays in the confirmatory family)
+- [x] Check in the BRFSS coverage report the year the diabetes item changes (Q12, Q19, Q23): 2019
+- [x] Review the smallest effects of interest (Q20) and the inference criteria (Q22): SESOIs kept; one-sided
+  support and contradiction (`decision_log.md`)
+- [ ] Read the original articles cited in Q4, Q18, Q19 and Q20 and check the numbers (several were taken from press
+  or publisher summaries)
+- [ ] Decide whether to keep the AI-assistance statement in Q18 (recommended)
+- [ ] Upload the OSF package (`resultados/osf_glp1_<date>.zip`, built by `scripts/build_osf_package.py`) before
+  registering. **Blocked on 14 November 2026:** the new OSF account returns "Account not valid"; waiting for OSF
+  Support. The project link for Q7 is also pending.
 
 ## Part 1. Study information
 
@@ -250,50 +255,52 @@ Labelled as exploratory in the preprint:
 
 The author confirms that this preregistration was completed truthfully, that Part 4 lists everything he knows about the data that is relevant to the hypotheses, and that no other preregistration covers the same hypotheses and data. Any deviation from this plan will be reported in the preprint, with its reason.
 
-## Referências
+## References
 
-Páginas abertas em 12 e 13 de novembro de 2026. As referências de métodos sem link foram citadas de memória: confira volume e páginas antes de usá-las no preprint.
+Pages accessed on 12-14 November 2026. Methods references without a link were cited from memory: check volume and
+pages before using them in the preprint.
 
-**Dados e documentação**
+**Data and documentation**
 
-- CDC, [BRFSS 2024 Annual Data](https://www.cdc.gov/brfss/annual_data/annual_2024.html) e [BRFSS 2025 Annual Data](https://www.cdc.gov/brfss/annual_data/annual_2025.html)
-- AHRQ, [MEPS HC-256: 2024 Full Year Consolidated Data File](https://meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-256) e sua [documentação](https://meps.ahrq.gov/mepsweb/data_stats/download_data/pufs/h256/h256doc.shtml)
+- CDC, [BRFSS 2024 Annual Data](https://www.cdc.gov/brfss/annual_data/annual_2024.html) and [BRFSS 2025 Annual Data](https://www.cdc.gov/brfss/annual_data/annual_2025.html)
+- AHRQ, [MEPS HC-256: 2024 Full Year Consolidated Data File](https://meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-256) and its [documentation](https://meps.ahrq.gov/mepsweb/data_stats/download_data/pufs/h256/h256doc.shtml)
 - AHRQ, [MEPS HC-254A: 2024 Prescribed Medicines File](https://meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-254A)
-- AHRQ, [MEPS HC-245: Panel 24 Four-Year Longitudinal Data File](https://meps.ahrq.gov/mepsweb/data_stats/download_data/pufs/h245/h245doc.shtml) e [MEPS HC-236: Panel 23 Four-Year Longitudinal Data File](https://meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-236)
-- CMS, [Medicare Part D by geography and drug](https://data.cms.gov/data-api/v1/dataset/c8ea3f8e-3a09-4fea-86f2-8902fb4b0920/data) e [Medicaid State Drug Utilization Data 2025](https://catalog.data.gov/dataset/state-drug-utilization-data-2025)
+- AHRQ, [MEPS HC-245: Panel 24 Four-Year Longitudinal Data File](https://meps.ahrq.gov/mepsweb/data_stats/download_data/pufs/h245/h245doc.shtml) and [MEPS HC-236: Panel 23 Four-Year Longitudinal Data File](https://meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-236)
+- CMS, [Medicare Part D by geography and drug](https://data.cms.gov/data-api/v1/dataset/c8ea3f8e-3a09-4fea-86f2-8902fb4b0920/data) and [Medicaid State Drug Utilization Data 2025](https://catalog.data.gov/dataset/state-drug-utilization-data-2025)
+- NCHS, [Data Brief 508](https://www.cdc.gov/nchs/products/databriefs/db508.htm): obesity and severe obesity, NHANES August 2021-August 2023
+- Hugging Face dataset [jamesjiadazhan/BRFSS](https://huggingface.co/datasets/jamesjiadazhan/BRFSS), revision 6e0af4750a9622dc297421924aab450774c00a2f (Parquet conversion of the CDC annual files)
 
-**Modelo de pré-registro**
+**Pre-registration template**
 
 - OSF, [Select a Registration Template](https://help.osf.io/hc/en-us/articles/360019738794-Select-a-Registration-Template)
 - Van den Akker et al., [Preregistration of secondary data analysis: a template and tutorial](https://open.lnu.se/index.php/metapsychology/article/view/2625), Meta-Psychology
 
-**Parâmetros da simulação (H5)**
+**Microsimulation parameters (H5)**
 
-- Wilding et al. (2021), STEP 1, N Engl J Med: −14,9% com semaglutida 2,4 mg contra −2,4% com placebo em 68 semanas ([resumo](https://wikijournalclub.org/wiki/STEP_1))
-- Jastreboff et al. (2022), [SURMOUNT-1](https://doi.org/10.1056/NEJMoa2206038), N Engl J Med 387:205–16: −20,9% com tirzepatida 15 mg em 72 semanas
-- Rodriguez et al. (2025), JAMA Network Open: 125.474 adultos que começaram GLP-1 entre 2018 e 2023; interrupção em um ano de 46,5% com diabetes tipo 2 e 64,8% sem ([resumo](https://www.healthday.com/healthpro-news/weight-loss/many-with-overweight-obesity-discontinue-glp-1-receptor-agonists-within-one-year))
+- Wilding et al. (2021), STEP 1, N Engl J Med: −14.9% with semaglutide 2.4 mg vs −2.4% with placebo at 68 weeks ([summary](https://wikijournalclub.org/wiki/STEP_1))
+- Jastreboff et al. (2022), [SURMOUNT-1](https://doi.org/10.1056/NEJMoa2206038), N Engl J Med 387:205-16: −20.9% with tirzepatide 15 mg at 72 weeks
+- Rodriguez et al. (2025), JAMA Network Open: 125,474 adults starting a GLP-1 in 2018-2023; one-year discontinuation 46.5% with type 2 diabetes and 64.8% without ([summary](https://www.healthday.com/healthpro-news/weight-loss/many-with-overweight-obesity-discontinue-glp-1-receptor-agonists-within-one-year))
 
-**Trabalhos anteriores e métodos citados nas respostas (revisão de 14/nov)**
+**Prior work and methods cited in the answers**
 
-- Rader, Hazan e Brownstein (2024), JAMA Health Forum: queda do IMC e da obesidade em 2023 em 16,7 milhões de adultos ([resumo](https://ajmc.com/view/obesity-prevalence-bmi-decreased-in-us-for-first-time-in-a-decade))
-- Gallup: obesidade e uso de GLP-1, [out/2025](https://news.gallup.com/poll/696599/obesity-rate-declining.aspx) e [jul/2026](https://news.gallup.com/poll/712157/glp-usage-reaches-new-high.aspx)
-- Epic Research (2026): uso de GLP-1 e obesidade no Epic Cosmos ([resumo](https://www.rttnews.com/3656241/new-epic-research-data-links-growing-glp-1-use-with-falling-obesity-rates-in-us.aspx))
-- [NCHS Data Brief 537](https://www.cdc.gov/nchs/products/databriefs/db537.htm) (2025): uso de GLP-1 injetável entre adultos com diabetes, NHIS 2024
-- [KFF Health Tracking Poll, nov/2025](https://www.kff.org/public-opinion/poll-1-in-8-adults-say-they-are-currently-taking-a-glp-1-drug-for-weight-loss-diabetes-or-another-condition-even-as-half-say-the-drugs-are-difficult-to-afford/)
-- Galindo et al. (2023), Obesity: uso de GLP-1 no MEPS 2010–2019 ([PDF](https://sochob.cl/web1/wp-content/uploads/2023/11/Use-and-continuity-of-weight‐modifying-medications-among-adults-with-diabetes-and-overweight.pdf))
-- Rodriguez et al. (2024), JAMA Internal Medicine: perda de peso em 12 meses com semaglutida e tirzepatida ([resumo](https://www.healio.com/news/endocrinology/20240812/tirzepatide-led-to-greater-realworld-weight-loss-than-semaglutide-for-adults-with-obesity))
-- Gasoyan et al. (2025), Obesity: perda de peso de quem interrompe o tratamento ([resumo](https://newsroom.clevelandclinic.org/2025/06/10/cleveland-clinic-research-finds-injectable-medications-for-obesity-produce-smaller-weight-loss-in-a-real-world-setting-compared-to-randomized-clinical-trials))
-- Callaway, Goodman-Bacon e Sant'Anna (2024), [Difference-in-differences with a Continuous Treatment](https://www.nber.org/papers/w32117), NBER w32117
-- Ward et al. (2019), N Engl J Med ([resumo](https://news.harvard.edu/gazette/story/2019/12/close-to-half-of-u-s-population-projected-to-have-obesity-by-2030/)) e DeCleene et al. (2026), JAMA ([resumo](https://www.healio.com/news/primary-care/20260128/us-obesity-prevalence-projected-to-rise-to-nearly-47-by-2035)): projeções da obesidade
-- Wing et al. (2026), [NBER w34949](https://www.nber.org/system/files/working_papers/w34949/w34949.pdf), e Khanna, Wang e Venkataramani (2026), JAMA Health Forum ([resumo](https://www.ajmc.com/view/medicaid-obesity-glp-1-coverage-may-offset-some-diabetes-labeled-use)): cobertura do Medicaid
+- Rader, Hazan and Brownstein (2024), JAMA Health Forum: fall in BMI and obesity in 2023 among 16.7 million adults ([summary](https://ajmc.com/view/obesity-prevalence-bmi-decreased-in-us-for-first-time-in-a-decade))
+- Gallup: obesity and GLP-1 use, [Oct 2025](https://news.gallup.com/poll/696599/obesity-rate-declining.aspx) and [Jul 2026](https://news.gallup.com/poll/712157/glp-usage-reaches-new-high.aspx)
+- Epic Research (2026): GLP-1 use and obesity in Epic Cosmos ([summary](https://www.rttnews.com/3656241/new-epic-research-data-links-growing-glp-1-use-with-falling-obesity-rates-in-us.aspx))
+- [NCHS Data Brief 537](https://www.cdc.gov/nchs/products/databriefs/db537.htm) (2025): injectable GLP-1 use among adults with diabetes, NHIS 2024
+- [KFF Health Tracking Poll, Nov 2025](https://www.kff.org/public-opinion/poll-1-in-8-adults-say-they-are-currently-taking-a-glp-1-drug-for-weight-loss-diabetes-or-another-condition-even-as-half-say-the-drugs-are-difficult-to-afford/)
+- Galindo et al. (2023), Obesity: GLP-1 use in MEPS 2010-2019 ([PDF](https://sochob.cl/web1/wp-content/uploads/2023/11/Use-and-continuity-of-weight‐modifying-medications-among-adults-with-diabetes-and-overweight.pdf))
+- Rodriguez et al. (2024), JAMA Internal Medicine: 12-month weight loss with semaglutide and tirzepatide ([summary](https://www.healio.com/news/endocrinology/20240812/tirzepatide-led-to-greater-realworld-weight-loss-than-semaglutide-for-adults-with-obesity))
+- Gasoyan et al. (2025), Obesity: weight loss among patients who discontinue treatment ([summary](https://newsroom.clevelandclinic.org/2025/06/10/cleveland-clinic-research-finds-injectable-medications-for-obesity-produce-smaller-weight-loss-in-a-real-world-setting-compared-to-randomized-clinical-trials))
+- Callaway, Goodman-Bacon and Sant'Anna (2024), [Difference-in-differences with a Continuous Treatment](https://www.nber.org/papers/w32117), NBER w32117
+- Ward et al. (2019), N Engl J Med ([summary](https://news.harvard.edu/gazette/story/2019/12/close-to-half-of-u-s-population-projected-to-have-obesity-by-2030/)) and DeCleene et al. (2026), JAMA ([summary](https://www.healio.com/news/primary-care/20260128/us-obesity-prevalence-projected-to-rise-to-nearly-47-by-2035)): obesity projections
+- Wing et al. (2026), [NBER w34949](https://www.nber.org/system/files/working_papers/w34949/w34949.pdf), and Khanna, Wang and Venkataramani (2026), JAMA Health Forum ([summary](https://www.ajmc.com/view/medicaid-obesity-glp-1-coverage-may-offset-some-diabetes-labeled-use)): Medicaid coverage
 
-**Métodos (sem link)**
+**Methods (no link)**
 
-- DiNardo, Fortin e Lemieux (1996), Econometrica: reponderação para composição fixa
-- Firpo, Fortin e Lemieux (2009), Econometrica: regressão RIF
-- Park, Gelman e Bafumi (2004), Political Analysis: MRP
-- Rambachan e Roth (2023), Review of Economic Studies: limites para pré-tendências
-- Rao e Wu (1988), Journal of the American Statistical Association: bootstrap reescalonado
-- Lakens (2017), Social Psychological and Personality Science: testes de equivalência
-- Ward et al. (2019), N Engl J Med: correção do IMC autorreferido com o NHANES
+- DiNardo, Fortin and Lemieux (1996), Econometrica: reweighting to a fixed composition
+- Firpo, Fortin and Lemieux (2009), Econometrica: RIF regression
+- Park, Gelman and Bafumi (2004), Political Analysis: MRP
+- Rambachan and Roth (2023), Review of Economic Studies: bounds for pre-trends
+- Rao and Wu (1988), Journal of the American Statistical Association: rescaled bootstrap
+- Lakens (2017), Social Psychological and Personality Science: equivalence tests
 - Rubin (1987), Multiple Imputation for Nonresponse in Surveys

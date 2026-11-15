@@ -21,5 +21,9 @@
 
 ## Language
 
-Study documents are in Portuguese; the OSF pre-registration answers are in English. Code and comments in
-English.
+**The study is published in English** (arXiv stat.AP, with a Portuguese summary for outreach; decided in
+`docs/plano_de_estudo.md`, "Decisões tomadas"). Everything that goes to the OSF package, the preprint or the
+public repository is written in English: pre-registration answers, decision log, implementation notes,
+hypothesis write-ups, figures, data and provenance tables, `scripts/README.md`, code and comments. The original
+study documents copied from `initial_docs/` (plan, literature review, work-package and pilot LEIAME) stay in
+Portuguese. Conversation with the author is in Portuguese.
