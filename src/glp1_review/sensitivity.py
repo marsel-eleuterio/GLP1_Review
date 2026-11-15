@@ -5,9 +5,9 @@ Covered here: pandemic years, balanced panel of states, alternative reference co
 (trend in the share missing; multiple imputation), interview mode (cell vs landline), and the hypothesis-specific
 lists for H2, H3, H4, H5, H6 and NC1. The counterfactual-trend alternatives of H1 are computed in `run.step_h1`.
 
-External counterfactuals (`q24_external`): DeCleene et al. (2026) is implemented with its verified figures; Ward et al.
-(2019) waits for the 2016 level in the full text. The NHANES-calibrated self-report correction (Ward et al. 2019) is
-not implemented: it needs the method in that paper's appendix and NHANES microdata.
+External counterfactuals (`q24_external`): DeCleene et al. (2026) and Ward et al. (2019), with the figures verified in
+the originals (docs/citation_check.md, D1-D2). Self-report (`q24_self_report`): the NHANES-calibrated correction of
+Ward et al. (2019, appendix section 2), implemented in `self_report.py`.
 """
 
 import numpy as np
@@ -18,7 +18,7 @@ from glp1_review import h3_quantiles as h3
 from glp1_review import h4_states as h4
 from glp1_review import h5_microsim as h5
 from glp1_review import h6_panel as h6
-from glp1_review import mi, trend
+from glp1_review import mi, self_report, trend
 from glp1_review.decision import Estimate, h5_compatibility
 
 PANDEMIC = (2020, 2021)
@@ -413,7 +413,8 @@ def q24_h6(df: pd.DataFrame, df_all_rounds: pd.DataFrame) -> list:
 EXTERNAL_PROJECTIONS = {
     # name: (start year, start %, end year, end %), national adult obesity; None until verified in the original
     "DeCleene et al. 2026 (IHME; data to 2022; ages 20+, bias-corrected)": (2022, 42.5, 2035, 46.9),
-    "Ward et al. 2019 (BRFSS 1993-2016, NHANES-corrected)": None,  # needs the 2016 level from the full text
+    # supplementary appendix, Table 8.1.1, US (National): 35.1% in 2010, 42.0% in 2020, 48.9% in 2030 (adults 18+)
+    "Ward et al. 2019 (BRFSS 1993-2016, NHANES-corrected; ages 18+)": (2020, 42.0, 2030, 48.9),
 }
 
 
@@ -461,6 +462,33 @@ def q24_external(P: dict, projections: dict = EXTERNAL_PROJECTIONS) -> list:
                 float(np.percentile(d, 2.5)),
                 float(np.percentile(d, 97.5)),
                 note=f"projected change 2022-2025 = {proj:+.2f} pp ({spec[1]}% in {spec[0]} to {spec[3]}% in {spec[2]})",
+            )
+        )
+    return rows
+
+
+# --------------------------------------------------------------------------------------------- self-report correction
+def q24_self_report(b: pd.DataFrame, nhanes: pd.DataFrame, seed: int = 20261115) -> list:
+    """Q24: H1 departure in 2025 (direct weighted series) after correcting self-reported BMI with NHANES, by sex and
+    period as in Ward et al. (2019), and with one calibration fixed at 2011-2020."""
+    rows = []
+    variants = {
+        "by sex and period, as in Ward et al. 2019": self_report.PERIODS,
+        "calibration fixed at 2011-2020": self_report.PERIODS_FIXED,
+    }
+    for label, periods in variants.items():
+        c, diag = self_report.correct(b, nhanes, periods, seed=seed)
+        s = direct_series(c)
+        rows.append(
+            _row(
+                "H1",
+                f"self-report correction (NHANES-calibrated, {label}), direct series",
+                direct_departure_2025(c),
+                note=(
+                    f"D2025, pp; corrected prevalence {100 * s.get(2022, np.nan):.1f}% (2022), "
+                    f"{100 * s.get(2025, np.nan):.1f}% (2025); KS distance to NHANES "
+                    f"{diag['ks_before'].max():.3f} before, {diag['ks_after'].max():.3f} after (max over sex x period)"
+                ),
             )
         )
     return rows

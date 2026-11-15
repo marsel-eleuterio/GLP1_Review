@@ -45,3 +45,6 @@ desktop.ini
 
 # --- Claude Code local settings ---
 .claude/settings.local.json
+
+# --- Copyrighted articles read for the study (kept locally, never committed) ---
+literatura/

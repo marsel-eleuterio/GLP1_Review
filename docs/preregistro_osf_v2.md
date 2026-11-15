@@ -19,9 +19,9 @@ reviewed and pasted field by field. Text in brackets is still to be completed.
 - [x] Check in the BRFSS coverage report the year the diabetes item changes (Q12, Q19, Q23): 2019
 - [x] Review the smallest effects of interest (Q20) and the inference criteria (Q22): SESOIs kept; one-sided
   support and contradiction (`decision_log.md`)
-- [ ] Read the original articles cited in Q4, Q18, Q19 and Q20 and check the numbers. **Nearly done**
-  (`citation_check.md`): every number that sets a pre-registered parameter matched its source, and Callaway et al.
-  confirms the H4 wording; only Ward et al. (2019) is left (free on nejm.org, blocked to automated downloads)
+- [x] Read the original articles cited in Q4, Q18, Q19 and Q20 and check the numbers (`citation_check.md`):
+  every number that sets a pre-registered parameter matched its source, Callaway et al. confirms the H4 wording,
+  and Ward et al. (2019) was read on 15 November 2026
 - [ ] Decide whether to keep the AI-assistance statement in Q18 (recommended)
 - [ ] Upload the OSF package (`resultados/osf_glp1_<date>.zip`, built by `scripts/build_osf_package.py`) before
   registering. **Blocked on 14 November 2026:** the new OSF account returns "Account not valid"; waiting for OSF
@@ -225,10 +225,10 @@ Approximate, under the stated assumptions. H1 and H4 figures are two-sided at α
 ### Q24. Robustness and sensitivity
 
 - **Counterfactual trends.** Linear on 2011–2021 and on 2015–2019, quadratic on 2011–2019, and the 2022 level continued at the 2011–2019 slope.
-- **External counterfactuals.** The observed change from 2022 to 2025 is set against the average annual change implied by two projections built on data from before the rise in GLP-1 use (Ward et al. 2019, BRFSS 1993–2016; DeCleene et al. 2026, data to 2022). Changes are compared, not levels, because those projections are calibrated to measured BMI.
+- **External counterfactuals.** The observed change from 2022 to 2025 is set against the average annual change implied by two projections built on data from before the rise in GLP-1 use (Ward et al. 2019, BRFSS 1993–2016: 42.0% in 2020 to 48.9% in 2030, adults 18+; DeCleene et al. 2026, data to 2022: 42.5% in 2022 to 46.9% in 2035, adults 20+), each taken as linear between its two points. Changes are compared, not levels, because those projections are calibrated to measured BMI.
 - **Pandemic years.** All models re-estimated without 2020 and 2021.
 - **Composition.** Balanced panel of states observed in every year; reweighting to the 2011 and the 2022 compositions instead of 2017–2019.
-- **Self-report.** BMI corrected with an NHANES-calibrated adjustment for self-report bias, as in Ward et al. (2019).
+- **Self-report.** BMI corrected with an NHANES-calibrated adjustment for self-report bias, as in Ward et al. (2019): within sex and period, measured minus reported BMI by quantile, smoothed with a cubic spline and added at each respondent's quantile, with normal noise (SD 0.5) for rounding. Periods: BRFSS 2011–2016, 2017–2020 and 2021–2025 with NHANES 2011–2016, 2017–March 2020 and August 2021–August 2023 (carried forward to 2024–2025). Variant: one calibration from 2011–2020 applied to every year. Reported for the H1 direct series.
 - **Missing BMI.** Multiple imputation (Q14), and the trend in the share missing.
 - **Interview mode.** Separate estimates for cell-phone and landline interviews.
 - **H2.** Without the age and sex interactions; ages 45–74 only; diabetes group reweighted to its 2017–2019 composition; wild cluster bootstrap by state; item-change term on and off.

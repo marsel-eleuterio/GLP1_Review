@@ -277,11 +277,19 @@ national use in H5.
 
 # Appendix B. Sensitivity analyses {-}
 
-The RIF variant of H3 follows @firpo2009. The observed change from 2022 to 2025 is compared with the change implied by a projection made before the rise in
-use, which forecast national adult obesity rising from 42.5% in 2022 to 46.9% in 2035, about 1.0 point over
-2022-2025 [@decleene2026]: {{Q24.EXTERNAL}}. Changes are compared, not levels, because the projection is
-calibrated to measured BMI. The projection of @ward2019 and its NHANES-calibrated correction of self-reported BMI
-are {{Q24.WARD}}.
+The RIF variant of H3 follows @firpo2009. The observed change from 2022 to 2025 is compared with the change implied by two projections made before the
+rise in use. @ward2019 forecast national adult obesity (ages 18+) rising from 42.0% in 2020 to 48.9% in 2030,
+about 2.1 points over 2022-2025; @decleene2026 forecast 42.5% in 2022 and 46.9% in 2035 (ages 20+), about 1.0
+point: {{Q24.EXTERNAL}}. Changes are compared, not levels, because both projections are calibrated to measured
+BMI.
+
+Self-reported BMI was also corrected with NHANES measurements, following @ward2019. Within each sex and period,
+the difference between measured (NHANES) and reported (BRFSS) BMI was estimated at each percentile, smoothed
+with a cubic spline, and added to each respondent's BMI at their percentile, with normal noise (SD 0.5) for the
+rounding of reported height and weight. The periods pair BRFSS 2011-2016, 2017-2020 and 2021-2025 with the
+NHANES cycles of 2011-2016, 2017-March 2020 and August 2021-August 2023; no NHANES data cover 2024-2025, so the
+last calibration is carried forward. A variant applies one calibration, from 2011-2020, to every year:
+{{Q24.SELFREPORT}}.
 
 {{Q24.TABLE}}
 

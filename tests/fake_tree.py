@@ -26,7 +26,7 @@ def build(root: Path, n_per_year: int = 6000, seed: int = 7) -> dict:
     names = _names()
     use = pd.Series(rng.normal(0, 1, len(STATES)), index=STATES)  # latent state use
     clean, raw = root / "dados_limpos", root / "dados_brutos"
-    for p in ("brfss", "acs", "census", "meps"):
+    for p in ("brfss", "acs", "census", "meps", "nhanes"):
         (clean / p).mkdir(parents=True, exist_ok=True)
     (raw / "cms").mkdir(parents=True, exist_ok=True)
 
@@ -83,6 +83,22 @@ def build(root: Path, n_per_year: int = 6000, seed: int = 7) -> dict:
     for y in range(2020, 2026):
         pop[str(y)] = rng.uniform(4e5, 3e7, len(STATES)).round()
     pop.to_csv(clean / "census" / "adult_pop_state_2020_2025.csv", index=False)
+
+    # ---------------------------------------------------------------- NHANES (measured BMI, above self-report)
+    cycles = {"2011-2012": 2.0, "2013-2014": 2.0, "2015-2016": 2.0, "2017-2020": 3.2, "2021-2023": 2.0}
+    nh = []
+    for c, span in cycles.items():
+        n = 1500
+        nh.append(
+            pd.DataFrame(
+                {
+                    "cycle": c, "span": span, "sex": rng.choice(["Male", "Female"], n), "age": rng.integers(18, 85, n),
+                    "bmi": np.exp(rng.normal(np.log(28.5), 0.22, n)).round(1), "wt": rng.uniform(5e3, 5e4, n),
+                    "psu": rng.integers(1, 3, n), "strat": rng.integers(1, 15, n),
+                }
+            )
+        )  # fmt: skip
+    pd.concat(nh).to_csv(clean / "nhanes" / "nhanes_adults.csv.gz", index=False)
 
     # ---------------------------------------------------------------- MEPS
     ids = {23: [f"23{i:06d}" for i in range(3000)], 24: [f"24{i:06d}" for i in range(2500)]}

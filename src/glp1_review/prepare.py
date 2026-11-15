@@ -63,6 +63,12 @@ def brfss(src: Sources = DEFAULT, years=YEARS) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
+def nhanes(src: Sources = DEFAULT) -> pd.DataFrame:
+    """NHANES adults 18+ with measured BMI (scripts/nhanes_download.py), for the Q24 self-report correction.
+    External measured data, not a study outcome: not guarded."""
+    return pd.read_csv(src.clean / "nhanes" / "nhanes_adults.csv.gz")
+
+
 def h1_inputs(b: pd.DataFrame, src: Sources = DEFAULT) -> dict:
     """Per year: MRP cells, z (previous-year direct estimate), ACS frame, whether race enters."""
     direct = h1_mrp.direct_estimates(b)

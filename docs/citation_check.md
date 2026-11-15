@@ -43,13 +43,13 @@ number is not in the part available), **not verified** (only a press or secondar
 | C3 | Holm 1979, Scand J Stat 6(2):65-70 | Q22, manuscript | OpenAlex (JSTOR record) | verified (bibliographic) | Volume 6, pages 65-70, DOI 10.2307/4615733 |
 | C4 | Rubin 1987 (book) | Q19, manuscript | — | not verified | Standard reference |
 
-## D. Inputs of the two pending Q24 analyses
+## D. Inputs of the Q24 external and self-report analyses
 
 | # | Claim | Used in | Source checked | Status | Note |
 | --- | --- | --- | --- | --- | --- |
 | D1 | DeCleene et al. 2026 projection: 42.5% of adults in 2022 → 46.9% in 2035 (bias-corrected, ages ≥ 20) | Q24 external counterfactual | JAMA 335(11):975-985, PMID 41604179 (abstract) | verified | Implied average change ≈ +0.34 pp a year (linear between 2022 and 2035). **Implemented** in `sensitivity.q24_external` |
-| D2 | Ward et al. 2019 projection: 48.9% by 2030 (BRFSS 1993-2016, NHANES-corrected) | Q24 external counterfactual | NEJM 381(25):2440-2450, PMID 31851800 (abstract) | not reachable | Free to read on nejm.org (bronze open access per OpenAlex and Semantic Scholar), but the site refuses automated clients (HTTP 403 for the article, the PDF and the appendix); no copy in PubMed Central, Europe PMC or another open repository. The annual change needs the 2016 (or 2020) level in the full text |
-| D3 | NHANES-calibrated, quantile-specific correction of self-reported BMI (Ward et al. 2019) | Q24 self-report correction | abstract | partial | The details are in the supplementary appendix (same 403). NHANES public files (measured and self-reported height and weight) are reachable at wwwn.cdc.gov, so the correction can be implemented once the method is read |
+| D2 | Ward et al. 2019 projection: national adult obesity 35.1% (2010), 42.0% (2020, 95% CI 41.2-42.7), 48.9% (2030, 47.7-50.1); BRFSS 1993-2016 corrected with NHANES, adults 18+ | Q24 external counterfactual | NEJM 381(25):2440-2450 and supplementary appendix, Table 8.1.1 (full text, saved by the author on 15 Nov 2026) | verified | The article gives only the 2030 figures; the 2010-2030 path is in the appendix table. The gain is 6.9 pp in each decade, so a straight line between 2020 and 2030 (+0.69 pp a year, +2.07 pp over 2022-2025) follows the fitted curve closely. **Implemented** in `sensitivity.q24_external` |
+| D3 | NHANES-calibrated, quantile-specific correction of self-reported BMI (Ward et al. 2019) | Q24 self-report correction | Supplementary appendix, section 2 (full text) | verified | By sex and period (1993-1994, 1999-2004, 2005-2010, 2011-2016): measured minus reported BMI by quantile, smoothed with cubic splines, added to each BRFSS respondent at the weighted quantile of their reported BMI, plus N(0, 0.5) noise for rounding; checked with two-sample Kolmogorov-Smirnov tests. NHANES adults 18+, pregnant women excluded. The paper does not report the quantile grid or the spline smoothing. **Implemented** in `self_report.py` (choices in `decision_log.md`, section 7) |
 
 ## E. Exploratory analysis (Q25)
 
@@ -60,13 +60,8 @@ number is not in the part available), **not verified** (only a press or secondar
 
 ## What is left for the author to read
 
-Updated 15 November 2026, after a second search for open copies (OpenAlex, Semantic Scholar, Europe PMC, arXiv,
-NBER, PubMed Central):
-
-1. **Ward et al. (2019)**, the only reading left: the national level in 2016 (or the projected path to 2025) for the
-   external counterfactual (D2), and the self-report correction in the supplementary appendix (D3). The article is
-   free on nejm.org but refuses automated downloads; opening it in a browser and saving the PDF and the appendix
-   locally (not in the repository) is enough.
-2. Optional: Epic Research (B7), TFAH and CDC maps (B8), cited without numbers.
+Updated 15 November 2026: Ward et al. (2019) was read from the copy the author saved locally (article and
+supplementary appendix, kept outside the repository), which completes D2 and D3. Nothing that enters an analysis is
+left unread. Optional: Epic Research (B7), TFAH and CDC maps (B8), cited without numbers.
 
 No number that enters a pre-registered parameter (section A) disagreed with its source.

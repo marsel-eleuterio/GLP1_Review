@@ -37,8 +37,8 @@ on outcome microdata is a placeholder, filled after registration from the pipeli
 | `{{NC2.TEXT}}` | `h1.json`, `h2.csv` | `nc2_departures_pp`, row "NC2 placebo (2017-2018)" |
 | `{{VERDICT.OVERALL}}` | `verdicts.json` | `overall` |
 | `{{Q24.TABLE}}` | `q24.csv` | full table |
-| `{{Q24.EXTERNAL}}` | `q24.csv` | rows "external: observed change 2022-2025 (MRP)" and "external: observed minus projected change, DeCleene …" |
-| `{{Q24.WARD}}` | — | Ward et al. (2019) projection and self-report correction: result, or the reason they were not done |
+| `{{Q24.EXTERNAL}}` | `q24.csv` | rows "external: observed change 2022-2025 (MRP)" and "external: observed minus projected change, Ward …" and "…, DeCleene …" |
+| `{{Q24.SELFREPORT}}` | `q24.csv` | rows "self-report correction (NHANES-calibrated, …), direct series": D2025 with the corrected 2022 and 2025 levels, both variants |
 | `{{*.TEXT}}`, `{{RESULTS.ABSTRACT}}`, `{{CONCLUSIONS.ABSTRACT}}`, `{{DISCUSSION}}` | — | prose written after the results |
 
 ## Converting

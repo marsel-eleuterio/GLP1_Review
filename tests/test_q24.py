@@ -106,4 +106,7 @@ def test_external_projection_comparison():
     dec = next(r for k, r in rows.items() if "DeCleene" in k)
     assert dec["estimate"] == pytest.approx(-0.4 - 4.4 / 13 * 3, abs=0.05)
     assert dec["lo"] < dec["estimate"] < dec["hi"]
-    assert any("pending" in r["note"] for k, r in rows.items() if "Ward" in k)
+    ward = next(r for k, r in rows.items() if "Ward" in k)
+    assert sens.projected_change(2020, 42.0, 2030, 48.9) == pytest.approx(2.07)
+    assert ward["estimate"] == pytest.approx(-0.4 - 2.07, abs=0.05)
+    assert not any("pending" in r["note"] for r in rows.values())

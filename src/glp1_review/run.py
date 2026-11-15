@@ -327,6 +327,7 @@ def step_q24(b, src, cfg, out, r) -> dict:
     rows += sensitivity.q24_h1(b, m_imputations=cfg.mi_m, seed=cfg.seed)
     if "H1" in r:
         rows += sensitivity.q24_external(r["H1"]["_P"])
+    rows += sensitivity.q24_self_report(b, prepare.nhanes(src), seed=cfg.seed)
     rows += sensitivity.q24_h2(b, m_imputations=cfg.mi_m, n_boot=cfg.wcb_boot, seed=cfg.seed)
     rows += sensitivity.q24_h3(b, n_rep=cfg.q24_reps, m_imputations=cfg.mi_m, seed=cfg.seed)
     rows += sensitivity.q24_nc1(b, n_rep=cfg.q24_reps, seed=cfg.seed + 1)

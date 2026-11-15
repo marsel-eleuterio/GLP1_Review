@@ -121,4 +121,41 @@ The DeCleene et al. (2026) projection was verified in the original (42.5% of adu
 the Q24 comparison was implemented: the observed 2022-2025 change from the H1 posterior minus the projected change,
 taken as linear between the two published points (+0.34 pp a year, +1.02 pp over three years). The projection's own
 uncertainty is not propagated because its interval for the change is not published. The Ward et al. (2019)
-comparison and the self-report correction remain pending until the full text is read.
+comparison and the self-report correction remain pending until the full text is read (done: section 7).
+
+## 7. Ward et al. (2019): projection and self-report correction (15 November 2026)
+
+The author saved the article and its supplementary appendix locally (nejm.org refuses automated downloads; the
+files stay outside the repository, in the git-ignored `literatura/`).
+
+- **External counterfactual.** Appendix Table 8.1.1, US (National): 35.1% in 2010, 42.0% in 2020 and 48.9% in 2030
+  (adults 18+, BRFSS corrected with NHANES). The Q24 comparison uses 2020 and 2030, the two points that bracket
+  2022-2025: +0.69 pp a year, +2.07 pp over three years. The gain is 6.9 pp in each decade, so the straight line
+  follows the fitted multinomial-logistic curve closely. Ward's population (18+) matches ours; DeCleene's is 20+.
+- **Self-report correction.** Implemented as in the appendix (section 2): within sex and period, measured minus
+  reported BMI at each quantile, smoothed with a cubic spline over the quantiles, added to each respondent at the
+  weighted quantile of their reported BMI, plus normal noise (SD 0.5) for rounding; Kolmogorov-Smirnov distance
+  between corrected and measured distributions reported as a check. Choices where the paper is silent, or where our
+  years differ from theirs:
+  - **Periods.** BRFSS 2011-2016 with NHANES 2011-2012, 2013-2014 and 2015-2016 (Ward's own last period);
+    BRFSS 2017-2020 with NHANES 2017-March 2020; BRFSS 2021-2025 with NHANES August 2021-August 2023. No NHANES
+    data cover 2024-2025, so the 2021-2023 calibration is carried forward.
+  - **Variant added: one calibration fixed at 2011-2020**, applied to every year. Reason: the period-specific
+    calibration matches each period's BRFSS distribution to NHANES, so it imports the NHANES level of 2021-2023
+    into 2021-2025 and puts a step at each period boundary, two of which fall inside the 2011-2019 trend window.
+    The fixed calibration removes the level and shape of the bias and keeps all of the BRFSS change after 2020.
+    Both are reported; neither enters a verdict.
+  - **Quantile grid and smoothing.** Quantiles 0.01 to 0.99 in steps of 0.01 (weighted, linear interpolation as in
+    H3); cubic smoothing spline with the penalty chosen by generalized cross-validation
+    (`scipy.interpolate.make_smoothing_spline`).
+  - **Quantile of each respondent.** Weighted mid-point rank within sex and period, over the pooled years, so the
+    correction is one map from reported to corrected BMI for the whole period and changes within a period are kept.
+  - **NHANES.** Adults 18+ with measured BMI, pregnant women excluded, MEC examination weights; when cycles are
+    pooled, weights are scaled by the years each cycle covers (3.2 for 2017-March 2020). Downloaded by
+    `scripts/nhanes_download.py`, which reproduces the NCHS Data Brief 508 age-adjusted prevalence within 0.04 pp
+    for 2013-2014, 2015-2016, 2017-March 2020 and 2021-2023 (`dados_limpos/nhanes/nhanes_check.csv`).
+  - **Difference from Ward.** Pregnant BRFSS respondents are not excluded (the item is not in our extraction);
+    the corrected series feeds the H1 direct weighted series, not the MRP model.
+- The correction is applied only to BRFSS data read through the guarded loader; before registration it was tested
+  on simulated data only.
+

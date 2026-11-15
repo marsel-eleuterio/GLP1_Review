@@ -9,6 +9,7 @@
 | `brfss_wayback_download.py` | Alternative route: downloads the XPT zips from Internet Archive captures of cdc.gov |
 | `cms_glp1_download.py` | Medicare Part D by state (2019-2024), Medicaid SDUD GLP-1 rows (2021-2025) and Medicaid enrollment (H4) |
 | `census_download.py` | Adult population by state (Census, Vintage 2025) and ACS PUMS 2011-2024 post-stratification cells (H1) |
+| `nhanes_download.py` | NHANES measured BMI, 2011-2023 cycles, for the Q24 self-report correction; reproduces the published age-adjusted prevalence |
 | `run_analysis.py` | **After registration:** runs all pre-registered analyses and writes tables, draws, verdicts and a summary (`--quick` for a smoke test) |
 | `build_osf_package.py` | Assembles `resultados/osf/` and the zip to upload to OSF, with a sha256 manifest |
 | `run_pilot.py` | Re-runs the 12 November 2026 pilot into `resultados/piloto/` |
@@ -38,6 +39,7 @@ the "not found" and MISMATCH lines are expected, because it runs on synthetic fi
     # 4. CMS and Census (H4 and H1), then the OSF package
     uv run python scripts/cms_glp1_download.py     # dados_brutos/cms/ + provenance_cms.csv
     uv run python scripts/census_download.py       # dados_brutos/census/, dados_limpos/{census,acs}/ + provenance_census.csv
+    uv run python scripts/nhanes_download.py       # dados_brutos/nhanes/, dados_limpos/nhanes/ + provenance_nhanes.csv (15 Nov 2026)
     uv run python scripts/build_osf_package.py     # resultados/osf/ and resultados/osf_glp1_<date>.zip
 
 ## Why BRFSS was not downloaded from cdc.gov

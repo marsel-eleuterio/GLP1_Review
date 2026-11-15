@@ -38,6 +38,7 @@ FILES = [
     ("scripts/brfss_wayback_download.py", "3_code"),
     ("scripts/cms_glp1_download.py", "3_code"),
     ("scripts/census_download.py", "3_code"),
+    ("scripts/nhanes_download.py", "3_code"),
     ("scripts/README.md", "3_code"),
     ("src/glp1_review", "3_code/analysis"),
     ("tests", "3_code/analysis"),
@@ -48,11 +49,13 @@ FILES = [
     ("dados_brutos/cms/provenance_cms.csv", "4_data_provenance/cms"),
     ("dados_brutos/cms/medicaid_sdud_product_names.csv", "4_data_provenance/cms"),
     ("dados_brutos/census/provenance_census.csv", "4_data_provenance/census"),
+    ("dados_brutos/nhanes/provenance_nhanes.csv", "4_data_provenance/nhanes"),
     ("dados_limpos/brfss/validation_state_year.csv", "5_checks/brfss"),
     ("dados_limpos/brfss/validation_national.csv", "5_checks/brfss"),
     ("dados_limpos/brfss/coverage_report.csv", "5_checks/brfss"),
     ("dados_limpos/meps/checks.csv", "5_checks/meps"),
     ("dados_limpos/meps/inventory.txt", "5_checks/meps"),
+    ("dados_limpos/nhanes/nhanes_check.csv", "5_checks/nhanes"),
     ("LICENSE", "."),
     ("LICENSE-docs", "."),
     ("CITATION.cff", "."),
@@ -67,8 +70,8 @@ Assembled {date}. Code repository: https://github.com/marsel-eleuterio/GLP1_Revi
 | 1_documents | Study plan (PDF and Markdown, Portuguese), pre-registration answers (English, v2), literature review |
 | 2_pilot | Pilot of 12 Nov 2026 on aggregated data: code, inputs (dados/) and original outputs (saidas/) |
 | 3_code | Download and extraction scripts, environment (pyproject.toml, uv.lock); scripts/README.md documents every step. 3_code/analysis: the pre-registered analysis code (glp1_review package) and its tests, written and tested on simulated data before registration |
-| 4_data_provenance | SHA-256 manifests and provenance of every downloaded file (MEPS, BRFSS, CMS, Census/ACS) |
-| 5_checks | Count-only outputs: BRFSS validation against CDC aggregates and variable coverage; MEPS codebook checks and case inventory |
+| 4_data_provenance | SHA-256 manifests and provenance of every downloaded file (MEPS, BRFSS, CMS, Census/ACS, NHANES) |
+| 5_checks | Count-only outputs: BRFSS validation against CDC aggregates and variable coverage; MEPS codebook checks and case inventory; NHANES reproduction of the published age-adjusted obesity prevalence |
 
 No microdata and no outcome analysis are included. Before registration the microdata were used only to reproduce
 published aggregates and to count cases (pre-registration Q18, item 6). MANIFEST_sha256.csv lists every file.
