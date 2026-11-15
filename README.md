@@ -35,6 +35,7 @@ GLP1_Review/
 ├── docs/              Study plan, OSF pre-registration draft, literature review (.md + .pdf)
 ├── piloto/            Pilot of 2026-11-12: code, aggregated input data (dados/) and original outputs (saidas/)
 ├── dados_externos/    Published estimates (Gallup, NHANES) and source design table, each number sourced
+├── paper/             Preprint skeleton (English, pandoc Markdown) with result placeholders
 ├── scripts/           Data download/extraction scripts and runners
 ├── src/glp1_review/   Analysis package (shared paths, future models)
 ├── tests/             Pytest suite (pilot reproducibility)
