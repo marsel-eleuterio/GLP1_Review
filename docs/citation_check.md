@@ -38,9 +38,9 @@ number is not in the part available), **not verified** (only a press or secondar
 
 | # | Claim | Used in | Source checked | Status | Note |
 | --- | --- | --- | --- | --- | --- |
-| C1 | With a continuous treatment and no untreated group only comparisons across doses are identified; they are causal only under stronger ("strong") parallel trends | Q4, Q19 (H4) | Callaway, Goodman-Bacon, Sant'Anna 2024, NBER w32117 (abstract) | partial | The abstract says comparisons across doses face selection bias "not ruled out by the parallel trends assumption" and need "typically stronger" assumptions. The term "strong parallel trends" and the no-untreated-group point must be checked in the paper |
+| C1 | With a continuous treatment and no untreated group only comparisons across doses are identified; they are causal only under stronger ("strong") parallel trends | Q4, Q19 (H4) | Callaway, Goodman-Bacon, Sant'Anna, arXiv 2107.02637 (draft of 31 Dec 2025; full text) | verified | Section 3: with no untreated units, under parallel trends E[ΔY\|D=d] − E[ΔY\|D=d_L] = ATT(d\|d) − ATT(d_L\|d_L), which mixes the causal response with selection bias; "continuous variation in the dose can be used to learn about causal effects even if there is no untreated comparison group, but interpreting these results as causal effects of the treatments requires strengthening Assumption PT". Their name for the stronger assumption is "strong parallel trends" |
 | C2 | DiNardo, Fortin, Lemieux 1996; Firpo, Fortin, Lemieux 2009; Park, Gelman, Bafumi 2004; Rambachan, Roth 2023; Rao, Wu 1988; Lakens 2017; Van den Akker et al. 2021; Webb 2023 | Q19, Q22-Q24, manuscript | Crossref | verified (bibliographic) | Details corrected in `paper/references.bib` |
-| C3 | Holm 1979, Scand J Stat 6(2):65-70 | Q22, manuscript | Crossref (not indexed) | not verified | Check on JSTOR |
+| C3 | Holm 1979, Scand J Stat 6(2):65-70 | Q22, manuscript | OpenAlex (JSTOR record) | verified (bibliographic) | Volume 6, pages 65-70, DOI 10.2307/4615733 |
 | C4 | Rubin 1987 (book) | Q19, manuscript | — | not verified | Standard reference |
 
 ## D. Inputs of the two pending Q24 analyses
@@ -48,22 +48,25 @@ number is not in the part available), **not verified** (only a press or secondar
 | # | Claim | Used in | Source checked | Status | Note |
 | --- | --- | --- | --- | --- | --- |
 | D1 | DeCleene et al. 2026 projection: 42.5% of adults in 2022 → 46.9% in 2035 (bias-corrected, ages ≥ 20) | Q24 external counterfactual | JAMA 335(11):975-985, PMID 41604179 (abstract) | verified | Implied average change ≈ +0.34 pp a year (linear between 2022 and 2035). **Implemented** in `sensitivity.q24_external` |
-| D2 | Ward et al. 2019 projection: 48.9% by 2030 (BRFSS 1993-2016, NHANES-corrected) | Q24 external counterfactual | NEJM 381(25):2440-2450, PMID 31851800 (abstract) | partial | The annual change needs the 2016 (or 2020) level, which is only in the full text (not in PMC) |
-| D3 | NHANES-calibrated, quantile-specific correction of self-reported BMI (Ward et al. 2019) | Q24 self-report correction | abstract | partial | Method in the supplementary appendix; reproducing it also needs NHANES microdata with self-reported and measured height and weight |
+| D2 | Ward et al. 2019 projection: 48.9% by 2030 (BRFSS 1993-2016, NHANES-corrected) | Q24 external counterfactual | NEJM 381(25):2440-2450, PMID 31851800 (abstract) | not reachable | Free to read on nejm.org (bronze open access per OpenAlex and Semantic Scholar), but the site refuses automated clients (HTTP 403 for the article, the PDF and the appendix); no copy in PubMed Central, Europe PMC or another open repository. The annual change needs the 2016 (or 2020) level in the full text |
+| D3 | NHANES-calibrated, quantile-specific correction of self-reported BMI (Ward et al. 2019) | Q24 self-report correction | abstract | partial | The details are in the supplementary appendix (same 403). NHANES public files (measured and self-reported height and weight) are reachable at wwwn.cdc.gov, so the correction can be implemented once the method is read |
 
 ## E. Exploratory analysis (Q25)
 
 | # | Claim | Used in | Source checked | Status | Note |
 | --- | --- | --- | --- | --- | --- |
-| E1 | State dates of Medicaid coverage of GLP-1s for obesity | Q25 | Wing et al. 2026, NBER w34949 (abstract): "Medicaid Coverage for Obesity Medications: Utilization and Net-of-Rebate Spending" | partial | 17 states ever covered by mid-2025; the dates are in the paper, not the abstract |
-| E2 | Same | Q25 | Khanna, Wang, Venkataramani 2026, JAMA Health Forum 7(9):e263353, PMID 42789287 | partial | Abstract reached; dates not in it |
+| E1 | State dates of Medicaid coverage of GLP-1s for obesity | Q25 | Wing et al. 2026, NBER w34949 (full text, Table 2) | verified | 17 states, first coverage from MI (2022-Q1) to TN and UT (2025-Q3), with the quarter each drug was added and later terminations and restrictions; saved in `dados_externos/medicaid_glp1_obesity_coverage.csv` |
+| E2 | Same | Q25 | Khanna, Wang, Venkataramani 2026, JAMA Health Forum 7(9):e263353, PMC13615463 (full text) | verified (consistent) | Treated states (CA, PA, MN, MA, MI, MS, NH, VA, RI) agree with Wing et al.; the paper classifies them by prior-authorization stringency and discusses why its substitution findings differ from Wing et al. |
 
 ## What is left for the author to read
 
-1. Callaway, Goodman-Bacon and Sant'Anna (2024), sections on continuous treatments without an untreated group (C1).
-2. Ward et al. (2019): the 2016-2020 national level and the self-report correction in the appendix (D2, D3).
-3. Wing et al. (2026) or Khanna et al. (2026): the state coverage dates (E1, E2), only for the exploratory analysis.
-4. Holm (1979) on JSTOR (C3).
-5. Optional: Epic Research (B7), TFAH and CDC maps (B8), cited without numbers.
+Updated 15 November 2026, after a second search for open copies (OpenAlex, Semantic Scholar, Europe PMC, arXiv,
+NBER, PubMed Central):
+
+1. **Ward et al. (2019)**, the only reading left: the national level in 2016 (or the projected path to 2025) for the
+   external counterfactual (D2), and the self-report correction in the supplementary appendix (D3). The article is
+   free on nejm.org but refuses automated downloads; opening it in a browser and saving the PDF and the appendix
+   locally (not in the repository) is enough.
+2. Optional: Epic Research (B7), TFAH and CDC maps (B8), cited without numbers.
 
 No number that enters a pre-registered parameter (section A) disagreed with its source.
