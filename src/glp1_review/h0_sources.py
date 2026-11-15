@@ -136,7 +136,14 @@ def age_change_table(brfss_groups: pd.DataFrame) -> pd.DataFrame:
 
 # ------------------------------------------------------------------------------- figure
 def plot_published_series(path: Path) -> Path:
-    """Static figure (paper): BRFSS lines, Gallup points, NHANES cycle segments with 95% CI. Light theme."""
+    """Static two-panel figure (paper, light theme).
+
+    A: long-run series - BRFSS (CDC published, annual) and NHANES (measured; point at the middle of each cycle,
+       95% CI whisker, cycle written below).
+    B: change from 2022 to 2025 - one row per source (Gallup; BRFSS with a constant state mix; BRFSS as published),
+       hollow dot = 2022, filled dot = 2025, arrow between them, change written at the right; the measured NHANES
+       level of Aug 2021-Aug 2023 as a reference line.
+    """
     import matplotlib
     import matplotlib.ticker
 
@@ -146,111 +153,204 @@ def plot_published_series(path: Path) -> Path:
 
     t = national_table()
     nh = nhanes_cycles()
-    fig, ax = plt.subplots(figsize=(8.0, 4.6), dpi=200)
+    blue, orange, aqua = COLORS["BRFSS"], COLORS["Gallup"], COLORS["NHANES"]
+
+    fig = plt.figure(figsize=(11.0, 5.4), dpi=200)
     fig.patch.set_facecolor(SURFACE)
-    ax.set_facecolor(SURFACE)
+    gs = fig.add_gridspec(
+        1, 2, width_ratios=[1.25, 1], left=0.07, right=0.93, top=0.76, bottom=0.17, wspace=0.42
+    )
+    axA, axB = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
 
+    def style(ax):
+        ax.set_facecolor(SURFACE)
+        for s in ("top", "right", "left"):
+            ax.spines[s].set_visible(False)
+        ax.spines["bottom"].set_color(GRID)
+        ax.tick_params(length=0, labelsize=8.5, colors=INK2)
+
+    # ------------------------------------------------------------------ A: long-run series
+    style(axA)
+    axA.axvspan(2021.5, 2025.5, color="#f0efec", lw=0, zorder=0)
+    axA.text(2023.5, 45.6, "2022-2025 and\nGallup: panel B", ha="center", va="top", fontsize=7.5, color=INK2)
     b = t["brfss_cdc"].dropna()
-    ax.plot(
-        b.index, b.values, color=COLORS["BRFSS"], lw=2, marker="o", ms=4, solid_capstyle="round", zorder=3
-    )
-    a = t["brfss_composition_adjusted"].dropna()
-    ax.plot(a.index, a.values, color=COLORS["BRFSS"], lw=1.4, ls=(0, (4, 3)), zorder=2)
-    g = t["gallup"].dropna()
-    ax.plot(g.index, g.values, color=COLORS["Gallup"], lw=0, marker="s", ms=8, mec=SURFACE, mew=2, zorder=4)
-    fieldwork = {
-        "2017-2020": (2017.0, 2020.2),
-        "2021-2023": (2021.6, 2023.7),
-    }  # to Mar 2020; Aug 2021-Aug 2023
+    axA.plot(b.index, b.values, color=blue, lw=2, zorder=3)
+    axA.plot(b.index, b.values, ls="none", marker="o", ms=5, color=blue, mec=SURFACE, mew=1.5, zorder=4)
+    axA.text(2013.2, 26.3, "BRFSS\ntelephone, self-reported, 18+", fontsize=8.5, color=INK, va="bottom")
+    centres = {"2013-2014": 2013.5, "2015-2016": 2015.5, "2017-2020": 2018.1, "2021-2023": 2022.1}
+    short = {
+        "2013-2014": "2013-14",
+        "2015-2016": "2015-16",
+        "2017-2020": "2017-\nMar 20",
+        "2021-2023": "Aug 21-\nAug 23",
+    }
     for _, r in nh.iterrows():
-        x0, x1 = fieldwork.get(r["period"], (r["start"], r["end"] + 0.9))
-        ax.fill_between(
-            [x0, x1],
-            r["value_pct"] - 1.96 * r["se"],
-            r["value_pct"] + 1.96 * r["se"],
-            color=COLORS["NHANES"],
-            alpha=0.15,
-            lw=0,
-            zorder=1,
-        )
-        ax.plot(
-            [x0, x1], [r["value_pct"]] * 2, color=COLORS["NHANES"], lw=2, solid_capstyle="round", zorder=2
-        )
+        x, y, h = centres[r["period"]], r["value_pct"], 1.96 * r["se"]
+        axA.plot([x, x], [y - h, y + h], color=aqua, lw=2, solid_capstyle="round", zorder=3)
+        axA.plot(x, y, marker="D", ms=7, color=aqua, mec=SURFACE, mew=1.5, zorder=4)
+        axA.text(x, y - h - 0.35, short[r["period"]], ha="center", va="top", fontsize=7, color=INK2)
+    axA.text(
+        2011.0, 44.6, "NHANES\nmeasured, 20+, age-adjusted\n(bars: 95% CI)", fontsize=8.5, color=INK, va="top"
+    )
+    axA.set_xlim(2010.5, 2025.8)
+    axA.set_ylim(25, 46)
+    axA.set_xticks(range(2011, 2026, 2))
+    axA.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(5))
+    axA.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%d"))
+    axA.yaxis.grid(True, color=GRID, lw=0.8)
+    axA.set_axisbelow(True)
+    axA.set_ylabel("Adults with obesity (%)", fontsize=8.5, color=INK2)
+    axA.set_title("A. Long-run series", loc="left", fontsize=10, color=INK, pad=8)
 
-    # direct labels (identity never by color alone)
-    ax.annotate(
-        "BRFSS (CDC, self-report, phone)",
-        (b.index[-1], b.values[-1]),
-        xytext=(6, -12),
-        textcoords="offset points",
-        color=INK,
-        fontsize=8.5,
-    )
-    ax.annotate(
-        "BRFSS, state composition fixed",
-        (a.index[-1], a.values[-1]),
-        xytext=(6, -24),
-        textcoords="offset points",
-        color=INK2,
-        fontsize=8,
-    )
-    ax.annotate(
-        "Gallup (self-report, web panel)",
-        (g.index[-1], g.values[-1]),
-        xytext=(8, 4),
-        textcoords="offset points",
-        color=INK,
-        fontsize=8.5,
-    )
-    ax.annotate(
-        f"{g.loc[2022]:.1f}",
-        (2022, g.loc[2022]),
-        xytext=(-24, -3),
-        textcoords="offset points",
-        color=INK2,
-        fontsize=7.5,
-    )
-    last = nh.iloc[-1]
-    ax.annotate(
-        "NHANES (measured, age 20+, age-adjusted)",
-        (last["start"], last["value_pct"] + 1.96 * last["se"]),
-        xytext=(0, 4),
-        textcoords="offset points",
-        color=INK,
-        fontsize=8.5,
-    )
-
-    ax.set_xlim(2010.5, 2029.5)
-    ax.set_ylim(25, 48)
-    ax.set_xticks(range(2011, 2027, 1))
-    ax.set_xticklabels([str(y) if y % 2 == 1 else "" for y in range(2011, 2027)], fontsize=8, color=INK2)
-    ax.tick_params(axis="y", labelsize=8, colors=INK2, length=0)
-    ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%d"))
-    handles = [
-        Line2D([], [], color=COLORS["BRFSS"], lw=2, marker="o", ms=4, label="BRFSS"),
-        Line2D([], [], color=COLORS["BRFSS"], lw=1.4, ls=(0, (4, 3)), label="BRFSS, state composition fixed"),
-        Line2D([], [], color=COLORS["Gallup"], lw=0, marker="s", ms=7, label="Gallup"),
-        Line2D([], [], color=COLORS["NHANES"], lw=2, label="NHANES (band = 95% CI)"),
+    # ------------------------------------------------------------------ B: change 2022 -> 2025
+    style(axB)
+    adj = t["brfss_composition_adjusted"]
+    rows = [
+        ("Gallup\nweb panel, self-reported", orange, t.loc[2022, "gallup"], t.loc[2025, "gallup"]),
+        ("BRFSS\nadjusted for missing states", blue, adj.loc[2022], adj.loc[2025]),
+        (
+            "BRFSS as published\n(2025 omits CA, MS, NV)",
+            blue,
+            t.loc[2022, "brfss_cdc"],
+            t.loc[2025, "brfss_cdc"],
+        ),
     ]
-    ax.legend(handles=handles, loc="upper left", fontsize=7.5, frameon=False, ncol=2, labelcolor=INK2)
-    ax.tick_params(axis="x", length=0)
-    ax.yaxis.grid(True, color=GRID, lw=0.8)
-    ax.set_axisbelow(True)
-    for s in ("top", "right", "left"):
-        ax.spines[s].set_visible(False)
-    ax.spines["bottom"].set_color(GRID)
-    ax.set_ylabel("Adults with obesity (%)", fontsize=9, color=INK2)
-    ax.set_title(
-        "US adult obesity by source: published estimates", loc="left", fontsize=11, color=INK, pad=10
+    ys = [2, 1, 0]
+    nh_last = nh.iloc[-1]["value_pct"]
+    axB.axvline(nh_last, color=aqua, lw=1.2, ls=(0, (2, 2)), zorder=1)
+    axB.text(
+        nh_last - 0.15,
+        3.1,
+        f"NHANES Aug 2021-Aug 2023\n(measured): {nh_last:.1f}",
+        ha="right",
+        va="top",
+        fontsize=7.5,
+        color=INK2,
+    )
+    for (_label, col, v0, v1), y in zip(rows, ys, strict=True):
+        if abs(v1 - v0) >= 0.6:  # the arrow is only visible when the dots do not overlap
+            axB.annotate(
+                "",
+                xy=(v1, y),
+                xytext=(v0, y),
+                arrowprops={
+                    "arrowstyle": "-|>",
+                    "color": col,
+                    "lw": 2,
+                    "shrinkA": 5,
+                    "shrinkB": 5,
+                    "mutation_scale": 12,
+                },
+                zorder=3,
+            )
+        axB.plot(v0, y, marker="o", ms=9, mfc=SURFACE, mec=col, mew=2, zorder=4)
+        axB.plot(v1, y, marker="o", ms=9, color=col, mec=SURFACE, mew=1.5, zorder=4)
+        if abs(v1 - v0) > 1.0:  # far apart: labels above the dots
+            for v in (v0, v1):
+                axB.annotate(
+                    f"{v:.1f}",
+                    (v, y),
+                    xytext=(0, 10),
+                    textcoords="offset points",
+                    ha="center",
+                    fontsize=8,
+                    color=INK2,
+                )
+        else:  # close together: smaller value labelled on the left, larger on the right
+            lo, hi = sorted((v0, v1))
+            axB.annotate(
+                f"{lo:.1f}",
+                (lo, y),
+                xytext=(-9, 0),
+                textcoords="offset points",
+                ha="right",
+                va="center",
+                fontsize=8,
+                color=INK2,
+            )
+            axB.annotate(
+                f"{hi:.1f}",
+                (hi, y),
+                xytext=(9, 0),
+                textcoords="offset points",
+                ha="left",
+                va="center",
+                fontsize=8,
+                color=INK2,
+            )
+        d = round(v1, 1) - round(v0, 1)
+        axB.annotate(
+            f"{d:+.1f}".replace("-", "−"),
+            xy=(1.0, y),
+            xycoords=("axes fraction", "data"),
+            xytext=(8, 0),
+            textcoords="offset points",
+            va="center",
+            fontsize=10,
+            color=INK,
+            fontweight="bold",
+        )
+    axB.annotate(
+        "change\n(pts)",
+        xy=(1.0, 2.55),
+        xycoords=("axes fraction", "data"),
+        xytext=(8, 0),
+        textcoords="offset points",
+        va="bottom",
+        fontsize=7.5,
+        color=INK2,
+    )
+    axB.set_yticks(ys)
+    axB.set_yticklabels([r[0] for r in rows], fontsize=8.5, color=INK)
+    axB.set_ylim(-0.6, 3.2)
+    axB.set_xlim(31.5, 42)
+    axB.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(2))
+    axB.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%d"))
+    axB.xaxis.grid(True, color=GRID, lw=0.8)
+    axB.set_axisbelow(True)
+    axB.set_xlabel("Adults with obesity (%)", fontsize=8.5, color=INK2)
+    axB.set_title("B. 2022 to 2025: level and change", loc="left", fontsize=10, color=INK, pad=8)
+    handles = [
+        Line2D([], [], ls="none", marker="o", ms=8, mfc=SURFACE, mec=INK2, mew=2, label="2022"),
+        Line2D([], [], ls="none", marker="o", ms=8, color=INK2, label="2025"),
+    ]
+    axB.legend(
+        handles=handles,
+        loc="upper left",
+        ncol=2,
+        frameon=False,
+        fontsize=8,
+        labelcolor=INK2,
+        handletextpad=0.3,
+        columnspacing=1.0,
+        borderaxespad=0,
+    )
+
+    # ------------------------------------------------------------------ titles and source
+    fig.text(
+        0.06,
+        0.955,
+        "Self-reported obesity fell 2.9 points in Gallup from 2022 to 2025 but stayed flat in BRFSS",
+        fontsize=12.5,
+        color=INK,
+        va="top",
     )
     fig.text(
-        0.01,
-        0.01,
-        "Sources: CDC BRFSS open data (hn4x-zwk7); Gallup (Oct 2025, Jul 2026); NCHS Data Brief 508. NHANES band = 95% CI.",
+        0.06,
+        0.905,
+        "Adults with obesity (BMI ≥ 30), %, published estimates. Levels differ by method: NHANES measures height and weight;\nBRFSS and Gallup use self-reports, which run lower. The comparison of interest is the change after 2022 (panel B).",
+        fontsize=8.5,
+        color=INK2,
+        va="top",
+    )
+    fig.text(
+        0.06,
+        0.02,
+        "Sources: CDC BRFSS open data (hn4x-zwk7); Gallup (Oct 2025; 2026 estimate after a weighting revision: 36.8); NCHS Data Brief 508.\n"
+        "BRFSS adjusted for missing states: state and year fixed effects on the published state estimates, weighted by 2024 adult population (pilot).",
         fontsize=7,
         color=INK2,
     )
-    fig.tight_layout(rect=(0, 0.03, 1, 1))
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, facecolor=SURFACE)
     plt.close(fig)

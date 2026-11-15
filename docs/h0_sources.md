@@ -9,7 +9,14 @@ its source, location in the text or a table, derivation and whether it was verif
 [dados_externos/source_design.csv](../dados_externos/source_design.csv). To regenerate the figure:
 `uv run python -c "from pathlib import Path; from glp1_review import h0_sources as h0; h0.plot_published_series(Path('docs/figures/h0_published_series.png'))"`.
 
-![US adult obesity by source](figures/h0_published_series.png)
+![US adult obesity by source: long-run series and change from 2022 to 2025](figures/h0_published_series.png)
+
+*Figure H0.* **Panel A:** long-run published series. BRFSS (CDC, annual, self-reported, 18+) and NHANES (measured,
+20+, age-adjusted; a diamond at the middle of each two-year cycle, with its 95% confidence interval and the cycle
+written below). Gallup has no published long-run series and appears only in panel B. **Panel B:** level in 2022
+(hollow dot) and 2025 (filled dot) for each source, with the change in percentage points at the right. BRFSS is
+shown as published (the 2025 value omits California, Mississippi and Nevada) and adjusted for missing states; the
+dotted line is the measured NHANES level for August 2021-August 2023, the most recent available.
 
 ## National series
 
