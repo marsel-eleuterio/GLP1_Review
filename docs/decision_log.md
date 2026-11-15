@@ -102,3 +102,15 @@ Found while testing the code on simulated data (`tests/test_h2.py`):
 - **H4 permutation test:** two-sided on |β*|.
 - **Rambachan-Roth bounds:** conservative version in Python (worst-case bias under ΔSD(M) added to the 95% CI),
   declared in Q19; the exact fixed-length interval (HonestDiD, R only) can only be narrower.
+
+## 5. H5 upper national rate and Q24 coverage (14 November 2026)
+
+- **H5 upper bound of national use:** 12% (KFF poll, 27 October-2 November 2025: adults currently taking a GLP-1
+  for any purpose), verified against the source. Gallup's 12.4% refers to weight-loss use only; MEPS, the lower
+  bound, counts any purpose, so the KFF figure is the consistent upper bound. Confirmed by the author.
+- **Q24 sensitivity analyses** are implemented in `src/glp1_review/sensitivity.py` and run by the `q24` step of the
+  pipeline. Interview mode uses `QSTVER` (10-13 landline, 20-23 cell) and the BMI imputation uses `GENHLTH`; both
+  were added to the extraction by `scripts/brfss_extract_parquet.py`, leaving `brfss_microdata.py` unchanged.
+  Two Q24 items wait for the reading of the original articles, because they need numbers from them: the external
+  counterfactuals (Ward et al. 2019; DeCleene et al. 2026) and the NHANES-calibrated self-report correction
+  (Ward et al. 2019).

@@ -132,23 +132,34 @@ def bootstrap(P: Prepared, n_rep: int, rng, stat_fn, chunk: int = 25) -> np.ndar
     return np.array(reps)
 
 
-def _contrast(qseries: np.ndarray, years, qs, rng, predictive: bool) -> float:
-    i90, i50 = qs.index(0.90), qs.index(0.50)
-    d90 = trend.departures(qseries[i90], years, scale="identity", predictive=predictive, rng=rng).draws[0]
+def _contrast(qseries: np.ndarray, years, qs, rng, predictive: bool, upper: float = 0.90) -> float:
+    iu, i50 = qs.index(upper), qs.index(0.50)
+    du = trend.departures(qseries[iu], years, scale="identity", predictive=predictive, rng=rng).draws[0]
     d50 = trend.departures(qseries[i50], years, scale="identity", predictive=predictive, rng=rng).draws[0]
-    return float(np.mean(d90 - d50))
+    return float(np.mean(du - d50))
 
 
-def fit_h3(df: pd.DataFrame, n_rep: int = 500, seed: int = 20261114, qs=QUANTILES) -> tuple[Estimate, dict]:
-    """df: year, bmi, wt, strat, psu, age_group, sex, race, educ."""
+def fit_h3(
+    df: pd.DataFrame,
+    n_rep: int = 500,
+    seed: int = 20261114,
+    qs=QUANTILES,
+    upper: float = 0.90,
+    ref_years=REF_YEARS,
+) -> tuple[Estimate, dict]:
+    """df: year, bmi, wt, strat, psu, age_group, sex, race, educ. `upper` and `ref_years` are the Q24 variants
+    (75th or 95th percentile; reweighting to the 2011 or 2022 composition)."""
     qs = list(qs)
-    P = prepare(df, "bmi")
+    P = prepare(df, "bmi", ref_years=ref_years)
     years = P.years
     q_obs = P.series(P.dfl(P.w), "quantile", qs)
     rng = np.random.default_rng(seed)
-    c_hat = _contrast(q_obs, years, qs, rng, predictive=False)
+    c_hat = _contrast(q_obs, years, qs, rng, predictive=False, upper=upper)
     reps = bootstrap(
-        P, n_rep, rng, lambda w: _contrast(P.series(w, "quantile", qs), years, qs, rng, predictive=True)
+        P,
+        n_rep,
+        rng,
+        lambda w: _contrast(P.series(w, "quantile", qs), years, qs, rng, predictive=True, upper=upper),
     )
     deps = {
         q: trend.departures(q_obs[i], years, scale="identity", predictive=False).draws[0]
@@ -183,3 +194,53 @@ def fit_nc1(
     est = float(np.mean(list(per_sex.values())))
     reps = np.mean(np.vstack(reps_all), axis=0)
     return Estimate(est, float(np.std(reps, ddof=1))), {"by_sex": per_sex, "replicates": reps}
+
+
+def rif_contrast(df: pd.DataFrame, upper: float = 0.90, ref_years=REF_YEARS) -> float:
+    """Q24: RIF regression instead of reweighting. For each year and q in {0.50, upper}, the recentered influence
+    function RIF = q_t + (tau - 1[BMI <= q_t]) / f_t(q_t) (Gaussian kernel density, Silverman bandwidth) is regressed
+    by WLS on year indicators and the cell covariates (age group x sex, race and ethnicity, education); the adjusted
+    quantile of year t is its year effect evaluated at the reference-period covariate means. The series then go
+    through the trend procedure (point estimate, predictive mean)."""
+    d = df[df["bmi"].notna() & df["wt"].notna() & (df["wt"] > 0)].copy()
+    years = sorted(d["year"].unique())
+    cov = pd.concat(
+        [
+            pd.get_dummies(
+                d["age_group"].astype(str) + "_" + d["sex"].astype(str),
+                prefix="as",
+                drop_first=True,
+                dtype=float,
+            ),
+            pd.get_dummies(d["race"].astype(str), prefix="r", drop_first=True, dtype=float),
+            pd.get_dummies(d["educ"].astype(str), prefix="e", drop_first=True, dtype=float),
+        ],
+        axis=1,
+    )
+    yr = pd.get_dummies(d["year"], prefix="y", dtype=float)
+    X = pd.concat([yr, cov], axis=1).to_numpy()
+    w = d["wt"].to_numpy(float)
+    xbar_ref = (
+        cov[d["year"].isin(ref_years).to_numpy()].mul(w[d["year"].isin(ref_years).to_numpy()], axis=0).sum()
+        / w[d["year"].isin(ref_years).to_numpy()].sum()
+    )
+    series = {}
+    for tau in (0.50, upper):
+        rif = np.empty(len(d))
+        for y in years:
+            m = (d["year"] == y).to_numpy()
+            x, ww = d.loc[m, "bmi"].to_numpy(float), w[m]
+            o = np.argsort(x)
+            cw = np.cumsum(ww[o])
+            q = float(np.interp(tau, (cw - 0.5 * ww[o]) / cw[-1], x[o]))
+            sd = np.sqrt(np.cov(x, aweights=ww))
+            h = 1.06 * sd * len(x) ** (-0.2)
+            f = float(np.sum(ww * np.exp(-0.5 * ((x - q) / h) ** 2)) / (np.sum(ww) * h * np.sqrt(2 * np.pi)))
+            rif[m] = q + (tau - (x <= q)) / f
+        sw = np.sqrt(w)
+        beta = np.linalg.lstsq(X * sw[:, None], rif * sw, rcond=None)[0]
+        n_y = yr.shape[1]
+        series[tau] = beta[:n_y] + float(beta[n_y:] @ xbar_ref.to_numpy())
+    du = trend.departures(series[upper], years, scale="identity", predictive=False).draws[0]
+    d50 = trend.departures(series[0.50], years, scale="identity", predictive=False).draws[0]
+    return float(np.mean(du - d50))

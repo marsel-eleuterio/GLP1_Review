@@ -53,4 +53,5 @@ ignore = ["E501"]  # line length is enforced by `ruff format`; docstrings and Ma
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra -m 'not slow'"
+markers = ["slow: end-to-end pipeline runs on the simulated tree (about 10 minutes); run with -m slow"]

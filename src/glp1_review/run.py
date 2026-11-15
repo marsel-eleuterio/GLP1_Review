@@ -25,6 +25,7 @@ from glp1_review import (
     h5_microsim,
     h6_panel,
     prepare,
+    sensitivity,
     trend,
 )
 from glp1_review.data import DIVISION
@@ -49,6 +50,9 @@ class Config:
     h4_factor_sampler: dict = field(default_factory=dict)
     h5_draws: int = 10_000
     published_rate_2025: float = 0.12  # KFF, Nov 2025: 12% of adults currently taking a GLP-1 (any purpose)
+    q24_reps: int = 200  # bootstrap replicates of each H3/NC1 sensitivity variant
+    mi_m: int = 20  # imputations of BMI (Q14)
+    wcb_boot: int = 9_999  # wild cluster bootstrap replications (H2)
     seed: int = 20261114
 
     @classmethod
@@ -62,6 +66,9 @@ class Config:
             h4_factor_draws=10,
             h4_factor_sampler={"draws": 200, "tune": 200, "chains": 2},
             h5_draws=200,
+            q24_reps=4,
+            mi_m=2,
+            wcb_boot=99,
         )
 
 
@@ -218,7 +225,7 @@ def step_h4(b, src, cfg, out) -> dict:
     _write(out, "h4_exposure", X.assign(E=E))
     _write(out, "h4_event_betas", es.beta.rename("beta").to_frame())
     _write(out, "h4", res)
-    return res
+    return {**res, "_X": X, "_E": E, "_Y": Y}  # kept in memory for the Q24 step, not written
 
 
 def step_h6(src, out) -> dict:
@@ -314,7 +321,30 @@ def summary_markdown(v: dict, r: dict, cfg: Config) -> str:
     return "\n".join(lines) + "\n"
 
 
-STEPS = ("h1", "h0", "h2", "h3", "nc1", "h4", "h6", "h5")
+def step_q24(b, src, cfg, out, r) -> dict:
+    """Q24 sensitivity analyses (sensitivity.py); results are reported in full whatever their direction."""
+    rows = []
+    rows += sensitivity.q24_h1(b, m_imputations=cfg.mi_m, seed=cfg.seed)
+    rows += sensitivity.q24_h2(b, m_imputations=cfg.mi_m, n_boot=cfg.wcb_boot, seed=cfg.seed)
+    rows += sensitivity.q24_h3(b, n_rep=cfg.q24_reps, m_imputations=cfg.mi_m, seed=cfg.seed)
+    rows += sensitivity.q24_nc1(b, n_rep=cfg.q24_reps, seed=cfg.seed + 1)
+    if "H4" in r:
+        h = r["H4"]
+        pop = pd.read_csv(src.clean / "census" / "adult_pop_state_2020_2025.csv")
+        adults = pop.set_index(pop["state"].map(prepare._name_to_abbr(src)))["2024"]
+        rows += sensitivity.q24_h4(b, h["_X"], h["_E"], h["_Y"], adults, n_perm=cfg.h4_perm, seed=cfg.seed)
+    if "H1" in r:
+        _, lo, hi = r["H1"]["D2025_pp"]
+        rows += sensitivity.q24_h5(
+            prepare.h5_inputs(b, src), cfg.published_rate_2025, (lo, hi), n_draws=cfg.h5_draws, seed=cfg.seed
+        )
+    rows += sensitivity.q24_h6(prepare.h6_frame(src), prepare.h6_frame(src, all_rounds=False))
+    tab = pd.DataFrame(rows)
+    _write(out, "q24", tab.set_index(["hypothesis", "variant"]))
+    return {"n_rows": len(tab)}
+
+
+STEPS = ("h1", "h0", "h2", "h3", "nc1", "h4", "h6", "h5", "q24")
 
 
 def run(out: Path, cfg: Config | None = None, steps=STEPS, src: prepare.Sources = prepare.DEFAULT) -> dict:
@@ -339,6 +369,8 @@ def run(out: Path, cfg: Config | None = None, steps=STEPS, src: prepare.Sources 
         r["H6"] = step_h6(src, out)
     if "h5" in steps and "H1" in r:
         r["H5"] = step_h5(b, src, cfg, r["H1"], r.get("H6"), out)
+    if "q24" in steps:
+        r["Q24"] = step_q24(b, src, cfg, out, r)
     v = verdicts(r)
     _write(
         out,

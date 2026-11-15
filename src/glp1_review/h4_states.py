@@ -79,13 +79,20 @@ def factor_exposure(
 
 
 # --------------------------------------------------------------------------------------------- event study
-def _twfe_residualize(panel: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
-    """Two-way (state, year) within-transformation for an unbalanced panel by alternating projections."""
+def _twfe_residualize(panel: pd.DataFrame, cols: list[str], w: np.ndarray | None = None) -> pd.DataFrame:
+    """Two-way (state, year) within-transformation for an unbalanced panel by alternating projections
+    (weighted means when w is given)."""
     out = panel[cols].astype(float).copy()
+    ww = pd.Series(np.ones(len(panel)) if w is None else w, index=panel.index)
+
+    def wmean(df, key):
+        num = df.mul(ww, axis=0).groupby(panel[key]).transform("sum")
+        return num.div(ww.groupby(panel[key]).transform("sum"), axis=0)
+
     for _ in range(200):
         prev = out.copy()
-        out = out - out.groupby(panel["state"]).transform("mean")
-        out = out - out.groupby(panel["year"]).transform("mean")
+        out = out - wmean(out, "state")
+        out = out - wmean(out, "year")
         if np.max(np.abs(out.to_numpy() - prev.to_numpy())) < 1e-12:
             break
     return out
@@ -113,7 +120,8 @@ def _beta_star_weights(years: list[int], pre=PRE, post=POST) -> np.ndarray:
 
 
 def event_study(Y: pd.DataFrame, E: pd.Series) -> EventStudy:
-    """Y: columns state, year, y (pp). E: exposure by state."""
+    """Y: columns state, year, y (pp), optionally w (weights for the Q24 population- or precision-weighted
+    variants; unweighted otherwise). E: exposure by state."""
     d = Y[Y["state"].isin(E.index)].copy()
     years = sorted(d["year"].unique())
     ref = years[0]
@@ -121,15 +129,16 @@ def event_study(Y: pd.DataFrame, E: pd.Series) -> EventStudy:
         {f"b_{k}": (d["year"] == k) * d["state"].map(E) for k in years if k != ref}, index=d.index
     )
     cols = list(X.columns)
-    R = _twfe_residualize(pd.concat([d[["state", "year", "y"]], X], axis=1), cols + ["y"])
+    w = d["w"].to_numpy(float) if "w" in d else np.ones(len(d))
+    R = _twfe_residualize(pd.concat([d[["state", "year", "y"]], X], axis=1), cols + ["y"], w)
     Xa, ya = R[cols].to_numpy(), R["y"].to_numpy()
-    XtX_inv = np.linalg.pinv(Xa.T @ Xa)
-    b = XtX_inv @ Xa.T @ ya
+    XtX_inv = np.linalg.pinv(Xa.T @ (Xa * w[:, None]))
+    b = XtX_inv @ Xa.T @ (w * ya)
     e = ya - Xa @ b
     S = np.zeros((len(cols), len(cols)))
     for s in d["state"].unique():
         m = (d["state"] == s).to_numpy()
-        u = Xa[m].T @ e[m]
+        u = Xa[m].T @ (w[m] * e[m])
         S += np.outer(u, u)
     G = d["state"].nunique()
     V = G / (G - 1) * XtX_inv @ S @ XtX_inv
@@ -219,3 +228,17 @@ def average_causal_response(dY: pd.Series, E: pd.Series, degree: int = 2) -> flo
     c = np.polyfit(e, dY.to_numpy(), degree)
     deriv = np.polyder(c)
     return float(np.mean(np.polyval(deriv, e)))
+
+
+def rm_interval(es: EventStudy, mbar: float, pre=PRE, post=POST) -> tuple[float, float]:
+    """Q24 Rambachan-Roth relative-magnitude restriction, conservative version (like `rr_interval`): post-period
+    violations of the linear pre-trend may grow each year by at most mbar times the largest year-to-year change of
+    the pre-period deviations from that trend. Worst-case bias for year t is mbar * m * (t - max(pre)); the bias of
+    beta* is its mean over the post years. Interval: beta* +- (1.96 SE + bias)."""
+    b = es.beta
+    t = np.array([y for y in pre if y in b.index], float)
+    coef = np.polyfit(t - 2015, b.loc[t.astype(int)].to_numpy(), 1)
+    resid = b.loc[t.astype(int)].to_numpy() - np.polyval(coef, t - 2015)
+    m = float(np.max(np.abs(np.diff(resid)))) if len(resid) > 1 else 0.0
+    bias = mbar * m * float(np.mean([y - max(pre) for y in post]))
+    return es.beta_star - 1.96 * es.se_star - bias, es.beta_star + 1.96 * es.se_star + bias

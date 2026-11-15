@@ -1,4 +1,5 @@
-"""End-to-end run of the pre-registered pipeline on a simulated data tree (quick configuration)."""
+"""End-to-end run of the pre-registered pipeline on a simulated data tree (quick configuration).
+Marked slow (about 10 minutes): run with `uv run pytest -m slow`."""
 
 import json
 
@@ -7,6 +8,8 @@ from fake_tree import build
 
 from glp1_review import guard, prepare, run
 from glp1_review.paths import PILOT_DATA
+
+pytestmark = pytest.mark.slow
 
 
 @pytest.fixture(scope="module")
@@ -41,6 +44,7 @@ def test_full_pipeline_quick(tree, tmp_path, monkeypatch):
         "h5.json",
         "verdicts.json",
         "summary.md",
+        "q24.csv",
     ):
         assert (out / f).exists(), f
     assert set(v["family"]) == {"H2", "H3", "H6"}
@@ -51,3 +55,17 @@ def test_full_pipeline_quick(tree, tmp_path, monkeypatch):
     h4 = json.loads((out / "h4.json").read_text())
     assert len(h4["rr_intervals"]) == 3
     assert (out / "summary.md").read_text().startswith("# Pre-registered analyses")
+
+
+def test_q24_table_covers_every_hypothesis(tree, tmp_path, monkeypatch):
+    import pandas as pd
+
+    reg = tmp_path / "osf_registration.txt"
+    reg.write_text("TEST")
+    monkeypatch.setattr(guard, "REGISTRATION_FILE", reg)
+    out = tmp_path / "out"
+    run.run(out, run.Config.quick(), steps=("h1", "h4", "q24"), src=tree)
+    q = pd.read_csv(out / "q24.csv")
+    assert {"H1", "H2", "H3", "NC1", "H4", "H5", "H6"} <= set(q["hypothesis"])
+    assert q["variant"].str.contains("multiple imputation").sum() == 3
+    assert q["variant"].str.contains("interview mode").sum() == 6

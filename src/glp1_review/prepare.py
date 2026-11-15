@@ -155,8 +155,9 @@ def h5_inputs(b: pd.DataFrame, src: Sources = DEFAULT) -> dict:
     }
 
 
-def h6_frame(src: Sources = DEFAULT) -> pd.DataFrame:
-    """Panels 23 and 24 with group, BMI change and baseline covariates (Q12-Q15, Q19, Q23)."""
+def h6_frame(src: Sources = DEFAULT, all_rounds: bool = True) -> pd.DataFrame:
+    """Panels 23 and 24 with group, BMI change and baseline covariates (Q12-Q15, Q19, Q23).
+    all_rounds=False keeps persons not present in all nine rounds (Q24 sensitivity)."""
     require_registration()
     parts = []
     for k, (yrs, t0, t1) in H6_PANELS.items():
@@ -168,7 +169,7 @@ def h6_frame(src: Sources = DEFAULT) -> pd.DataFrame:
         parts.append(p)
     df = pd.concat(parts, ignore_index=True)
     df = df[
-        (df["all9rds"] == 1)
+        ((df["all9rds"] == 1) | (not all_rounds))
         & df["bmi_t0"].notna()
         & df["bmi_t1"].notna()
         & (df["age"] >= 18)

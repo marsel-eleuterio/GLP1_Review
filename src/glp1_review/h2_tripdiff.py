@@ -158,3 +158,57 @@ def fit_two_stage(df: pd.DataFrame, spec: Spec = PRIMARY) -> tuple[Estimate, dic
         "pi": dict(zip(spec.estimand_years, pi, strict=True)),
     }
     return Estimate(float(pi.mean()), se, dof=dof), details
+
+
+# --------------------------------------------------------------------------------------------- Q24 sensitivities
+def wild_cluster_bootstrap(
+    df: pd.DataFrame, spec: Spec = PRIMARY, n_boot: int = 9_999, seed: int = 20261114
+) -> tuple[Estimate, dict]:
+    """Single regression with a wild cluster bootstrap by state (Webb six-point weights, Q23/Q24).
+    Unrestricted bootstrap of the coefficient: b* = b + A^-1 sum_g v_g s_g, with s_g the state score totals.
+    Returns pi_bar with the bootstrap SE and the 95% percentile interval."""
+    d = df[df["year"].isin(spec.years) & df[spec.outcome].notna() & df[spec.group].notna()]
+    X, _ = build(d, spec)
+    X = X.loc[:, X.std() > 0]
+    w = d["wt"].to_numpy(float)
+    fe = d["state"].astype(str) + "_" + d["year"].astype(str)
+    cols = list(X.columns)
+    dm = demean(pd.concat([X, d[[spec.outcome]]], axis=1), cols + [spec.outcome], fe, w)
+    Xa, y = dm[cols].to_numpy(), dm[spec.outcome].to_numpy()
+    A_inv = np.linalg.pinv(Xa.T @ (Xa * w[:, None]))
+    b = A_inv @ (Xa.T @ (w * y))
+    e = y - Xa @ b
+    g, _ = pd.factorize(d["state"])
+    S = np.zeros((g.max() + 1, len(cols)))
+    np.add.at(S, g, Xa * (w * e)[:, None])
+    a = np.zeros(len(cols))
+    for k in spec.estimand_years:
+        a[cols.index(f"pi_{k}")] = 1 / len(spec.estimand_years)
+    rng = np.random.default_rng(seed)
+    webb = np.array([-np.sqrt(1.5), -1, -np.sqrt(0.5), np.sqrt(0.5), 1, np.sqrt(1.5)])
+    V = rng.choice(webb, size=(n_boot, S.shape[0]))
+    draws = float(a @ b) + (V @ S) @ A_inv.T @ a
+    est = float(a @ b)
+    return Estimate(est, float(np.std(draws, ddof=1))), {
+        "ci95": tuple(np.percentile(draws, [2.5, 97.5])),
+        "clusters": S.shape[0],
+    }
+
+
+def reweight_group_composition(
+    df: pd.DataFrame, group: str = "diabetes", ref_years=(2017, 2018, 2019), cells=("age_group", "sex")
+) -> pd.DataFrame:
+    """Q24: reweight the group (D = 1) in every year to its own 2017-2019 composition (age group x sex);
+    the other respondents keep their weights."""
+    out = df.copy()
+    D = out[group] == 1
+    key = out[list(cells)].astype(str).agg("|".join, axis=1)
+    ref = out[D & out["year"].isin(ref_years)].groupby(key[D & out["year"].isin(ref_years)])["wt"].sum()
+    ref = ref / ref.sum()
+    for y in out.loc[D, "year"].unique():
+        m = D & (out["year"] == y)
+        own = out[m].groupby(key[m])["wt"].sum()
+        own = own / own.sum()
+        f = key[m].map(ref).fillna(0.0) / key[m].map(own)
+        out.loc[m, "wt"] = out.loc[m, "wt"] * f.to_numpy()
+    return out

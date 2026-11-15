@@ -113,3 +113,10 @@ After the change: selftest passes, extraction has no missing columns (except rac
   then White, Black, Asian, other (as `_IMPRACE`); education `SCHL` ≤ 15 / 16-17 / 18-20 / ≥ 21 (as `_EDUCAG`).
   Institutional exclusion: `RELP == 16` through 2018, `RELSHIPP == 37` from 2019. In 2024 the column `ST` was
   renamed `STATE`.
+
+## Extra BRFSS columns for Q24 (14 November 2026)
+
+`brfss_extract_parquet.py` also writes `genhlth` (`GENHLTH`, 1-5; 7 and 9 missing), a covariate of the BMI
+imputation (Q14), and `phone` (`QSTVER` 10-13 landline, 20-23 cell), for the interview-mode sensitivity (Q24). They
+are added in that script, not in `brfss_microdata.py`, which stays as cited in the pre-registration. After the
+re-extraction the validation is unchanged (792 state-years, maximum 0.12 pp).

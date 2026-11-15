@@ -86,3 +86,21 @@ writing tables, H1 posterior draws, `verdicts.json` and `summary.md` to `resulta
 `--quick` shrinks draws, replicates and permutations for smoke tests. `tests/test_pipeline.py` runs the whole
 pipeline on a simulated tree with the same file layout (`tests/fake_tree.py`) and checks that the guard blocks it
 without a registration.
+
+## Q24 sensitivity analyses (`sensitivity.py`)
+
+| Item | Implementation |
+| --- | --- |
+| Counterfactual trends (H1) | `run.step_h1`: linear 2011-2021, linear 2015-2019, quadratic 2011-2019, 2022 level with the 2011-2019 slope |
+| Pandemic years | Removed for H2 (stage 1 and 2) and H4; not applicable to H1 and H3, whose trends use 2011-2019 and whose years are estimated separately |
+| Balanced panel | States with BRFSS data in all 15 years: H1 (direct weighted series), H2, H3, H4 |
+| Other compositions (H3) | DFL reference 2011 or 2022 instead of 2017-2019 |
+| Missing BMI | Departure of the weighted share with missing BMI from its 2011-2019 trend; 20 imputations (`mi.py`, predictive mean matching, proper draws) for the H1 direct series, H2 (Rubin's rules) and H3 (point estimates) |
+| Interview mode | Separate estimates for cell-phone and landline interviews (H1 direct series, H2, H3) with the combined-frame weight `_LLCPWT`; mode-specific weights are not used |
+| H2 | No age and sex interactions; ages 45-74 (`_AGEG5YR` 6-11); diabetes group reweighted to its 2017-2019 age × sex composition; single regression with a wild cluster bootstrap by state (Webb six-point weights, 9,999 draws, unrestricted); item-change term off |
+| H3 | 75th and 95th percentiles; RIF regression (pooled WLS of the RIF on year and cell covariates, evaluated at 2017-2019 covariate means; point estimate) |
+| H4 | Each indicator alone; population weights (2024 adults); precision weights (Kish effective n / p(1 − p)); leave-one-state-out range; without WV, KY, LA and OK; without states missing a post-period year; relative-magnitude bounds (conservative: post-period violation per year ≤ M̄ × the largest year-to-year change of the detrended pre-period betas); quartile contrast; cubic average causal response |
+| H5 | Loss of non-persistent users U(0%, 4%); persistence fixed at 35.2% and 53.5%; national use fixed at the MEPS 2024 rate |
+| H6 | Prevalent users as a third group; LONGWT; persons not present in all rounds; changes > 10 kg/m² excluded; by baseline diabetes; each panel separately |
+| NC1 | All adults 18+; by sex |
+| Pending | External counterfactuals and the self-report correction (need numbers from Ward et al. 2019 and DeCleene et al. 2026) |

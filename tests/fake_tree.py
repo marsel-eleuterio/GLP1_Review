@@ -51,7 +51,9 @@ def build(root: Path, n_per_year: int = 6000, seed: int = 7) -> dict:
         )
         bmi = np.exp(rng.normal(np.log(27.3), 0.2, n)) + 3.0 * (logit + 0.95)
         bmi = bmi - 0.8 * diab * (y >= 2023)
-        bmicat = np.digitize(bmi, [18.5, 25, 30]) + 1
+        bmicat = (np.digitize(bmi, [18.5, 25, 30]) + 1).astype(float)
+        missing = rng.random(n) < 0.04  # height or weight refused
+        bmi, bmicat = np.where(missing, np.nan, bmi), np.where(missing, np.nan, bmicat)
         race = rng.choice([1, 2, 3, 4, 5, 6], n, p=[0.6, 0.12, 0.05, 0.02, 0.17, 0.04]).astype(float)
         if y in (2015, 2016):
             race[:] = np.nan
@@ -62,7 +64,8 @@ def build(root: Path, n_per_year: int = 6000, seed: int = 7) -> dict:
                 "age5": age5, "sex": sex, "race": race, "educ": rng.integers(1, 5, n), "income": rng.integers(1, 6, n),
                 "diab_raw": np.where(diab == 1, 1, 3), "plan_raw": rng.choice([1, 2], n, p=[0.9, 0.1]),
                 "diabetes": diab, "htm": np.where(sex == 1, 1.76, 1.62) + rng.normal(0, 0.07, n),
-                "wtkg": bmi * 1.7**2,
+                "wtkg": bmi * 1.7**2, "genhlth": rng.integers(1, 6, n).astype(float),
+                "phone": rng.choice(["cell", "landline"], n, p=[0.6, 0.4]),
             }
         ).to_csv(clean / "brfss" / f"brfss_{y}.csv.gz", index=False)  # fmt: skip
 

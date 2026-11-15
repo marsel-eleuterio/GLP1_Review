@@ -104,3 +104,15 @@ def merge_sparse(df: pd.DataFrame, col: str, order: list | None = None, min_init
         if order:
             order = [merged if x in (c, target) else x for x in order]
             order = list(dict.fromkeys(order))
+
+
+def fit_with_prevalent(df: pd.DataFrame) -> tuple[Estimate, DesignFit]:
+    """Q24: prevalent users as a third group (initiator and prevalent indicators, never-users as reference)."""
+    d = df[df["group"].isin(["initiator", "never", "prevalent"])].copy()
+    d["init"] = d["group"] == "initiator"
+    X = design_matrix(d, "init")
+    X["prevalent"] = (d["group"] == "prevalent").astype(float)
+    w = d["lsaqwt"].where(d["lsaqwt"] > 0, d.get("longwt"))
+    strata = d["panel"].astype(str) + "_" + d["varstr"].astype(str)
+    fit = wls_design(X, d["dbmi"], w, strata, d["varpsu"])
+    return Estimate(*fit.get("init")), fit

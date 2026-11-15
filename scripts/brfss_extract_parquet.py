@@ -7,6 +7,10 @@ instead of XPT). After this, run the original validation:
 
   uv run python scripts/brfss_extract_parquet.py [--raw dados_brutos/brfss_hf] [--out dados_limpos/brfss]
   uv run python scripts/brfss_microdata.py validate --clean dados_limpos/brfss --api piloto/dados
+
+Two columns are added here for the Q24 sensitivity analyses (not in brfss_microdata.py, which stays as cited):
+  genhlth  GENHLTH, self-rated general health 1-5 (7, 9 -> missing); a covariate of the BMI imputation (Q14)
+  phone    "landline" (QSTVER 10-13) or "cell" (QSTVER 20-23); interview mode (Q24)
 """
 
 import argparse
@@ -22,6 +26,27 @@ _spec = importlib.util.spec_from_file_location(
 )
 bm = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bm)
+
+
+EXTRA = ("GENHLTH", "QSTVER")
+
+
+def add_extra(res: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    g = (
+        pd.to_numeric(df["GENHLTH"], errors="coerce")
+        if "GENHLTH" in df
+        else pd.Series(float("nan"), index=df.index)
+    )
+    q = (
+        pd.to_numeric(df["QSTVER"], errors="coerce")
+        if "QSTVER" in df
+        else pd.Series(float("nan"), index=df.index)
+    )
+    res["genhlth"] = g.where(g.between(1, 5)).to_numpy()
+    res["phone"] = pd.Series(
+        pd.cut(q, [9, 19, 29], labels=["landline", "cell"]).astype(object), index=df.index
+    ).to_numpy()
+    return res
 
 
 def read_parquet(path: Path, wanted: set[str]) -> tuple[pd.DataFrame, int]:
@@ -41,7 +66,7 @@ def main() -> int:
     a = ap.parse_args()
     raw, out = Path(a.raw), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    wanted = {c for cands in bm.CANDIDATES.values() for c in cands}
+    wanted = {c for cands in bm.CANDIDATES.values() for c in cands} | set(EXTRA)
 
     rows = []
     for y in bm.parse_years(a.years):
@@ -52,6 +77,7 @@ def main() -> int:
         t = time.time()
         df, total = read_parquet(p, wanted)
         res, used = bm.harmonise(df, y)
+        res = add_extra(res, df)
         res.to_csv(out / f"brfss_{y}.csv.gz", index=False)
         rows.append({"year": y, "records": total, **used})
         miss = [k for k, v in used.items() if not v]

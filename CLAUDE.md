@@ -15,7 +15,7 @@
 ## Commands
 
 - Setup: `uv sync` (creates `.venv`); with models: `uv sync --extra analysis`
-- Tests: `uv run pytest`
+- Tests: `uv run pytest` (fast); end-to-end pipeline on simulated data: `uv run pytest -m slow` (~10 min)
 - Lint: `uv run ruff check .` / `uv run ruff format .`
 - Pilot: `uv run python scripts/run_pilot.py` (writes to `resultados/piloto/`)
 
