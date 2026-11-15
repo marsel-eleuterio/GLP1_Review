@@ -24,6 +24,7 @@ FILES = [
     ("docs/plano_de_estudo.md", "1_documents"),
     ("docs/preregistro_osf_v2.md", "1_documents"),
     ("docs/decisoes_q20_q22.md", "1_documents"),
+    ("docs/notas_implementacao.md", "1_documents"),
     ("docs/revisao_da_literatura.pdf", "1_documents"),
     ("piloto", "2_pilot"),
     ("scripts/brfss_microdata.py", "3_code"),
@@ -34,6 +35,8 @@ FILES = [
     ("scripts/cms_glp1_download.py", "3_code"),
     ("scripts/census_download.py", "3_code"),
     ("scripts/README.md", "3_code"),
+    ("src/glp1_review", "3_code/analysis"),
+    ("tests", "3_code/analysis"),
     ("pyproject.toml", "3_code"),
     ("uv.lock", "3_code"),
     ("dados_brutos/meps/manifest_sha256.csv", "4_data_provenance/meps"),
@@ -59,7 +62,7 @@ Assembled {date}. Code repository: https://github.com/marsel-eleuterio/GLP1_Revi
 | --- | --- |
 | 1_documents | Study plan (PDF and Markdown, Portuguese), pre-registration answers (English, v2), literature review |
 | 2_pilot | Pilot of 12 Nov 2026 on aggregated data: code, inputs (dados/) and original outputs (saidas/) |
-| 3_code | Download and extraction scripts, environment (pyproject.toml, uv.lock); scripts/README.md documents every step |
+| 3_code | Download and extraction scripts, environment (pyproject.toml, uv.lock); scripts/README.md documents every step. 3_code/analysis: the pre-registered analysis code (glp1_review package) and its tests, written and tested on simulated data before registration |
 | 4_data_provenance | SHA-256 manifests and provenance of every downloaded file (MEPS, BRFSS, CMS, Census/ACS) |
 | 5_checks | Count-only outputs: BRFSS validation against CDC aggregates and variable coverage; MEPS codebook checks and case inventory |
 

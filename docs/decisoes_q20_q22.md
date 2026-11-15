@@ -118,3 +118,15 @@ Encontrados ao testar o código das análises em dados simulados (`tests/test_h2
 - **NC2 da H2.** A janela placebo pré-registrada (desvio em 2017-2019) inclui 2019, o ano da troca da pergunta de
   diabetes, e κ não pode ser estimado dentro dela. **Decisão:** para a H2, o desvio placebo é medido em
   2017-2018 (tendência em 2011-2015). A NC2 da H1 continua em 2017-2019.
+
+## H1 e H4 (14/nov/2026)
+
+- **Modelo da H1 (MRP).** Como estava na Q19, não convergiu em dados simulados com nenhum dos cinco recursos da Q23
+  (R-hat até 1,23; ESS de 13 a 63). A constante e os efeitos de grupo sem restrição podem se deslocar juntos sem
+  mudar a previsão. **Decisão:** efeitos de grupo com soma zero (ZeroSumNormal), na forma não-centrada, sexo como
+  efeito fixo e target_accept 0,95. Com isso: R-hat ≤ 1,005, ESS > 2.000 e prevalência recuperada com erro de
+  ~0,1 ponto em amostras do tamanho do BRFSS. Recursos da Q23: 2.000 passos de aquecimento; target_accept 0,99;
+  retirar idade × sexo; retirar escolaridade.
+- **Permutação da H4:** bicaudal em |β*|.
+- **Limites de Rambachan–Roth:** versão conservadora em Python (pior viés sob ΔSD(M) somado ao IC de 95%),
+  declarada na Q19.
