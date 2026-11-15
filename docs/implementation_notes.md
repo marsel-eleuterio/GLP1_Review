@@ -103,4 +103,5 @@ without a registration.
 | H5 | Loss of non-persistent users U(0%, 4%); persistence fixed at 35.2% and 53.5%; national use fixed at the MEPS 2024 rate |
 | H6 | Prevalent users as a third group; LONGWT; persons not present in all rounds; changes > 10 kg/m² excluded; by baseline diabetes; each panel separately |
 | NC1 | All adults 18+; by sex |
-| Pending | External counterfactuals and the self-report correction (need numbers from Ward et al. 2019 and DeCleene et al. 2026) |
+| External counterfactuals | Observed change 2022-2025 (H1 posterior) minus the change implied by a projection, linear between its published points, over three years. DeCleene et al. (2026): 42.5% in 2022 to 46.9% in 2035, +0.34 pp a year, +1.02 pp over 2022-2025 (verified, `citation_check.md` D1). The projection's own uncertainty is not propagated |
+| Pending | Ward et al. (2019) projection (needs the 2016 level) and the NHANES-calibrated self-report correction (needs the appendix method and NHANES microdata) |

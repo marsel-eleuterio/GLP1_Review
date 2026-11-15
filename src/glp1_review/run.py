@@ -133,7 +133,7 @@ def step_h1(b, src, cfg, out) -> dict:
     }
     _write(out, "h1_departures", pd.DataFrame(rows).set_index("counterfactual"))
     _write(out, "h1", res)
-    return res
+    return {**res, "_P": P}  # posterior draws kept in memory for the Q24 external comparison
 
 
 def step_h0(b, h1, out) -> dict:
@@ -325,6 +325,8 @@ def step_q24(b, src, cfg, out, r) -> dict:
     """Q24 sensitivity analyses (sensitivity.py); results are reported in full whatever their direction."""
     rows = []
     rows += sensitivity.q24_h1(b, m_imputations=cfg.mi_m, seed=cfg.seed)
+    if "H1" in r:
+        rows += sensitivity.q24_external(r["H1"]["_P"])
     rows += sensitivity.q24_h2(b, m_imputations=cfg.mi_m, n_boot=cfg.wcb_boot, seed=cfg.seed)
     rows += sensitivity.q24_h3(b, n_rep=cfg.q24_reps, m_imputations=cfg.mi_m, seed=cfg.seed)
     rows += sensitivity.q24_nc1(b, n_rep=cfg.q24_reps, seed=cfg.seed + 1)

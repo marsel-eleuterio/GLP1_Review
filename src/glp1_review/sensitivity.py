@@ -5,8 +5,9 @@ Covered here: pandemic years, balanced panel of states, alternative reference co
 (trend in the share missing; multiple imputation), interview mode (cell vs landline), and the hypothesis-specific
 lists for H2, H3, H4, H5, H6 and NC1. The counterfactual-trend alternatives of H1 are computed in `run.step_h1`.
 
-Not computed here, pending the original articles (see the decision log): the external counterfactuals (Ward et al.
-2019; DeCleene et al. 2026) and the NHANES-calibrated self-report correction (Ward et al. 2019).
+External counterfactuals (`q24_external`): DeCleene et al. (2026) is implemented with its verified figures; Ward et al.
+(2019) waits for the 2016 level in the full text. The NHANES-calibrated self-report correction (Ward et al. 2019) is
+not implemented: it needs the method in that paper's appendix and NHANES microdata.
 """
 
 import numpy as np
@@ -404,5 +405,62 @@ def q24_h6(df: pd.DataFrame, df_all_rounds: pd.DataFrame) -> list:
         sub = df[df["panel"] == k]
         rows.append(
             _row("H6", f"Panel {k} only", h6.fit_primary(sub)[0], note=f"{h6.n_initiators(sub)} initiators")
+        )
+    return rows
+
+
+# --------------------------------------------------------------------------------------------- external counterfactuals
+EXTERNAL_PROJECTIONS = {
+    # name: (start year, start %, end year, end %), national adult obesity; None until verified in the original
+    "DeCleene et al. 2026 (IHME; data to 2022; ages 20+, bias-corrected)": (2022, 42.5, 2035, 46.9),
+    "Ward et al. 2019 (BRFSS 1993-2016, NHANES-corrected)": None,  # needs the 2016 level from the full text
+}
+
+
+def projected_change(start_year, start_pct, end_year, end_pct, years=3) -> float:
+    """Average annual change implied by a projection (linear between its two points), times `years` (pp)."""
+    return (end_pct - start_pct) / (end_year - start_year) * years
+
+
+def q24_external(P: dict, projections: dict = EXTERNAL_PROJECTIONS) -> list:
+    """Q24: observed change 2022 -> 2025 (H1 posterior draws of national prevalence, pp) against the change implied by
+    projections made before the rise in GLP-1 use. Changes are compared, not levels, because the projections are
+    calibrated to measured BMI. The projections' own uncertainty is not propagated (their correlated intervals are not
+    published); the interval is that of the observed change."""
+    obs = 100 * (np.asarray(P[2025]) - np.asarray(P[2022]))
+    lo, hi = np.percentile(obs, [2.5, 97.5])
+    rows = [
+        _row(
+            "H1",
+            "external: observed change 2022-2025 (MRP)",
+            float(np.median(obs)),
+            None,
+            float(lo),
+            float(hi),
+            note="pp",
+        )
+    ]
+    for name, spec in projections.items():
+        if spec is None:
+            rows.append(
+                _row(
+                    "H1",
+                    f"external: {name}",
+                    note="pending: projection numbers not yet verified in the original",
+                )
+            )
+            continue
+        proj = projected_change(*spec)
+        d = obs - proj
+        rows.append(
+            _row(
+                "H1",
+                f"external: observed minus projected change, {name}",
+                float(np.median(d)),
+                None,
+                float(np.percentile(d, 2.5)),
+                float(np.percentile(d, 97.5)),
+                note=f"projected change 2022-2025 = {proj:+.2f} pp ({spec[1]}% in {spec[0]} to {spec[3]}% in {spec[2]})",
+            )
         )
     return rows

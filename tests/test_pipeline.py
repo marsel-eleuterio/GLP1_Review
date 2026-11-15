@@ -69,3 +69,4 @@ def test_q24_table_covers_every_hypothesis(tree, tmp_path, monkeypatch):
     assert {"H1", "H2", "H3", "NC1", "H4", "H5", "H6"} <= set(q["hypothesis"])
     assert q["variant"].str.contains("multiple imputation").sum() == 3
     assert q["variant"].str.contains("interview mode").sum() == 6
+    assert q["variant"].str.contains("external: observed minus projected").sum() == 1

@@ -92,3 +92,18 @@ def test_rif_contrast_detects_tail_shift_and_variants_run():
     e75, _ = h3.fit_h3(shifted, n_rep=3, upper=0.75)
     e11, _ = h3.fit_h3(shifted, n_rep=3, ref_years=(2011,))
     assert np.isfinite(e75.est) and np.isfinite(e11.est)
+
+
+def test_external_projection_comparison():
+    from glp1_review import sensitivity as sens
+
+    assert sens.projected_change(2022, 42.5, 2035, 46.9) == pytest.approx(4.4 / 13 * 3)
+    rng = np.random.default_rng(87)
+    P = {2022: 0.333 + rng.normal(0, 0.001, 4000), 2025: 0.329 + rng.normal(0, 0.001, 4000)}
+    rows = {r["variant"]: r for r in sens.q24_external(P)}
+    obs = rows["external: observed change 2022-2025 (MRP)"]
+    assert obs["estimate"] == pytest.approx(-0.4, abs=0.05)
+    dec = next(r for k, r in rows.items() if "DeCleene" in k)
+    assert dec["estimate"] == pytest.approx(-0.4 - 4.4 / 13 * 3, abs=0.05)
+    assert dec["lo"] < dec["estimate"] < dec["hi"]
+    assert any("pending" in r["note"] for k, r in rows.items() if "Ward" in k)

@@ -114,3 +114,11 @@ Found while testing the code on simulated data (`tests/test_h2.py`):
   Two Q24 items wait for the reading of the original articles, because they need numbers from them: the external
   counterfactuals (Ward et al. 2019; DeCleene et al. 2026) and the NHANES-calibrated self-report correction
   (Ward et al. 2019).
+
+## 6. External counterfactual (14 November 2026)
+
+The DeCleene et al. (2026) projection was verified in the original (42.5% of adults in 2022 to 46.9% in 2035) and
+the Q24 comparison was implemented: the observed 2022-2025 change from the H1 posterior minus the projected change,
+taken as linear between the two published points (+0.34 pp a year, +1.02 pp over three years). The projection's own
+uncertainty is not propagated because its interval for the change is not published. The Ward et al. (2019)
+comparison and the self-report correction remain pending until the full text is read.

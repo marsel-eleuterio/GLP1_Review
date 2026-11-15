@@ -47,7 +47,7 @@ number is not in the part available), **not verified** (only a press or secondar
 
 | # | Claim | Used in | Source checked | Status | Note |
 | --- | --- | --- | --- | --- | --- |
-| D1 | DeCleene et al. 2026 projection: 42.5% of adults in 2022 → 46.9% in 2035 (bias-corrected, ages ≥ 20) | Q24 external counterfactual | JAMA 335(11):975-985, PMID 41604179 (abstract) | verified | Implied average change ≈ +0.34 pp a year (linear between 2022 and 2035). Enough to run the comparison |
+| D1 | DeCleene et al. 2026 projection: 42.5% of adults in 2022 → 46.9% in 2035 (bias-corrected, ages ≥ 20) | Q24 external counterfactual | JAMA 335(11):975-985, PMID 41604179 (abstract) | verified | Implied average change ≈ +0.34 pp a year (linear between 2022 and 2035). **Implemented** in `sensitivity.q24_external` |
 | D2 | Ward et al. 2019 projection: 48.9% by 2030 (BRFSS 1993-2016, NHANES-corrected) | Q24 external counterfactual | NEJM 381(25):2440-2450, PMID 31851800 (abstract) | partial | The annual change needs the 2016 (or 2020) level, which is only in the full text (not in PMC) |
 | D3 | NHANES-calibrated, quantile-specific correction of self-reported BMI (Ward et al. 2019) | Q24 self-report correction | abstract | partial | Method in the supplementary appendix; reproducing it also needs NHANES microdata with self-reported and measured height and weight |
 
