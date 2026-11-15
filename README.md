@@ -61,6 +61,7 @@ Without uv: `python -m venv .venv`, activate it (`.venv\Scripts\activate` on Win
 ```powershell
 uv run pytest                           # checks the pilot still reproduces piloto/saidas/
 uv run python scripts/run_pilot.py      # re-runs the pilot into resultados/piloto/
+uv run python scripts/run_analysis.py   # after OSF registration: all pre-registered analyses
 ```
 
 Microdata workflow (BRFSS ≈ 1 GB from cdc.gov, MEPS ≈ 110 MB from meps.ahrq.gov) is described in

@@ -57,7 +57,8 @@ def z_previous(direct: pd.DataFrame, year: int) -> pd.Series:
             out[s] = prev.iloc[-1]
         elif len(nxt):
             out[s] = nxt.iloc[0]
-    z = trend.logit(pd.Series(out))
+    s = pd.Series(out, dtype=float)
+    z = pd.Series(trend.logit(s.to_numpy()), index=s.index)
     return z - z.mean()
 
 
@@ -237,7 +238,8 @@ def national_departures(
     n = min(len(v) for v in P.values())
     M = np.column_stack([np.asarray(P[y])[:n] for y in years])
     dep = trend.departures(M, years, **trend_kwargs)
-    out = {"departures": dep, "summary_pp": dep.summary(), "p_2025_below_2023": dep.prob_less(2025, 2023)}
+    p = dep.prob_less(2025, 2023) if {2023, 2025} <= set(dep.years) else None
+    out = {"departures": dep, "summary_pp": dep.summary(), "p_2025_below_2023": p}
     if adults_millions:
         mill = dep.draws / 100 * np.array([adults_millions[y] for y in dep.years])[None, :]
         out["summary_millions"] = trend.Departures(dep.years, mill).summary()

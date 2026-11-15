@@ -4,7 +4,8 @@ Composition adjustment (DiNardo-Fortin-Lemieux): each year's sample is reweighte
 of age group x sex x race and ethnicity x education. With these four categorical covariates the logistic model of
 "reference years vs year t" is taken as saturated (all 6 x 2 x 5 x 4 = 240 cells), whose fitted odds are exactly the
 ratio of weighted cell shares, so the DFL factor is share_ref(cell) / share_t(cell). Cells absent from the reference
-period get weight zero.
+period get weight zero. In years where a cell variable is not available (race and ethnicity in 2015-2016, recorded
+as "Not available"), the cells drop that variable and the reference shares are computed on the same reduced cells.
 
 H3: for each year and q in {0.10, 0.25, 0.50, 0.75, 0.90, 0.95}, the reweighted weighted quantile of BMI. Each series
 goes through the H1 Stage-2 trend procedure (identity scale), giving departures D_q,t. Estimand
@@ -15,7 +16,12 @@ so year-level shocks are included, consistent with H2) in every replicate. SE = 
 NC1: mean self-reported height (HTM4, cm) of adults 25-64 by sex, composition-adjusted in the same way (the sex
 cell is fixed within each series), through the same trend procedure. Estimand: mean departure in 2023-2025, averaged
 over the two sexes; each sex is also reported. Equivalence margin +-0.5 cm (Q22).
+
+Implementation: cells are integer-coded once and rows are sorted by (year, value) once, so each bootstrap replicate
+only recomputes weights, the DFL factor (bincount) and cumulative sums.
 """
+
+from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
@@ -27,54 +33,103 @@ from glp1_review.survey import rao_wu_weights
 QUANTILES = (0.10, 0.25, 0.50, 0.75, 0.90, 0.95)
 REF_YEARS = (2017, 2018, 2019)
 CELL_VARS = ("age_group", "sex", "race", "educ")
+NOT_AVAILABLE = "Not available"
 
 
-def cell_key(df: pd.DataFrame, cell_vars=CELL_VARS) -> pd.Series:
-    return df[list(cell_vars)].astype(str).agg("|".join, axis=1)
+@dataclass
+class Prepared:
+    """Rows sorted by (year, value); one integer cell code per row for each set of available cell variables."""
+
+    years: list
+    bounds: dict  # year -> (start, end) row slice
+    x: np.ndarray  # value, sorted within year
+    w: np.ndarray  # survey weight
+    strat: np.ndarray
+    psu: np.ndarray
+    codes: np.ndarray  # (n_sets, n) cell codes
+    n_cells: list  # number of cells per set
+    set_of_year: dict  # year -> index of its variable set
+    ref_mask: np.ndarray
+
+    def dfl(self, w: np.ndarray) -> np.ndarray:
+        out = np.zeros_like(w)
+        ref = []
+        for s, k in enumerate(self.n_cells):
+            r = np.bincount(self.codes[s][self.ref_mask], weights=w[self.ref_mask], minlength=k)
+            ref.append(r / r.sum())
+        for y, (a, b) in self.bounds.items():
+            s = self.set_of_year[y]
+            c = self.codes[s][a:b]
+            own = np.bincount(c, weights=w[a:b], minlength=self.n_cells[s])
+            own = own / own.sum()
+            with np.errstate(divide="ignore", invalid="ignore"):
+                f = np.where(own[c] > 0, ref[s][c] / own[c], 0.0)
+            out[a:b] = w[a:b] * f
+        return out
+
+    def series(self, w: np.ndarray, stat: str, qs=None) -> np.ndarray:
+        """(n_stats, n_years): weighted quantiles (stat='quantile') or the weighted mean (stat='mean')."""
+        cols = []
+        for y in self.years:
+            a, b = self.bounds[y]
+            ww, xx = w[a:b], self.x[a:b]
+            if stat == "mean":
+                cols.append([np.sum(ww * xx) / np.sum(ww)])
+            else:
+                cw = np.cumsum(ww)
+                p = (cw - 0.5 * ww) / cw[-1]
+                cols.append(np.interp(qs, p, xx))
+        return np.array(cols).T
 
 
-def dfl_factor(year: np.ndarray, cell: np.ndarray, w: np.ndarray, ref_years=REF_YEARS) -> np.ndarray:
-    """Multiplicative DFL factor per observation: share of its cell in the reference years / share in its own year."""
-    d = pd.DataFrame({"year": year, "cell": cell, "w": w})
-    ref = d[d["year"].isin(ref_years)].groupby("cell")["w"].sum()
-    ref = ref / ref.sum()
-    own = d.groupby(["year", "cell"])["w"].sum()
-    own = own / own.groupby(level=0).transform("sum")
-    num = d["cell"].map(ref).fillna(0.0).to_numpy()
-    den = own.loc[list(zip(d["year"], d["cell"], strict=True))].to_numpy()
-    return num / den
+def _available(g: pd.DataFrame, cell_vars) -> tuple:
+    return tuple(v for v in cell_vars if not (g[v].isna() | (g[v].astype(str) == NOT_AVAILABLE)).all())
 
 
-def _sorted_quantiles(x_sorted: np.ndarray, w_sorted: np.ndarray, qs) -> np.ndarray:
-    """Weighted quantiles for one or many weight columns (x already sorted). w_sorted: (n,) or (n, R)."""
-    W = w_sorted if w_sorted.ndim == 2 else w_sorted[:, None]
-    cw = np.cumsum(W, axis=0)
-    p = (cw - 0.5 * W) / cw[-1]
-    out = np.empty((len(qs), W.shape[1]))
-    for r in range(W.shape[1]):
-        out[:, r] = np.interp(qs, p[:, r], x_sorted)
-    return out
-
-
-def _series(df: pd.DataFrame, value: str, stat: str, qs, w_col: str, years) -> np.ndarray:
-    """(n_stats, n_years) yearly quantiles (stat='quantile') or means (stat='mean') with weights w_col."""
-    out = []
+def prepare(df: pd.DataFrame, value: str, cell_vars=CELL_VARS, ref_years=REF_YEARS) -> Prepared:
+    d = df[df[value].notna() & df["wt"].notna() & (df["wt"] > 0)].sort_values(
+        ["year", value], kind="mergesort"
+    )
+    years = sorted(d["year"].unique())
+    avail = {y: _available(g, cell_vars) for y, g in d.groupby("year")}
+    sets = sorted(set(avail.values()), key=len, reverse=True)
+    codes, n_cells = [], []
+    for s in sets:
+        key = d[list(s)].astype(str).fillna("missing").agg("|".join, axis=1)
+        c, u = pd.factorize(key)
+        codes.append(c)
+        n_cells.append(len(u))
+    yv = d["year"].to_numpy()
+    bounds = {}
     for y in years:
-        g = df[df["year"] == y]
-        x, w = g[value].to_numpy(float), g[w_col].to_numpy(float)
-        if stat == "mean":
-            out.append([np.sum(w * x) / np.sum(w)])
-        else:
-            o = np.argsort(x)
-            out.append(_sorted_quantiles(x[o], w[o], qs)[:, 0])
-    return np.array(out).T
+        idx = np.flatnonzero(yv == y)
+        bounds[y] = (int(idx[0]), int(idx[-1]) + 1)
+    return Prepared(
+        years=years,
+        bounds=bounds,
+        x=d[value].to_numpy(float),
+        w=d["wt"].to_numpy(float),
+        strat=d["strat"].to_numpy(),
+        psu=d["psu"].to_numpy(),
+        codes=np.vstack(codes),
+        n_cells=n_cells,
+        set_of_year={y: sets.index(avail[y]) for y in years},
+        ref_mask=np.isin(yv, ref_years),
+    )
 
 
-def _prepare(df: pd.DataFrame, value: str, cell_vars=CELL_VARS) -> pd.DataFrame:
-    d = df[df[value].notna() & df["wt"].notna()].copy()
-    d["cell"] = cell_key(d, cell_vars)
-    d["w_dfl"] = d["wt"] * dfl_factor(d["year"].to_numpy(), d["cell"].to_numpy(), d["wt"].to_numpy(float))
-    return d
+def bootstrap(P: Prepared, n_rep: int, rng, stat_fn, chunk: int = 25) -> np.ndarray:
+    """Replicate estimates. Rao-Wu weights are drawn year by year (strata nested in year); the DFL factor is
+    recomputed from the replicate weights; stat_fn receives the reweighted replicate weights."""
+    reps = []
+    for start in range(0, n_rep, chunk):
+        R = min(chunk, n_rep - start)
+        W = np.empty((len(P.w), R))
+        for _y, (a, b) in P.bounds.items():
+            W[a:b] = rao_wu_weights(P.strat[a:b], P.psu[a:b], P.w[a:b], R, rng)
+        for r in range(R):
+            reps.append(stat_fn(P.dfl(W[:, r])))
+    return np.array(reps)
 
 
 def _contrast(qseries: np.ndarray, years, qs, rng, predictive: bool) -> float:
@@ -84,43 +139,17 @@ def _contrast(qseries: np.ndarray, years, qs, rng, predictive: bool) -> float:
     return float(np.mean(d90 - d50))
 
 
-def _bootstrap(d: pd.DataFrame, years, n_rep: int, rng, stat_fn, chunk: int = 50) -> np.ndarray:
-    """Replicate estimates. Replicate weights are drawn year by year (strata nested in year) and the DFL factor is
-    recomputed from the replicate weights."""
-    reps = []
-    by_year = {y: d[d["year"] == y] for y in years}
-    for start in range(0, n_rep, chunk):
-        R = min(chunk, n_rep - start)
-        rw = {
-            y: rao_wu_weights(g["strat"], g["psu"], g["wt"].to_numpy(float), R, rng)
-            for y, g in by_year.items()
-        }
-        for r in range(R):
-            parts = []
-            for y, g in by_year.items():
-                parts.append(g.assign(wt=rw[y][:, r]))
-            rep = pd.concat(parts)
-            rep = rep[rep["wt"] > 0]
-            rep["w_dfl"] = rep["wt"] * dfl_factor(
-                rep["year"].to_numpy(), rep["cell"].to_numpy(), rep["wt"].to_numpy()
-            )
-            reps.append(stat_fn(rep))
-    return np.array(reps)
-
-
 def fit_h3(df: pd.DataFrame, n_rep: int = 500, seed: int = 20261114, qs=QUANTILES) -> tuple[Estimate, dict]:
     """df: year, bmi, wt, strat, psu, age_group, sex, race, educ."""
-    years = sorted(df["year"].unique())
     qs = list(qs)
-    d = _prepare(df, "bmi")
-    q_obs = _series(d, "bmi", "quantile", qs, "w_dfl", years)
+    P = prepare(df, "bmi")
+    years = P.years
+    q_obs = P.series(P.dfl(P.w), "quantile", qs)
     rng = np.random.default_rng(seed)
     c_hat = _contrast(q_obs, years, qs, rng, predictive=False)
-
-    def stat(rep):
-        return _contrast(_series(rep, "bmi", "quantile", qs, "w_dfl", years), years, qs, rng, predictive=True)
-
-    reps = _bootstrap(d, years, n_rep, rng, stat)
+    reps = bootstrap(
+        P, n_rep, rng, lambda w: _contrast(P.series(w, "quantile", qs), years, qs, rng, predictive=True)
+    )
     deps = {
         q: trend.departures(q_obs[i], years, scale="identity", predictive=False).draws[0]
         for i, q in enumerate(qs)
@@ -137,20 +166,20 @@ def fit_nc1(
 ) -> tuple[Estimate, dict]:
     """df: year, htm (metres), wt, strat, psu, age_group, sex, race, educ. Adults 25-64 by default (Q19);
     pass all age groups for the Q24 sensitivity."""
-    years = sorted(df["year"].unique())
     base = df[df["age_group"].isin(ages)].assign(height_cm=lambda x: 100 * x["htm"])
     rng = np.random.default_rng(seed)
     per_sex, reps_all = {}, []
     for sex, g in base.groupby("sex"):
-        d = _prepare(g, "height_cm")
-        m = _series(d, "height_cm", "mean", None, "w_dfl", years)[0]
+        P = prepare(g, "height_cm")
+        years = P.years
+        m = P.series(P.dfl(P.w), "mean")[0]
         per_sex[sex] = float(np.mean(trend.departures(m, years, scale="identity", predictive=False).draws[0]))
 
-        def stat(rep):
-            mr = _series(rep, "height_cm", "mean", None, "w_dfl", years)[0]
+        def stat(w, P=P, years=years):
+            mr = P.series(w, "mean")[0]
             return float(np.mean(trend.departures(mr, years, scale="identity", rng=rng).draws[0]))
 
-        reps_all.append(_bootstrap(d, years, n_rep, rng, stat))
+        reps_all.append(bootstrap(P, n_rep, rng, stat))
     est = float(np.mean(list(per_sex.values())))
     reps = np.mean(np.vstack(reps_all), axis=0)
     return Estimate(est, float(np.std(reps, ddof=1))), {"by_sex": per_sex, "replicates": reps}

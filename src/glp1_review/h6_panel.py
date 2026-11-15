@@ -78,3 +78,29 @@ def classify_groups(glp1: pd.DataFrame, years: list[int], t0: int, t1: int) -> p
         default="unknown",
     )
     return pd.Series(np.where(known, g, None), index=G.index)
+
+
+def merge_sparse(df: pd.DataFrame, col: str, order: list | None = None, min_initiators: int = 5) -> pd.Series:
+    """Q23: a covariate category with fewer than `min_initiators` initiators is merged with an adjacent category.
+    Ordered categories (`order`) merge with the neighbour that has fewer initiators; unordered ones merge into the
+    category with the most initiators."""
+    s = df[col].astype(object).copy()
+    init = df["group"] == "initiator"
+    while True:
+        cats = [c for c in (order or s.dropna().unique().tolist()) if (s == c).any()]
+        counts = {c: int(((s == c) & init).sum()) for c in cats}
+        small = [c for c in cats if counts[c] < min_initiators]
+        if not small or len(cats) < 2:
+            return s
+        c = min(small, key=counts.get)
+        if order:
+            i = cats.index(c)
+            nbrs = [cats[j] for j in (i - 1, i + 1) if 0 <= j < len(cats)]
+            target = min(nbrs, key=counts.get)
+        else:
+            target = max((x for x in cats if x != c), key=counts.get)
+        merged = f"{target}+{c}" if order and cats.index(target) < cats.index(c) else f"{c}+{target}"
+        s[(s == c) | (s == target)] = merged
+        if order:
+            order = [merged if x in (c, target) else x for x in order]
+            order = list(dict.fromkeys(order))

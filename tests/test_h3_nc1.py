@@ -2,7 +2,6 @@
 
 import numpy as np
 import pandas as pd
-import pytest
 
 from glp1_review import h3_quantiles as h3
 
@@ -43,15 +42,30 @@ def simulate(rng, tail_shift=0.0, old_jump=0.0, n=4000, trend_bmi=0.12):
     return pd.concat(rows, ignore_index=True)
 
 
-def test_dfl_factor_reproduces_reference_composition():
+def test_dfl_reproduces_reference_composition():
     rng = np.random.default_rng(40)
     df = simulate(rng, old_jump=0.25)
-    d = h3._prepare(df, "bmi")
-    old = d["age_group"].isin(["55-64", "65+"])
-    ref_share = d.loc[d.year.isin(h3.REF_YEARS)].pipe(lambda x: np.average(old[x.index], weights=x.wt))
-    for y in (2011, 2024):
-        g = d[d.year == y]
-        assert np.average(old[g.index], weights=g.w_dfl) == pytest.approx(ref_share, abs=1e-9)
+    df["old"] = df["age_group"].isin(["55-64", "65+"]).astype(float)
+    P = h3.prepare(df, "old")
+    share = P.series(P.dfl(P.w), "mean")[0]  # weighted share of 55+ per year after reweighting
+    ref = df[df.year.isin(h3.REF_YEARS)]
+    assert np.allclose(share, np.average(ref["old"], weights=ref["wt"]), atol=1e-9)
+
+
+def test_dfl_years_without_race_use_reduced_cells():
+    """2015-2016 have no race variable: those years are reweighted on age x sex x education, not zeroed."""
+    rng = np.random.default_rng(44)
+    df = simulate(rng, old_jump=0.25)
+    df.loc[df.year.isin([2015, 2016]), "race"] = h3.NOT_AVAILABLE
+    df["old"] = df["age_group"].isin(["55-64", "65+"]).astype(float)
+    P = h3.prepare(df, "old")
+    w = P.dfl(P.w)
+    for y in (2015, 2016):
+        a, b = P.bounds[y]
+        assert w[a:b].sum() > 0
+    share = P.series(w, "mean")[0]
+    ref = df[df.year.isin(h3.REF_YEARS)]
+    assert np.allclose(share, np.average(ref["old"], weights=ref["wt"]), atol=1e-9)
 
 
 def test_h3_recovers_tail_contrast():
@@ -67,9 +81,9 @@ def test_h3_composition_jump_is_neutralized():
     est, det = h3.fit_h3(simulate(rng, tail_shift=0.0, old_jump=0.25), n_rep=30)
     assert abs(est.est) < 3 * est.se + 0.15
     # without reweighting the jump in older adults would move the upper quantiles
-    d = h3._prepare(simulate(np.random.default_rng(42), old_jump=0.25), "bmi")
-    raw = h3._series(d, "bmi", "quantile", [0.9], "wt", sorted(d.year.unique()))[0]
-    adj = h3._series(d, "bmi", "quantile", [0.9], "w_dfl", sorted(d.year.unique()))[0]
+    P = h3.prepare(simulate(np.random.default_rng(42), old_jump=0.25), "bmi")
+    raw = P.series(P.w, "quantile", [0.9])[0]
+    adj = P.series(P.dfl(P.w), "quantile", [0.9])[0]
     assert raw[-1] - raw[-4] > adj[-1] - adj[-4] + 0.3
 
 
