@@ -19,8 +19,9 @@ reviewed and pasted field by field. Text in brackets is still to be completed.
 - [x] Check in the BRFSS coverage report the year the diabetes item changes (Q12, Q19, Q23): 2019
 - [x] Review the smallest effects of interest (Q20) and the inference criteria (Q22): SESOIs kept; one-sided
   support and contradiction (`decision_log.md`)
-- [ ] Read the original articles cited in Q4, Q18, Q19 and Q20 and check the numbers (several were taken from press
-  or publisher summaries)
+- [ ] Read the original articles cited in Q4, Q18, Q19 and Q20 and check the numbers. **Partly done on 14 November 2026**
+  (`citation_check.md`): every number that sets a pre-registered parameter matched its source; still to read: Callaway
+  et al. (2024) on continuous treatments, Ward et al. (2019) full text, Holm (1979)
 - [ ] Decide whether to keep the AI-assistance statement in Q18 (recommended)
 - [ ] Upload the OSF package (`resultados/osf_glp1_<date>.zip`, built by `scripts/build_osf_package.py`) before
   registering. **Blocked on 14 November 2026:** the new OSF account returns "Account not valid"; waiting for OSF

@@ -25,6 +25,7 @@ FILES = [
     ("docs/preregistro_osf_v2.md", "1_documents"),
     ("docs/decision_log.md", "1_documents"),
     ("docs/implementation_notes.md", "1_documents"),
+    ("docs/citation_check.md", "1_documents"),
     ("docs/h0_sources.md", "1_documents"),
     ("docs/figures", "1_documents"),
     ("dados_externos", "4_data_provenance"),
