@@ -258,9 +258,9 @@ pre-registration are in {{REPO.URL}} and in the OSF project ({{OSF.DOI}}).
 
 # Use of AI assistance
 
-The pilot, the download scripts, the analysis code and drafts of this paper were prepared with an AI assistant
-(Claude, Anthropic) under the author's direction. The author is responsible for every analytic decision and for
-the text.
+The pilot, the download scripts, the analysis code, the check of cited numbers and drafts of this paper were
+prepared with an AI assistant (Claude, Anthropic) under the author's direction. The author is responsible for
+every analytic decision and for the text.
 
 # Funding and competing interests
 

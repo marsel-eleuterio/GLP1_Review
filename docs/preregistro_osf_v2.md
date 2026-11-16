@@ -1,10 +1,13 @@
 # OSF pre-registration: GLP-1 and the US adult obesity curve (draft, version 2)
 
-14 November 2026 · Marsel Eleutério
+14 November 2026, last updated 16 November 2026 · Marsel Eleutério
 
 Version 2 fills the fields that depended on the download scripts (Q7, Q8, Q10, Q12, Q13, Q18, Q21, Q23) with the
 results of 14 November 2026 and revises the inference and model choices listed in `decision_log.md` (Q19, Q21,
 Q22, Q23). Version 1 is kept unchanged in `preregistro_osf_rascunho.md`; the differences are in the git history.
+Updated after 14 November, before any registration: Q7, Q8 and Q18 (NHANES files downloaded on 15 November 2026
+for the self-report correction), Q24 (Ward et al. 2019 projection and correction method, `decision_log.md`
+section 7) and the AI-assistance statement in Q18.
 
 Draft of the 25 answers of the OSF Secondary Data Preregistration template, in the order of the form, to be
 reviewed and pasted field by field. Text in brackets is still to be completed.
@@ -22,7 +25,8 @@ reviewed and pasted field by field. Text in brackets is still to be completed.
 - [x] Read the original articles cited in Q4, Q18, Q19 and Q20 and check the numbers (`citation_check.md`):
   every number that sets a pre-registered parameter matched its source, Callaway et al. confirms the H4 wording,
   and Ward et al. (2019) was read on 15 November 2026
-- [ ] Decide whether to keep the AI-assistance statement in Q18 (recommended)
+- [x] AI-assistance statement in Q18: kept and extended to the analysis code, the citation check and the
+  supporting documents (author's decision, 16 November 2026)
 - [ ] Upload the OSF package (`resultados/osf_glp1_<date>.zip`, built by `scripts/build_osf_package.py`) before
   registering. **Blocked on 14 November 2026:** the new OSF account returns "Account not valid"; waiting for OSF
   Support. The project link for Q7 is also pending.
@@ -79,7 +83,8 @@ All sources are free. BRFSS, MEPS, CMS, CDC open data, Census and ACS files are 
 - Medicare Part D by geography and drug: https://data.cms.gov/data-api/v1/dataset/c8ea3f8e-3a09-4fea-86f2-8902fb4b0920/data (2024; earlier years have their own dataset ids, listed in provenance_cms.csv)
 - Medicaid State Drug Utilization Data: https://catalog.data.gov/dataset/state-drug-utilization-data-2025
 - CDC open data: https://catalog.data.gov/dataset/nutrition-physical-activity-and-obesity-behavioral-risk-factor-surveillance-system
-- Download scripts (brfss_microdata.py, meps_microdata.py, brfss_hf_download.py, brfss_extract_parquet.py, cms_glp1_download.py, census_download.py), the MEPS SHA-256 manifest and the provenance files of BRFSS, CMS and Census/ACS are in this OSF project: [OSF link].
+- NHANES (measured BMI, used only for the Q24 self-report correction): https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/YEAR/DataFiles/FILE.xpt, demographics (DEMO) and body measures (BMX) files of the 2011–2012, 2013–2014, 2015–2016, 2017–March 2020 and August 2021–August 2023 cycles
+- Download scripts (brfss_microdata.py, meps_microdata.py, brfss_hf_download.py, brfss_extract_parquet.py, cms_glp1_download.py, census_download.py, nhanes_download.py), the MEPS SHA-256 manifest and the provenance files of BRFSS, CMS, Census/ACS and NHANES are in this OSF project: [OSF link].
 
 ### Q8. Download and access dates
 
@@ -90,6 +95,7 @@ Marsel Eleutério, the only author:
 - MEPS files: downloaded 14 November 2026 from meps.ahrq.gov (16 Stata files; SHA-256 manifest in the OSF project). Codebook checks: 24 of 24 comparable counts match, no mismatch.
 - Medicare Part D and Medicaid files from CMS: downloaded 14 November 2026 through the official APIs (cms_glp1_download.py). Medicare Part D by Geography and Drug 2019–2024: all state-level rows (2024 file released 21 May 2026). Medicaid State Drug Utilization Data 2021–2025 (versions of 13 July 2026): GLP-1 rows selected by product-name prefix, every name kept listed for review. Medicaid and CHIP monthly enrollment 2021–2025. Every row count matches the API count; dataset ids, release dates and SHA-256 in provenance_cms.csv.
 - ACS PUMS: 1-year person files 2011–2019, experimental 2020 and 2021–2024 downloaded 14 November 2026, before any BMI analysis, and reduced to post-stratification cell counts (census_download.py; the 2025 file is not yet released, so 2024 is used for 2025 as stated in Q19). Census state population estimates, Vintage 2025, downloaded the same day. SHA-256 in provenance_census.csv.
+- NHANES DEMO and BMX files, five cycles 2011–2023: downloaded 15 November 2026 from wwwn.cdc.gov (nhanes_download.py; SHA-256 in provenance_nhanes.csv). Check: the age-adjusted obesity prevalence of adults 20+ reproduces NCHS Data Brief 508 within 0.04 pp for 2013–2014, 2015–2016, 2017–March 2020 and 2021–2023 (nhanes_check.csv).
 
 ### Q9. Data collection and representativeness
 
@@ -157,13 +163,13 @@ On 12–13 November 2026 the author ran a pilot on aggregated data only (BRFSS t
 3. **Age and sex (relevant to the secondary H2 gradients).** Departures by age group did not follow published use by age: their correlations with use across six age groups ranged from −0.40 to +0.67, depending on the use source and the departure measure. The 2025 departure was −0.90 pp for women and −0.44 pp for men.
 4. **States (relevant to H4).** With the 2024 all-payer use measure, the change in obesity from 2021–22 to 2024–25 was 0.33 pp lower per standard deviation of use (HC3 standard error 0.16; permutation p = 0.05; r = −0.28). The slope was driven by West Virginia, Kentucky, Louisiana and Oklahoma: −0.03 pp per SD without them. The Medicaid measure showed no association. Alternative specifications (Medicare claims per adult or claim share, a 2019–2022 baseline, precision weights, adjustment for or residualization on the 2015–2019 level, dropping states missing a post-period year) gave slopes between −0.18 and −0.52 pp per SD. With the deviation from each state's own 2011–2019 trend as outcome, the slope was −0.93 pp per SD, falling to −0.43 (p = 0.11) after adjusting for the 2015–2019 obesity level. Placebo periods gave −0.06 pp per SD for 2015/16 to 2018/19 (p = 0.71), +0.35 for 2012/13 to 2015/16 (p = 0.008), and −0.40 for the deviation-from-trend placebo (p = 0.07). In an event study, the slopes were negative in 2011–2014 (−0.62 to −0.23), close to zero in 2015–2019, and −0.35 and −0.39 in 2024 and 2025; after removing the linear pre-trend in the slopes, the post-period slopes were −0.44 (2023), −0.82 (2024) and −0.93 (2025). A power check gave about 74% power if a 1.5 pp national departure were proportional to all-payer use. By tercile of all-payer use, the mean deviation from the states' own 2011–2019 trend in 2024–25 was +0.01 pp (low use), −1.03 pp (middle) and −1.81 pp (high).
 5. **Published reports.** The author has read earlier reports on the same question: Rader et al. (2024), who found a fall in measured BMI and obesity in 2023 in records of 16.7 million adults, largest in the South, where GLP-1 dispensing was highest; Gallup (2025, 2026), with obesity at 39.9% in 2022 and 37.0% in 2025 and the largest declines at ages 40–64; Epic Research (2026); state counts from Trust for America's Health (2025) and the CDC maps (2026); NHANES estimates to 2023; and published GLP-1 use rates by age, sex, diabetes, BMI class and insurance (KFF, Gallup, NCHS). These reports motivated the hypotheses and the parameter ranges in Q19 and Q20. None analyses BMI by diabetes status, BMI quantiles or within-person change in the datasets used here.
-6. **Microdata.** On 14 November 2026 BRFSS and MEPS microdata were downloaded and processed only by the scripts in this project. They reproduce published aggregates (state-year obesity prevalence and codebook counts) and count cases (adults with BMI, GLP-1 users per year, initiators per panel). The MEPS extraction also printed the weighted share of adults with a GLP-1 purchase per year, overall and among adults with diagnosed diabetes (0.84% and 7.2% in 2018, 4.99% and 30.4% in 2024); this is exposure, not outcome. The BRFSS coverage report led to adding source names for sex (SEX, SEX1) and health-care coverage (_HLTHPL2) to brfss_microdata.py, after checking in the CDC dictionaries that their codes match; this change is documented in the OSF project. No BMI analysis by diabetes status, BMI quantile, height trend or GLP-1 use has been run.
+6. **Microdata.** On 14 November 2026 BRFSS and MEPS microdata were downloaded and processed only by the scripts in this project. They reproduce published aggregates (state-year obesity prevalence and codebook counts) and count cases (adults with BMI, GLP-1 users per year, initiators per panel). The MEPS extraction also printed the weighted share of adults with a GLP-1 purchase per year, overall and among adults with diagnosed diabetes (0.84% and 7.2% in 2018, 4.99% and 30.4% in 2024); this is exposure, not outcome. The BRFSS coverage report led to adding source names for sex (SEX, SEX1) and health-care coverage (_HLTHPL2) to brfss_microdata.py, after checking in the CDC dictionaries that their codes match; this change is documented in the OSF project. On 15 November 2026 the NHANES measured-BMI files were downloaded for the Q24 self-report correction and used only to reproduce the published age-adjusted obesity prevalence by cycle (within 0.04 pp); NHANES BMI quantiles were not computed, and the correction was written and tested on simulated data and has not been applied to BRFSS. No BMI analysis by diabetes status, BMI quantile, height trend or GLP-1 use has been run.
 
 Not yet examined: anything by diagnosed diabetes (H2), BMI quantiles (H3), BMI change in MEPS (H6), self-reported height (NC1), and the 2017 pseudo-break in the microdata (NC2).
 
 Consequences for this plan: H1 and H4 are registered as estimation targets with fixed specifications, not as confirmatory tests; the BMI-category predictions in H3 are secondary because the category shares were seen; the confirmatory tests are H2, H3 (quantile contrast) and H6, together with NC1.
 
-AI assistance: the pilot, the download scripts and the draft of this registration were prepared with an AI assistant (Claude, Anthropic) under the author's direction. The author is responsible for every analytic decision.
+AI assistance: the pilot, the download scripts, the analysis code and its tests, the check of cited numbers against their sources, and the drafts of this registration and its supporting documents were prepared with an AI assistant (Claude, Anthropic) under the author's direction. The author is responsible for every analytic decision.
 
 ## Part 5. Analyses
 

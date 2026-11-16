@@ -20,9 +20,10 @@ measurement artefact.
 
 Negative controls: self-reported height and the 2015–2019 period must not show the same pattern.
 
-**Status (2026-11-14):** pilot done with aggregated data; literature review closed; OSF
-pre-registration in draft. Next step: download the BRFSS and MEPS microdata and reproduce the CDC API
-numbers, then register on OSF before any confirmatory analysis.
+**Status (2026-11-16):** data downloaded and validated against published numbers (BRFSS, MEPS, CMS,
+Census/ACS, NHANES); pre-registered analysis code written and tested on simulated data; preprint skeleton in
+`paper/`. Next step: register on OSF (waiting for OSF Support to repair the account), then run
+`scripts/run_analysis.py`.
 
 > Study documents are written in Portuguese; the OSF pre-registration answers are in English.
 
@@ -78,7 +79,10 @@ scripts → complete the draft → register → analyse.
 ## Documents
 
 - [Study plan](docs/plano_de_estudo.md) ([PDF](docs/plano_de_estudo.pdf))
-- [OSF pre-registration draft](docs/preregistro_osf_rascunho.md) ([PDF](docs/preregistro_osf_rascunho.pdf))
+- [OSF pre-registration, version 2 (current)](docs/preregistro_osf_v2.md); first draft:
+  [version 1](docs/preregistro_osf_rascunho.md) ([PDF](docs/preregistro_osf_rascunho.pdf))
+- [Decision log](docs/decision_log.md), [implementation notes](docs/implementation_notes.md),
+  [citation check](docs/citation_check.md)
 - [Literature review](docs/revisao_da_literatura.md) ([PDF](docs/revisao_da_literatura.pdf))
 - [Pilot notes](piloto/LEIAME.md)
 
