@@ -46,7 +46,12 @@ def _pmm(X_obs, y_obs, X_mis, rng, k=5) -> np.ndarray:
     order = np.argsort(pred_obs)
     sorted_pred = pred_obs[order]
     pos = np.searchsorted(sorted_pred, pred_mis)
-    pick = np.clip(pos + rng.integers(-k // 2, k - k // 2, size=len(pos)), 0, len(order) - 1)
+    # the k observed cases with the nearest predicted values lie within k places of the insertion point
+    win = np.clip(pos[:, None] + np.arange(-k, k)[None, :], 0, len(order) - 1)
+    dist = np.abs(sorted_pred[win] - pred_mis[:, None])
+    dist[:, 1:][win[:, 1:] == win[:, :-1]] = np.inf  # clipped duplicates at the ends
+    nearest = np.take_along_axis(win, np.argsort(dist, axis=1, kind="stable")[:, :k], axis=1)
+    pick = nearest[np.arange(len(pos)), rng.integers(0, k, size=len(pos))]
     return y_obs[order[pick]]
 
 

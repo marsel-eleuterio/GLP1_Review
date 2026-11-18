@@ -107,12 +107,22 @@ def rao_wu_weights(strata, psu, w, n_rep: int, rng: np.random.Generator) -> np.n
     replacement and each PSU's weights are multiplied by n_h / (n_h - 1) * (times drawn). Single-PSU strata keep
     their weights."""
     w = np.asarray(w, float)
+    codes, psu_stratum = psu_codes(strata, psu)
+    return w[:, None] * rao_wu_multipliers(psu_stratum, n_rep, rng)[codes]
+
+
+def psu_codes(strata, psu) -> tuple[np.ndarray, np.ndarray]:
+    """Integer PSU code of each row (PSUs are nested in strata) and the stratum of each distinct PSU."""
     st = pd.Series(np.asarray(strata)).astype(str).to_numpy()
     ps = pd.Series(np.asarray(psu)).astype(str).to_numpy()
-    key = pd.Series(st) + "|" + pd.Series(ps)
+    key = pd.Series(st) + "\x1f" + pd.Series(ps)
     codes, uniq = pd.factorize(key)
-    psu_stratum = pd.Series(uniq).str.split("|").str[0].to_numpy()
-    mult = np.ones((len(uniq), n_rep))
+    return codes, pd.Series(uniq).str.split("\x1f").str[0].to_numpy()
+
+
+def rao_wu_multipliers(psu_stratum, n_rep: int, rng: np.random.Generator) -> np.ndarray:
+    """(n_psu, n_rep) Rao-Wu rescaled bootstrap multipliers, given the stratum of each distinct PSU."""
+    mult = np.ones((len(psu_stratum), n_rep))
     for h in np.unique(psu_stratum):
         idx = np.flatnonzero(psu_stratum == h)
         nh = len(idx)
@@ -123,4 +133,4 @@ def rao_wu_weights(strata, psu, w, n_rep: int, rng: np.random.Generator) -> np.n
         for r in range(n_rep):
             counts[:, r] = np.bincount(draws[:, r], minlength=nh)
         mult[idx] = nh / (nh - 1) * counts
-    return w[:, None] * mult[codes]
+    return mult

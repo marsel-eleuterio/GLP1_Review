@@ -18,8 +18,9 @@ Periods (Ward used 1993-1994, 1999-2004, 2005-2010 and 2011-2016, matching NHANE
   PERIODS_FIXED (variant)         one calibration, BRFSS 2011-2020 <-> NHANES 2011-March 2020, applied to every
                                   year, so the corrected series keeps all of the BRFSS change after 2020.
 
-Within a period the quantile is taken over the pooled years, so the correction is one increasing map from reported
-to corrected BMI for the whole period and changes within the period are kept.
+The quantile of each respondent is read from the weighted distribution of the calibration years (the pooled years
+of the period; 2011-2020 in the fixed variant), so the correction is one map from reported to corrected BMI per
+period and changes within a period, or after 2020 in the fixed variant, are kept.
 
 The functions are pure; the BRFSS input comes from the guarded loader (pre-registration rule) and they are tested on
 simulated data only.
@@ -33,24 +34,26 @@ from glp1_review.survey import weighted_quantile
 
 GRID = np.round(np.arange(0.01, 1.0, 0.01), 2)
 NOISE_SD = 0.5
+# period: (BRFSS calibration years, BRFSS years corrected, NHANES cycles)
 PERIODS = {
-    "2011-2016": (range(2011, 2017), ("2011-2012", "2013-2014", "2015-2016")),
-    "2017-2020": (range(2017, 2021), ("2017-2020",)),
-    "2021-2025": (range(2021, 2026), ("2021-2023",)),
+    "2011-2016": (range(2011, 2017), range(2011, 2017), ("2011-2012", "2013-2014", "2015-2016")),
+    "2017-2020": (range(2017, 2021), range(2017, 2021), ("2017-2020",)),
+    "2021-2025": (range(2021, 2026), range(2021, 2026), ("2021-2023",)),
 }
 PERIODS_FIXED = {
-    "2011-2020": (range(2011, 2026), ("2011-2012", "2013-2014", "2015-2016", "2017-2020")),
+    "2011-2020": (range(2011, 2021), range(2011, 2026), ("2011-2012", "2013-2014", "2015-2016", "2017-2020")),
 }
 
 
-def weighted_rank(x, w) -> np.ndarray:
-    """Mid-point weighted ECDF value of each element (ties share the rank of their pooled mass)."""
+def weighted_rank(x, w, at=None) -> np.ndarray:
+    """Mid-point weighted ECDF of (x, w) (ties share the rank of their pooled mass), evaluated at each element of x,
+    or at `at` by linear interpolation between the distinct values of x."""
     x, w = np.asarray(x, float), np.asarray(w, float)
     ux, inv = np.unique(x, return_inverse=True)
     mass = np.bincount(inv, weights=w)
     cum = np.cumsum(mass)
     p = (cum - 0.5 * mass) / cum[-1]
-    return p[inv]
+    return p[inv] if at is None else np.interp(np.asarray(at, float), ux, p)
 
 
 def nhanes_weights(n: pd.DataFrame) -> np.ndarray:
@@ -86,16 +89,19 @@ def correct(b: pd.DataFrame, nhanes: pd.DataFrame, periods: dict = PERIODS, seed
     out["bmi"] = np.nan
     out["obese"] = np.nan
     diag = []
-    for period, (years, cycles) in periods.items():
+    for period, (calib_years, years, cycles) in periods.items():
         for sex in ("Male", "Female"):
-            m = b["year"].isin(list(years)) & (b["sex"] == sex) & b["bmi"].notna() & (b["wt"] > 0)
+            ok = (b["sex"] == sex) & b["bmi"].notna() & (b["wt"] > 0)
+            c = ok & b["year"].isin(list(calib_years))
+            m = ok & b["year"].isin(list(years))
             n = nhanes[nhanes["cycle"].isin(cycles) & (nhanes["sex"] == sex)]
-            if not m.any() or n.empty:
+            if not c.any() or not m.any() or n.empty:
                 continue
+            xc, wc = b.loc[c, "bmi"].to_numpy(float), b.loc[c, "wt"].to_numpy(float)
             x, w = b.loc[m, "bmi"].to_numpy(float), b.loc[m, "wt"].to_numpy(float)
             nb, nw = n["bmi"].to_numpy(float), nhanes_weights(n)
-            spline, raw = bias_curve(x, w, nb, nw)
-            q = weighted_rank(x, w)
+            spline, raw = bias_curve(xc, wc, nb, nw)
+            q = weighted_rank(xc, wc, at=x)
             adj = x + spline(q) + rng.normal(0.0, NOISE_SD, len(x))
             out.loc[m, "bmi"] = adj
             out.loc[m, "obese"] = (adj >= 30).astype(float)
@@ -103,6 +109,7 @@ def correct(b: pd.DataFrame, nhanes: pd.DataFrame, periods: dict = PERIODS, seed
                 {
                     "period": period,
                     "sex": sex,
+                    "n_brfss_calibration": int(c.sum()),
                     "n_brfss": int(m.sum()),
                     "n_nhanes": len(n),
                     "bias_q10": float(spline(0.10)),

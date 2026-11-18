@@ -15,7 +15,7 @@ from glp1_review import h1_mrp, h5_microsim
 from glp1_review.data import AGE6, STATES, harmonise_brfss
 from glp1_review.guard import require_registration
 from glp1_review.h3_quantiles import NOT_AVAILABLE
-from glp1_review.h6_panel import classify_groups, merge_sparse
+from glp1_review.h6_panel import analysis_weight, classify_groups, merge_sparse
 from glp1_review.paths import CLEAN, PILOT_DATA, RAW
 
 YEARS = tuple(range(2011, 2026))
@@ -90,6 +90,12 @@ def h1_inputs(b: pd.DataFrame, src: Sources = DEFAULT) -> dict:
 def adults_millions(src: Sources = DEFAULT, years=(2023, 2024, 2025)) -> dict:
     pop = pd.read_csv(src.clean / "census" / "adult_pop_state_2020_2025.csv")
     return {y: float(pop[str(y)].sum()) / 1e6 for y in years}
+
+
+def adults_by_state(src: Sources = DEFAULT, year: int = 2024) -> pd.Series:
+    """Adult resident population by state postal code (Census Vintage 2025)."""
+    pop = pd.read_csv(src.clean / "census" / "adult_pop_state_2020_2025.csv")
+    return pop.set_index(pop["state"].map(_name_to_abbr(src)))[str(year)]
 
 
 def h4_outcome(b: pd.DataFrame) -> pd.DataFrame:
@@ -190,6 +196,7 @@ def h6_frame(src: Sources = DEFAULT, all_rounds: bool = True) -> pd.DataFrame:
         diabetes0=df["diabetes"],
         insured0=df["inscov"].isin([1, 2]).astype(float),
     )
+    df = df[analysis_weight(df).notna()]  # persons with neither a positive LSAQWT nor LONGWT
     df["age_group"] = merge_sparse(df, "age_group", order=list(AGE6))
     df["race"] = merge_sparse(df, "race")
     return df.reset_index(drop=True)

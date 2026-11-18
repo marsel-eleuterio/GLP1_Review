@@ -6,7 +6,7 @@ that change results materially were decided by the author and are logged in `dec
 
 ## Pre-registration guard
 
-`guard.py`: any loading of real BMI, obesity or height data (`data.load_brfss`) raises an error until
+`guard.py`: any loading of real BMI, obesity or height data (`prepare.brfss`) raises an error until
 `docs/osf_registration.txt` holds the registration DOI or URL.
 
 ## Shared
@@ -27,6 +27,8 @@ that change results materially were decided by the author and are logged in `dec
 | Group effects | N(0, σ) constrained to sum to zero (ZeroSumNormal), non-centred; sex as a fixed effect; state deviations sum to zero (decision log, section 4) |
 | Division effect | A group effect like the others |
 | Sampler | NUTS via `nutpie` (no C compiler on the build machine); 4 chains × 1,000 draws + 1,000 tuning, target acceptance 0.95 |
+| Convergence (Q23) | R-hat < 1.01, bulk ESS > 400 and no divergences, checked on every parameter in the posterior (group effects, raw deviations and SDs) |
+| Q23 fallback | If any year fails every Q23 step, the whole primary series becomes the composition-adjusted direct series: weighted two-way (state + year) fixed effects on the direct state estimates, weights = 2024 Census adults, national value = weighted mean of state + year effects (as in the pilot). Its value is repeated over 4,000 draws, so Stage 2 adds only the Student-t predictive uncertainty; `h1.json` records `primary_series` |
 | Pairing across years | Yearly fits are independent; Stage 2 pairs draws by index |
 | Categories | Age from `_AGEG5YR` (1; 2-3; 4-5; 6-7; 8-9; 10-13), race from `_IMPRACE` (4 and 6 → "other or multiracial"), education from `_EDUCAG` |
 
@@ -42,7 +44,7 @@ transformation (exact by Frisch-Waugh-Lovell). Strata nested within year.
 | Logistic model of the DFL reweighting | Saturated in the 240 cells (age × sex × race × education): the factor is the ratio of the cell's weighted share in 2017-2019 to its share in the year |
 | Quantiles | Weighted ECDF with linear interpolation (Q23) |
 | Uncertainty | Rao-Wu bootstrap (500 replicates) repeating reweighting, quantiles and projection, **with the Student-t predictive draw in each replicate**, so that year-level shocks are included, as in H2 |
-| NC1 "by sex" | Mean height by sex, each series with its own trend; the estimand is the mean of the two departures, and each sex is reported |
+| NC1 "by sex" | Mean height by sex, each series with its own trend; the estimand is the mean of the two departures, and each sex is reported. Bootstrap: each replicate resamples the PSUs once and applies the draw to both sexes, which share PSUs |
 
 ## H4
 
@@ -62,14 +64,15 @@ only. Within a draw the loss is the same for every user.
 
 ## H6
 
-LSAQWT, with LONGWT where LSAQWT is missing; strata nested within panel. Persons whose GLP-1 status is unknown in
+LSAQWT, with LONGWT where LSAQWT is zero or missing; persons with neither weight positive are dropped from the
+frame (`h6_panel.analysis_weight`); strata nested within panel. Persons whose GLP-1 status is unknown in
 any panel year are excluded.
 
 ## Analysis inputs from the real files (`prepare.py`)
 
 | Input | Construction |
 | --- | --- |
-| BRFSS rows | 50 states + DC; codes mapped to the ACS categories (`data.harmonise_brfss`); in years without the race variable (2015-2016) race = "Not available" |
+| BRFSS rows | 50 states + DC; codes mapped to the ACS categories (`data.harmonise_brfss`); in years without the race variable (2015-2016) race = "Not available"; income: `_INCOMG1` (from 2021) codes 6 and 7 ($100-200k, $200k+) merged into 5, so 5 means $50k+ in every year as in `_INCOMG` |
 | H3/NC1 reweighting in 2015-2016 | Cells drop race in those years and the 2017-2019 reference shares are computed on the same reduced cells (otherwise every cell would be absent from the reference and those years would get zero weight) |
 | H4 Medicare indicator | Part D 2024 state rows whose generic name contains semaglutide, tirzepatide, liraglutide, dulaglutide, exenatide, lixisenatide or albiglutide (insulin combinations included); total claims / Census 2024 adults × 100 |
 | H4 Medicaid indicator | SDUD 2025 GLP-1 prescriptions, all utilization types (suppressed cells are missing and contribute nothing) / average monthly total Medicaid enrollment in 2025 (final or updated report preferred over preliminary) × 1,000 |
@@ -95,10 +98,10 @@ without a registration.
 | Pandemic years | Removed for H2 (stage 1 and 2) and H4; not applicable to H1 and H3, whose trends use 2011-2019 and whose years are estimated separately |
 | Balanced panel | States with BRFSS data in all 15 years: H1 (direct weighted series), H2, H3, H4 |
 | Other compositions (H3) | DFL reference 2011 or 2022 instead of 2017-2019 |
-| Missing BMI | Departure of the weighted share with missing BMI from its 2011-2019 trend; 20 imputations (`mi.py`, predictive mean matching, proper draws) for the H1 direct series, H2 (Rubin's rules) and H3 (point estimates) |
+| Missing BMI | Departure of the weighted share with missing BMI from its 2011-2019 trend; 20 imputations (`mi.py`, predictive mean matching with a random draw among the 5 nearest donors, proper draws) for the H1 direct series, H2 (Rubin's rules) and H3 (point estimates) |
 | Interview mode | Separate estimates for cell-phone and landline interviews (H1 direct series, H2, H3) with the combined-frame weight `_LLCPWT`; mode-specific weights are not used |
 | H2 | No age and sex interactions; ages 45-74 (`_AGEG5YR` 6-11); diabetes group reweighted to its 2017-2019 age × sex composition; single regression with a wild cluster bootstrap by state (Webb six-point weights, 9,999 draws, unrestricted); item-change term off |
-| H3 | 75th and 95th percentiles; RIF regression (pooled WLS of the RIF on year and cell covariates, evaluated at 2017-2019 covariate means; point estimate) |
+| H3 | 75th and 95th percentiles; RIF regression (pooled WLS of the RIF on year and cell covariates, evaluated at 2017-2019 covariate means; point estimate; in 2015-2016 the race dummies are set to their reference means, so those years are adjusted for the other covariates only, as in the reduced DFL cells) |
 | H4 | Each indicator alone; population weights (2024 adults); precision weights (Kish effective n / p(1 − p)); leave-one-state-out range; without WV, KY, LA and OK; without states missing a post-period year; relative-magnitude bounds (conservative: post-period violation per year ≤ M̄ × the largest year-to-year change of the detrended pre-period betas); quartile contrast; cubic average causal response |
 | H5 | Loss of non-persistent users U(0%, 4%); persistence fixed at 35.2% and 53.5%; national use fixed at the MEPS 2024 rate |
 | H6 | Prevalent users as a third group; LONGWT; persons not present in all rounds; changes > 10 kg/m² excluded; by baseline diabetes; each panel separately |

@@ -7,7 +7,8 @@ results of 14 November 2026 and revises the inference and model choices listed i
 Q22, Q23). Version 1 is kept unchanged in `preregistro_osf_rascunho.md`; the differences are in the git history.
 Updated after 14 November, before any registration: Q7, Q8 and Q18 (NHANES files downloaded on 15 November 2026
 for the self-report correction), Q24 (Ward et al. 2019 projection and correction method, `decision_log.md`
-section 7) and the AI-assistance statement in Q18.
+section 7), the AI-assistance statement in Q18, and Q12 (income brackets harmonised after the code review of
+16 November 2026, `decision_log.md` section 8).
 
 Draft of the 25 answers of the OSF Secondary Data Preregistration template, in the order of the form, to be
 reviewed and pasted field by field. Text in brackets is still to be completed.
@@ -124,7 +125,7 @@ None. This is an observational study of secondary data.
 - **Diagnosed diabetes, BRFSS.** DIABETE3 in 2011–2018 and DIABETE4 from 2019 (item change t_item = 2019, from coverage_report.csv): 1 = yes; 3 = no and 4 = prediabetes coded as no; 2 = during pregnancy only, 7 = don't know and 9 = refused treated as missing.
 - **State GLP-1 use (H4).** Three indicators: Medicare Part D GLP-1 claims per 100 adult residents (2024), Medicaid GLP-1 prescriptions per 1,000 enrollees (2025), all-payer prescriptions per 100 residents (2024); combined into a latent index (Q19).
 - **Individual GLP-1 use, MEPS.** At least one purchase in the year of a drug whose Multum name (RXDRGNAM) contains semaglutide, tirzepatide, liraglutide, dulaglutide, exenatide, lixisenatide or albiglutide; household-reported names (RXNAME) are used as a check. Initiator: first purchase in a panel year after the first BMI measurement and up to the second, with no purchase in earlier panel years. Late initiator (Panel 23): first purchase in 2021. Never-user: no purchase in any panel year.
-- **Covariates, BRFSS.** Age group (_AGEG5YR collapsed to 18–24, 25–34, 35–44, 45–54, 55–64, 65+), sex (_SEX from 2019, SEX1 in 2018, SEX in 2011–2017; codes 7 and 9 treated as missing), race and ethnicity (_IMPRACE collapsed to White, Black, Hispanic, Asian, other or multiracial; _IMPRACE does not exist in 2015–2016, so in those two years race and ethnicity enters as a separate "not available" category; sensitivity: models without race and ethnicity), education (_EDUCAG, four levels), income (_INCOMG or _INCOMG1), health-care coverage (HLTHPLN1 in 2011–2020, _HLTHPLN in 2021–2022, _HLTHPL1 in 2023, _HLTHPL2 in 2024–2025; 1 = insured, 2 = not insured, other codes missing), state and year.
+- **Covariates, BRFSS.** Age group (_AGEG5YR collapsed to 18–24, 25–34, 35–44, 45–54, 55–64, 65+), sex (_SEX from 2019, SEX1 in 2018, SEX in 2011–2017; codes 7 and 9 treated as missing), race and ethnicity (_IMPRACE collapsed to White, Black, Hispanic, Asian, other or multiracial; _IMPRACE does not exist in 2015–2016, so in those two years race and ethnicity enters as a separate "not available" category; sensitivity: models without race and ethnicity), education (_EDUCAG, four levels), income (_INCOMG to 2020, _INCOMG1 from 2021, whose $50–100k, $100–200k and $200k+ brackets are merged into the $50k+ bracket of _INCOMG), health-care coverage (HLTHPLN1 in 2011–2020, _HLTHPLN in 2021–2022, _HLTHPL1 in 2023, _HLTHPL2 in 2024–2025; 1 = insured, 2 = not insured, other codes missing), state and year.
 - **Covariates, MEPS.** Age, sex, race and ethnicity (RACETHX), census region, insurance coverage (INSCOVyy), poverty category (POVCATyy), diagnosed diabetes (DIABDX_M18) and baseline BMI.
 
 ### Q13. Units of analysis, inclusion criteria and expected sample size

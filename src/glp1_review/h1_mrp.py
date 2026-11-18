@@ -154,7 +154,8 @@ def _dataset(node):
 def converged(idata) -> dict:
     import arviz as az
 
-    s = az.summary(idata, var_names=["mu", "gamma", "a_state", "a_age", "a_sex"], kind="diagnostics")
+    # every sampled and derived parameter (group effects, raw deviations, SDs), as Q23 requires
+    s = az.summary(idata, kind="diagnostics")
     ss = _dataset(idata.sample_stats)
     div = int(ss["diverging"].sum()) if "diverging" in ss else 0
     info = {
@@ -189,6 +190,30 @@ def fit_year_q23(cells, z, division, seed, sampler_kwargs=None):
         if diag["ok"]:
             return idata, label, log, model_opts
     raise RuntimeError(f"MRP did not converge after every Q23 step: {log}")
+
+
+def composition_adjusted_series(Y: pd.DataFrame, weights: pd.Series) -> pd.Series:
+    """Q23 fallback, as in the pilot: weighted two-way fixed effects (state + year) on the direct state estimates,
+    national value of year t = weighted mean over all states of (state effect + year effect), so states missing in a
+    year are filled from their own level. Y: state, year, y (any scale); weights: by state (adult population)."""
+    d = Y.dropna(subset=["y"])
+    d = d[d["state"].isin(weights.index)]
+    states = sorted(d["state"].unique())
+    years = sorted(d["year"].unique())
+    si = {s: i for i, s in enumerate(states)}
+    yi = {y: i for i, y in enumerate(years)}
+    X = np.zeros((len(d), len(states) + len(years) - 1))
+    X[np.arange(len(d)), d["state"].map(si).to_numpy()] = 1.0
+    t = d["year"].map(yi).to_numpy()
+    rows = np.flatnonzero(t > 0)
+    X[rows, len(states) + t[rows] - 1] = 1.0
+    w = weights.reindex(d["state"]).to_numpy(float)
+    sw = np.sqrt(w)
+    beta = np.linalg.lstsq(X * sw[:, None], d["y"].to_numpy(float) * sw, rcond=None)[0]
+    alpha, tau = beta[: len(states)], np.r_[0.0, beta[len(states) :]]
+    ws = weights.reindex(states).to_numpy(float)
+    level = float(np.sum(ws * alpha) / ws.sum())
+    return pd.Series(level + tau, index=years)
 
 
 def poststratify(

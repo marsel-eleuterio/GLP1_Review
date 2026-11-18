@@ -93,7 +93,7 @@ def change_2022_2025() -> pd.DataFrame:
 # ------------------------------------------------------------------------------- after registration
 def brfss_by_gallup_groups(df: pd.DataFrame, years=(2022, 2025)) -> pd.DataFrame:
     """Weighted obesity (%) with design-based SE by Gallup group and year. df: harmonised BRFSS rows with raw
-    `age5`, `sex` (Male/Female), `obese`, `wt`, `strat`, `psu`, `year` (load with data.load_brfss)."""
+    `age5`, `sex` (Male/Female), `obese`, `wt`, `strat`, `psu`, `year` (as returned by prepare.brfss)."""
     d = df[df["year"].isin(years) & df["obese"].notna()]
     groups = {k: d["age5"].isin(v) for k, v in GALLUP_AGE.items()}
     groups.update(

@@ -159,3 +159,34 @@ files stay outside the repository, in the git-ignored `literatura/`).
 - The correction is applied only to BRFSS data read through the guarded loader; before registration it was tested
   on simulated data only.
 
+## 8. Code review before registration (16 November 2026)
+
+A review of `src/glp1_review/` against the pre-registration, before the code is frozen, found ten problems. Nine
+were fixed, each with a regression test (`tests/test_review_fixes.py`); none touched real outcome data.
+
+1. **H1, Q23 fallback not implemented.** When a year failed every Q23 step the pipeline stopped. Now the
+   composition-adjusted direct series becomes the primary H1 series, as Q23 states (implementation notes, H1).
+2. **H1, convergence checked on five parameters only.** The R-hat/ESS rule now covers every parameter in the
+   posterior, as Q23 requires; before, an unconverged age × sex, race or education effect would have passed.
+3. **H2 and the BMI imputation, income codes.** `_INCOMG1` (from 2021) splits the top bracket of `_INCOMG`
+   ($50k+) into three. Codes 6 and 7 are merged into 5, so the income categories mean the same in every year; before,
+   a change of meaning in 2021 fell inside the H2 post-period. Q12 updated.
+4. **NC1, bootstrap.** Men and women were bootstrapped with independent PSU draws although they share PSUs, which
+   misstates the SE of their average (the TOST of Q22 depends on it). Each replicate now resamples PSUs once for
+   both.
+5. **Missing BMI, predictive mean matching.** An operator-precedence slip drew among 6 donors, not the 5 of Q14,
+   and did not take the nearest ones. Now one of the 5 observed cases with the nearest predicted values.
+6. **H3 RIF variant (Q24), years without race.** The "not available" race dummy equalled the sum of the 2015 and
+   2016 year dummies, so those years' adjusted quantiles were arbitrary (several kg/m² off in a test). Their race
+   dummies are now set to the reference means: adjusted for the other covariates only, as in the primary H3.
+7. **Self-report correction (Q24), fixed calibration.** The "2011-2020" calibration was computed on BRFSS 2011-2025,
+   including the outcome years. It now uses 2011-2020 only and is applied to every year (section 7).
+8. **H6, missing weights.** A person with neither LSAQWT nor LONGWT positive would have turned every estimate into
+   NaN without an error. Such persons are dropped from the frame, and the fit refuses a missing weight.
+9. **Unused loaders.** `data.load_brfss`, `load_acs_cells` and `load_adult_population` duplicated the loaders in
+   `prepare.py` and had diverged from them; removed (the guarded loader is `prepare.brfss`).
+
+Not changed: the H4 permutation test refits the event study for each of the 20,000 permutations (about 0.05 s
+each; roughly 15 minutes for H4 and 2-3 hours with the Q24 variants). It is slow but correct, and a faster version
+would be new code to verify; it stays as is.
+

@@ -32,8 +32,17 @@ def design_matrix(df: pd.DataFrame, treat_col: str) -> pd.DataFrame:
     return X
 
 
+def analysis_weight(df: pd.DataFrame) -> pd.Series:
+    """LSAQWT, or LONGWT where LSAQWT is zero or missing; NaN where neither is positive."""
+    longwt = df["longwt"] if "longwt" in df else pd.Series(np.nan, index=df.index)
+    w = df["lsaqwt"].where(df["lsaqwt"] > 0, longwt)
+    return w.where(w > 0)
+
+
 def _fit(df: pd.DataFrame, treat_col: str) -> DesignFit:
-    w = df["lsaqwt"].where(df["lsaqwt"] > 0, df.get("longwt"))
+    w = analysis_weight(df)
+    if w.isna().any():
+        raise ValueError(f"H6: {int(w.isna().sum())} rows without a positive weight (drop them in h6_frame)")
     strata = df["panel"].astype(str) + "_" + df["varstr"].astype(str)
     return wls_design(design_matrix(df, treat_col), df["dbmi"], w, strata, df["varpsu"])
 

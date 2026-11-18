@@ -51,6 +51,7 @@ class Config:
     h5_draws: int = 10_000
     published_rate_2025: float = 0.12  # KFF, Nov 2025: 12% of adults currently taking a GLP-1 (any purpose)
     q24_reps: int = 200  # bootstrap replicates of each H3/NC1 sensitivity variant
+    fallback_draws: int = 4000  # predictive draws of the H1 Q23 fallback series (4 chains x 1,000 draws)
     mi_m: int = 20  # imputations of BMI (Q14)
     wcb_boot: int = 9_999  # wild cluster bootstrap replications (H2)
     seed: int = 20261114
@@ -87,12 +88,17 @@ def _est(e: dec.Estimate) -> dict:
 # --------------------------------------------------------------------------------------------- steps
 def step_h1(b, src, cfg, out) -> dict:
     inputs = prepare.h1_inputs(b, src)
-    P, log = {}, {}
+    P, log, failed = {}, {}, []
     for y, inp in inputs.items():
         if cfg.mrp_q23:
-            idata, label, diag, opts = h1_mrp.fit_year_q23(
-                inp["cells"], inp["z"], DIVISION, seed=cfg.seed + y, sampler_kwargs=cfg.mrp_sampler
-            )
+            try:
+                idata, label, diag, opts = h1_mrp.fit_year_q23(
+                    inp["cells"], inp["z"], DIVISION, seed=cfg.seed + y, sampler_kwargs=cfg.mrp_sampler
+                )
+            except RuntimeError as e:  # every Q23 step failed for this year
+                failed.append(int(y))
+                log[y] = {"step": "failed every Q23 step", "diagnostics": str(e), "use_race": inp["use_race"]}
+                continue
         else:
             idata, _ = h1_mrp.fit_year(
                 inp["cells"], inp["z"], DIVISION, seed=cfg.seed + y, sampler_kwargs=cfg.mrp_sampler
@@ -102,6 +108,14 @@ def step_h1(b, src, cfg, out) -> dict:
             idata, inp["frame"], inp["use_race"], **{k: v for k, v in opts.items() if k in ("agesex", "educ")}
         )
         log[y] = {"step": label, "diagnostics": diag, "use_race": inp["use_race"]}
+    primary_series = "MRP"
+    if failed:
+        # Q23: the composition-adjusted direct series becomes the primary H1 series. It has no posterior draws, so
+        # each year's value is repeated and Stage 2 adds only its Student-t predictive uncertainty.
+        weights = prepare.adults_by_state(src)
+        s = h1_mrp.composition_adjusted_series(prepare.h4_outcome(b), weights) / 100
+        P = {int(y): np.full(cfg.fallback_draws, float(v)) for y, v in s.items()}
+        primary_series = f"composition-adjusted direct series (Q23 fallback; MRP failed in {failed})"
     years = sorted(P)
     n = min(len(v) for v in P.values())
     np.savez(
@@ -130,6 +144,7 @@ def step_h1(b, src, cfg, out) -> dict:
         "nc2_departures_pp": nc2["summary_pp"],
         "nc2_passes": all(lo <= 0 <= hi for _, lo, hi in nc2["summary_pp"].values()),
         "fit_log": log,
+        "primary_series": primary_series,
     }
     _write(out, "h1_departures", pd.DataFrame(rows).set_index("counterfactual"))
     _write(out, "h1", res)
@@ -333,8 +348,7 @@ def step_q24(b, src, cfg, out, r) -> dict:
     rows += sensitivity.q24_nc1(b, n_rep=cfg.q24_reps, seed=cfg.seed + 1)
     if "H4" in r:
         h = r["H4"]
-        pop = pd.read_csv(src.clean / "census" / "adult_pop_state_2020_2025.csv")
-        adults = pop.set_index(pop["state"].map(prepare._name_to_abbr(src)))["2024"]
+        adults = prepare.adults_by_state(src)
         rows += sensitivity.q24_h4(b, h["_X"], h["_E"], h["_Y"], adults, n_perm=cfg.h4_perm, seed=cfg.seed)
     if "H1" in r:
         _, lo, hi = r["H1"]["D2025_pp"]

@@ -28,7 +28,7 @@ import pandas as pd
 
 from glp1_review import trend
 from glp1_review.decision import Estimate
-from glp1_review.survey import rao_wu_weights
+from glp1_review.survey import psu_codes, rao_wu_multipliers, rao_wu_weights
 
 QUANTILES = (0.10, 0.25, 0.50, 0.75, 0.90, 0.95)
 REF_YEARS = (2017, 2018, 2019)
@@ -179,29 +179,58 @@ def fit_nc1(
     pass all age groups for the Q24 sensitivity."""
     base = df[df["age_group"].isin(ages)].assign(height_cm=lambda x: 100 * x["htm"])
     rng = np.random.default_rng(seed)
-    per_sex, reps_all = {}, []
-    for sex, g in base.groupby("sex"):
-        P = prepare(g, "height_cm")
-        years = P.years
+    Ps = {sex: prepare(g, "height_cm") for sex, g in base.groupby("sex")}
+    per_sex = {}
+    for sex, P in Ps.items():
         m = P.series(P.dfl(P.w), "mean")[0]
-        per_sex[sex] = float(np.mean(trend.departures(m, years, scale="identity", predictive=False).draws[0]))
-
-        def stat(w, P=P, years=years):
-            mr = P.series(w, "mean")[0]
-            return float(np.mean(trend.departures(mr, years, scale="identity", rng=rng).draws[0]))
-
-        reps_all.append(bootstrap(P, n_rep, rng, stat))
+        per_sex[sex] = float(
+            np.mean(trend.departures(m, P.years, scale="identity", predictive=False).draws[0])
+        )
     est = float(np.mean(list(per_sex.values())))
-    reps = np.mean(np.vstack(reps_all), axis=0)
+    # Men and women share PSUs: each replicate resamples the PSUs once and applies the draw to both series.
+    keys = {sex: _psu_keys(P) for sex, P in Ps.items()}
+    all_st = np.concatenate([k[0] for k in keys.values()])
+    all_psu = np.concatenate([k[1] for k in keys.values()])
+    codes, psu_stratum = psu_codes(all_st, all_psu)
+    offsets = np.cumsum([0] + [len(P.w) for P in Ps.values()])
+    reps = []
+    for start in range(0, n_rep, 25):
+        R = min(25, n_rep - start)
+        mult = rao_wu_multipliers(psu_stratum, R, rng)
+        for r in range(R):
+            vals = []
+            for i, P in enumerate(Ps.values()):
+                w = P.dfl(P.w * mult[codes[offsets[i] : offsets[i + 1]], r])
+                mr = P.series(w, "mean")[0]
+                vals.append(float(np.mean(trend.departures(mr, P.years, scale="identity", rng=rng).draws[0])))
+            reps.append(float(np.mean(vals)))
+    reps = np.array(reps)
     return Estimate(est, float(np.std(reps, ddof=1))), {"by_sex": per_sex, "replicates": reps}
 
 
+def _psu_keys(P: Prepared) -> tuple[np.ndarray, np.ndarray]:
+    """Stratum (year|stratum) and PSU (year|stratum|psu) keys of each row; Rao-Wu strata are nested in year."""
+    yr = np.empty(len(P.w), dtype=object)
+    for y, (a, b) in P.bounds.items():
+        yr[a:b] = str(y)
+    st = yr + "|" + P.strat.astype(str).astype(object)
+    return st, st + "|" + P.psu.astype(str).astype(object)
+
+
 def rif_contrast(df: pd.DataFrame, upper: float = 0.90, ref_years=REF_YEARS) -> float:
-    """Q24: RIF regression instead of reweighting. For each year and q in {0.50, upper}, the recentered influence
-    function RIF = q_t + (tau - 1[BMI <= q_t]) / f_t(q_t) (Gaussian kernel density, Silverman bandwidth) is regressed
-    by WLS on year indicators and the cell covariates (age group x sex, race and ethnicity, education); the adjusted
-    quantile of year t is its year effect evaluated at the reference-period covariate means. The series then go
-    through the trend procedure (point estimate, predictive mean)."""
+    """Q24: RIF regression instead of reweighting (series from `rif_series`), through the trend procedure (point
+    estimate, predictive mean): mean over 2023-2025 of the upper-quantile minus median departures."""
+    years, series = rif_series(df, (0.50, upper), ref_years)
+    du = trend.departures(series[upper], years, scale="identity", predictive=False).draws[0]
+    d50 = trend.departures(series[0.50], years, scale="identity", predictive=False).draws[0]
+    return float(np.mean(du - d50))
+
+
+def rif_series(df: pd.DataFrame, taus=(0.50, 0.90), ref_years=REF_YEARS) -> tuple[list, dict]:
+    """For each year and tau, the recentered influence function RIF = q_t + (tau - 1[BMI <= q_t]) / f_t(q_t) (Gaussian
+    kernel density, Silverman bandwidth) is regressed by WLS on year indicators and the cell covariates (age group x
+    sex, race and ethnicity, education); the adjusted quantile of year t is its year effect evaluated at the
+    reference-period covariate means. Returns (years, {tau: adjusted quantile by year})."""
     d = df[df["bmi"].notna() & df["wt"].notna() & (df["wt"] > 0)].copy()
     years = sorted(d["year"].unique())
     cov = pd.concat(
@@ -217,15 +246,22 @@ def rif_contrast(df: pd.DataFrame, upper: float = 0.90, ref_years=REF_YEARS) -> 
         ],
         axis=1,
     )
+    w = d["wt"].to_numpy(float)
+    ref = d["year"].isin(ref_years).to_numpy()
+    # Years without race (2015-2016): a "Not available" dummy would equal the sum of their year dummies. Their race
+    # dummies are set to the reference means instead, so those years are adjusted for the other covariates only, as
+    # in the reduced DFL cells of the primary H3.
+    na = (d["race"].astype(str) == NOT_AVAILABLE).to_numpy()
+    rcols = [c for c in cov.columns if c.startswith("r_")]
+    cov = cov.drop(columns=[c for c in rcols if c == f"r_{NOT_AVAILABLE}"])
+    rcols = [c for c in rcols if c != f"r_{NOT_AVAILABLE}"]
+    xbar_ref = cov[ref].mul(w[ref], axis=0).sum() / w[ref].sum()
+    if na.any() and rcols:
+        cov.loc[na, rcols] = xbar_ref[rcols].to_numpy()
     yr = pd.get_dummies(d["year"], prefix="y", dtype=float)
     X = pd.concat([yr, cov], axis=1).to_numpy()
-    w = d["wt"].to_numpy(float)
-    xbar_ref = (
-        cov[d["year"].isin(ref_years).to_numpy()].mul(w[d["year"].isin(ref_years).to_numpy()], axis=0).sum()
-        / w[d["year"].isin(ref_years).to_numpy()].sum()
-    )
     series = {}
-    for tau in (0.50, upper):
+    for tau in taus:
         rif = np.empty(len(d))
         for y in years:
             m = (d["year"] == y).to_numpy()
@@ -241,6 +277,4 @@ def rif_contrast(df: pd.DataFrame, upper: float = 0.90, ref_years=REF_YEARS) -> 
         beta = np.linalg.lstsq(X * sw[:, None], rif * sw, rcond=None)[0]
         n_y = yr.shape[1]
         series[tau] = beta[:n_y] + float(beta[n_y:] @ xbar_ref.to_numpy())
-    du = trend.departures(series[upper], years, scale="identity", predictive=False).draws[0]
-    d50 = trend.departures(series[0.50], years, scale="identity", predictive=False).draws[0]
-    return float(np.mean(du - d50))
+    return years, series

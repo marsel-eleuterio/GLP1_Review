@@ -1,14 +1,11 @@
-"""Loaders and harmonisation of the extracted data. Every loader that returns outcome variables (BMI, obesity,
-height) calls guard.require_registration() first (pre-registration Q18).
+"""Shared categories and harmonisation of the extracted BRFSS data. The loaders are in prepare.py; the one that
+returns outcome variables (prepare.brfss) calls guard.require_registration() first (pre-registration Q18).
 
 Category labels match the ACS post-stratification cells written by scripts/census_download.py.
 """
 
 import numpy as np
 import pandas as pd
-
-from glp1_review.guard import require_registration
-from glp1_review.paths import CLEAN, CLEAN_BRFSS
 
 AGE6 = ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"]
 RACE5 = ["White", "Black", "Hispanic", "Asian", "Other or multiracial"]
@@ -55,24 +52,8 @@ def harmonise_brfss(d: pd.DataFrame) -> pd.DataFrame:
     out["educ"] = d["educ"].map(dict(zip([1, 2, 3, 4], EDUC4, strict=True)))
     out["obese"] = np.where(d["bmicat"].isin([1, 2, 3, 4]), (d["bmicat"] == 4).astype(float), np.nan)
     out["insured"] = d["plan_raw"].map({1: 1.0, 2: 0.0})
+    if "income" in d:
+        # _INCOMG (to 2020): 1-4 = <$15k, $15-25k, $25-35k, $35-50k, 5 = $50k+, 9 = unknown. _INCOMG1 (from 2021)
+        # splits $50k+ into 5 = $50-100k, 6 = $100-200k, 7 = $200k+; collapsed to 5 so codes mean the same every year.
+        out["income"] = d["income"].replace({6: 5, 7: 5})
     return out
-
-
-def load_brfss(years=range(2011, 2026), columns=None) -> pd.DataFrame:
-    """Harmonised BRFSS microdata, 50 states + DC. Contains outcomes: requires the registration."""
-    require_registration()
-    frames = []
-    for y in years:
-        d = pd.read_csv(CLEAN_BRFSS / f"brfss_{y}.csv.gz", usecols=columns)
-        frames.append(harmonise_brfss(d[d["state"].isin(STATES)]))
-    return pd.concat(frames, ignore_index=True)
-
-
-def load_acs_cells(year: int) -> pd.DataFrame:
-    """ACS post-stratification cells (no outcome; no guard). 2025 uses the 2024 frame (Q19)."""
-    y = min(year, 2024)
-    return pd.read_csv(CLEAN / "acs" / f"acs_cells_{y}.csv")
-
-
-def load_adult_population() -> pd.DataFrame:
-    return pd.read_csv(CLEAN / "census" / "adult_pop_state_2020_2025.csv")
