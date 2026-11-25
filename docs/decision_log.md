@@ -220,3 +220,23 @@ hypothesis, model, threshold or decision rule, so none is a deviation:
 
 **Not done before registration.** The simulated precision analysis planned on 18 November 2026 was not run; Q21
 gives analytic power only. If it is run, it is reported in the preprint as a check made after registration.
+
+## 10. Survey helpers rewritten for speed, after registration (25 November 2026)
+
+The first run on the real BRFSS data (a `--quick` smoke test) spent over an hour in the first H2 regression. The
+code had been tested on simulated data with about 450 strata; BRFSS has about 2,400 strata a year (about 36,000 in
+2011-2025) and nearly one PSU per respondent. Two helpers looped over strata and compared every PSU label in each
+pass, which grows with strata × PSUs. They were rewritten without changing any estimator, weight, random draw or
+decision rule, so this is an implementation change, not a deviation from the registration. The registered
+versions are kept in `tests/test_score_totals.py` as references:
+
+1. `survey.wls_design` (H2, NC2 and the H2 sensitivities): the between-PSU variance is computed for all strata at
+   once, and the PSU score totals with `np.bincount` instead of `np.add.at` on the full score matrix (one n × k
+   copy less in memory). Coefficients are bit-for-bit identical; the covariance agrees to rounding error
+   (relative tolerance 1e-10), because the same sums are added in another order.
+2. `survey.rao_wu_multipliers` (H3 and NC1 bootstrap): strata visited in the same sorted order with the same random
+   draws, indices grouped once, and the per-replicate loop replaced by one `np.bincount`. Bit-for-bit identical,
+   including the generator state afterwards.
+3. `h2_tripdiff.wild_cluster_bootstrap` (Q24): state score totals with `np.bincount`; bit-for-bit identical.
+
+On 2 million simulated records with 12,000 strata, `wls_design` takes 5 s. The smoke test was restarted.

@@ -179,8 +179,8 @@ def wild_cluster_bootstrap(
     b = A_inv @ (Xa.T @ (w * y))
     e = y - Xa @ b
     g, _ = pd.factorize(d["state"])
-    S = np.zeros((g.max() + 1, len(cols)))
-    np.add.at(S, g, Xa * (w * e)[:, None])
+    we, n_g = w * e, g.max() + 1  # state score totals, column by column (same sums as np.add.at, less memory)
+    S = np.column_stack([np.bincount(g, weights=Xa[:, j] * we, minlength=n_g) for j in range(len(cols))])
     a = np.zeros(len(cols))
     for k in spec.estimand_years:
         a[cols.index(f"pi_{k}")] = 1 / len(spec.estimand_years)

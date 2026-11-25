@@ -74,32 +74,35 @@ def wls_design(X: pd.DataFrame, y, w, strata, psu, dof_adjust: int = 0) -> Desig
     A = Xa.T @ (Xa * w[:, None])
     A_inv = np.linalg.pinv(A)
     beta = A_inv @ (Xa.T @ (w * y))
-    e = y - Xa @ beta
-    u = Xa * (w * e)[:, None]  # score contributions
+    we = w * (y - Xa @ beta)  # score contributions are Xa * we[:, None]
 
-    st = pd.Series(np.asarray(strata)).astype(str).to_numpy()
-    ps = pd.Series(np.asarray(psu)).astype(str).to_numpy()
-    key = pd.Series(st) + "|" + pd.Series(ps)
-    codes, uniq = pd.factorize(key)
-    U = np.zeros((len(uniq), u.shape[1]))
-    np.add.at(U, codes, u)  # PSU totals
-    psu_stratum = pd.Series(uniq).str.split("|").str[0].to_numpy()
-    meat = np.zeros((u.shape[1], u.shape[1]))
-    singles = []
-    for h in np.unique(psu_stratum):
-        Uh = U[psu_stratum == h]
-        nh = len(Uh)
-        if nh == 1:
-            singles.append(Uh[0])
-            continue
-        D = Uh - Uh.mean(axis=0)
-        meat += nh / (nh - 1) * D.T @ D
-    if singles:  # single-PSU strata: centre at the grand mean of PSU totals
-        S = np.array(singles)
-        D = S - U.mean(axis=0)
+    st = pd.Series(np.asarray(strata)).astype(str)
+    ps = pd.Series(np.asarray(psu)).astype(str)
+    codes, uniq = pd.factorize(st + "|" + ps)  # PSUs nested in strata
+    st_codes, st_uniq = pd.factorize(st)
+    k, n_st = Xa.shape[1], len(st_uniq)
+    # PSU totals of the score contributions, one column at a time: the same sequential sums as np.add.at on the
+    # full score matrix, without materializing that n x k matrix (one copy of the design less in memory)
+    U = np.column_stack([np.bincount(codes, weights=Xa[:, j] * we, minlength=len(uniq)) for j in range(k)])
+    # Between-PSU variance within strata, all strata at once: sum_h n_h/(n_h-1) sum_i (U_hi - mean_h)'(U_hi - mean_h).
+    # (A loop over strata compared every PSU label for each of the ~36,000 BRFSS strata.)
+    psu_st = np.empty(len(uniq), dtype=np.int64)
+    psu_st[codes] = st_codes
+    nh = np.bincount(psu_st, minlength=n_st)
+    means = (
+        np.column_stack([np.bincount(psu_st, weights=U[:, j], minlength=n_st) for j in range(k)])
+        / nh[:, None]
+    )
+    multi = nh[psu_st] > 1
+    f = np.zeros(n_st)
+    f[nh > 1] = nh[nh > 1] / (nh[nh > 1] - 1)
+    D = (U[multi] - means[psu_st[multi]]) * np.sqrt(f[psu_st[multi]])[:, None]
+    meat = D.T @ D
+    if not multi.all():  # single-PSU strata: centre at the grand mean of PSU totals
+        D = U[~multi] - U.mean(axis=0)
         meat += D.T @ D
     cov = A_inv @ meat @ A_inv
-    return DesignFit(names, beta, cov, len(y), len(uniq), len(np.unique(st)))
+    return DesignFit(names, beta, cov, len(y), len(uniq), n_st)
 
 
 def rao_wu_weights(strata, psu, w, n_rep: int, rng: np.random.Generator) -> np.ndarray:
@@ -122,15 +125,20 @@ def psu_codes(strata, psu) -> tuple[np.ndarray, np.ndarray]:
 
 def rao_wu_multipliers(psu_stratum, n_rep: int, rng: np.random.Generator) -> np.ndarray:
     """(n_psu, n_rep) Rao-Wu rescaled bootstrap multipliers, given the stratum of each distinct PSU."""
-    mult = np.ones((len(psu_stratum), n_rep))
-    for h in np.unique(psu_stratum):
-        idx = np.flatnonzero(psu_stratum == h)
-        nh = len(idx)
+    # Strata in sorted order and PSUs in their original order within each stratum, so the random draws are the
+    # same as a loop over np.unique(psu_stratum) with np.flatnonzero; the indices are grouped once instead of
+    # comparing every PSU label for each of the ~36,000 BRFSS strata.
+    _, inv = np.unique(np.asarray(psu_stratum), return_inverse=True)
+    inv = inv.ravel()
+    order = np.argsort(inv, kind="stable")
+    sizes = np.bincount(inv)
+    starts = np.concatenate([[0], np.cumsum(sizes)[:-1]])
+    reps = np.arange(n_rep)
+    mult = np.ones((len(inv), n_rep))
+    for s, nh in zip(starts, sizes, strict=True):
         if nh < 2:
             continue
         draws = rng.integers(0, nh, size=(nh - 1, n_rep))
-        counts = np.zeros((nh, n_rep))
-        for r in range(n_rep):
-            counts[:, r] = np.bincount(draws[:, r], minlength=nh)
-        mult[idx] = nh / (nh - 1) * counts
+        counts = np.bincount((draws + nh * reps).ravel(), minlength=nh * n_rep).reshape(n_rep, nh).T
+        mult[order[s : s + nh]] = nh / (nh - 1) * counts
     return mult
