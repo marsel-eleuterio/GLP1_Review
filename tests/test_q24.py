@@ -37,6 +37,22 @@ def test_reweight_group_composition_matches_reference():
     assert (out.loc[~D, "wt"] == df.loc[~D, "wt"]).all()
 
 
+def test_reweight_group_composition_keeps_rows_with_missing_cells():
+    """Real BRFSS has about 1% missing age group; pandas 3 keeps NaN through astype(str), which made the
+    cell key fail (smoke test of 25 November 2026). Missing values form their own cell."""
+    rng = np.random.default_rng(83)
+    df = simulate_brfss(rng, n_per_year=6000)
+    df.loc[df.sample(frac=0.1, random_state=1).index, "age_group"] = np.nan  # every year has missing cells
+    out = h2.reweight_group_composition(df)
+    assert out["wt"].notna().all() and np.isfinite(out["wt"]).all()
+    D = out["diabetes"] == 1
+    miss = out["age_group"].isna()
+    ref = out[D & out.year.isin([2017, 2018, 2019])]
+    ref_share = np.average(miss[ref.index], weights=ref["wt"])
+    g = out[D & (out.year == 2025)]
+    assert np.average(miss[g.index], weights=g["wt"]) == pytest.approx(ref_share, abs=1e-9)
+
+
 def test_rm_interval_widens_with_mbar():
     rng = np.random.default_rng(82)
     Y, E = simulate_states(rng, slope_post=-0.5)

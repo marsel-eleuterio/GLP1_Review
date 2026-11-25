@@ -240,3 +240,14 @@ versions are kept in `tests/test_score_totals.py` as references:
 3. `h2_tripdiff.wild_cluster_bootstrap` (Q24): state score totals with `np.bincount`; bit-for-bit identical.
 
 On 2 million simulated records with 12,000 strata, `wls_design` takes 5 s. The smoke test was restarted.
+
+**Fix found by the smoke test (same day).** The first complete smoke run stopped in Q24 at
+`h2_tripdiff.reweight_group_composition` (H2 sensitivity "diabetes group reweighted to its 2017-2019
+composition"): about 1% of BRFSS respondents have no age group, and pandas 3 (the version in the registered
+`uv.lock`) keeps NaN through `astype(str)`, so building the age × sex cell key failed. Missing values now form their
+own cell, the same rule `h3_quantiles` already applies (`fillna("missing")`); test in `tests/test_q24.py`.
+
+Related, not changed: in the H2 regressions the same pandas behaviour gives respondents with a missing age group
+(about 0.6-1.1% a year) or education (about 0.2-0.3%) zeros in those indicator sets, i.e. they share the reference
+category of that covariate. This is how the registered code and environment behave, and Q12/Q14 do not state
+another rule for missing covariates, so it is kept and reported as an implementation detail.

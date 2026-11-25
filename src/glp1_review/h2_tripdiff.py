@@ -202,7 +202,8 @@ def reweight_group_composition(
     the other respondents keep their weights."""
     out = df.copy()
     D = out[group] == 1
-    key = out[list(cells)].astype(str).agg("|".join, axis=1)
+    # missing cell values form their own cell, as in h3_quantiles (pandas 3 keeps NaN through astype(str))
+    key = out[list(cells)].astype(str).fillna("missing").agg("|".join, axis=1)
     ref = out[D & out["year"].isin(ref_years)].groupby(key[D & out["year"].isin(ref_years)])["wt"].sum()
     ref = ref / ref.sum()
     for y in out.loc[D, "year"].unique():
