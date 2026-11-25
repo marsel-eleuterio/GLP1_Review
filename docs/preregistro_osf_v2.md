@@ -267,8 +267,8 @@ The author confirms that this preregistration was completed truthfully, that Par
 
 ## References
 
-Pages accessed on 12-14 November 2026. Methods references without a link were cited from memory: check volume and
-pages before using them in the preprint.
+Web pages accessed on 12-14 November 2026. The methods references without a link were checked against Crossref
+(citation_check.md, in the attached package).
 
 **Data and documentation**
 
