@@ -1,14 +1,15 @@
 # OSF pre-registration: GLP-1 and the US adult obesity curve (draft, version 2)
 
-14 November 2026, last updated 16 November 2026 · Marsel Eleutério
+14 November 2026, last updated 25 November 2026 · Marsel Eleutério
 
 Version 2 fills the fields that depended on the download scripts (Q7, Q8, Q10, Q12, Q13, Q18, Q21, Q23) with the
 results of 14 November 2026 and revises the inference and model choices listed in `decision_log.md` (Q19, Q21,
 Q22, Q23). Version 1 is kept unchanged in `preregistro_osf_rascunho.md`; the differences are in the git history.
 Updated after 14 November, before any registration: Q7, Q8 and Q18 (NHANES files downloaded on 15 November 2026
 for the self-report correction), Q24 (Ward et al. 2019 projection and correction method, `decision_log.md`
-section 7), the AI-assistance statement in Q18, and Q12 (income brackets harmonised after the code review of
-16 November 2026, `decision_log.md` section 8).
+section 7), the AI-assistance statement in Q18, Q12 (income brackets harmonised after the code review of
+16 November 2026, `decision_log.md` section 8), and on 25 November 2026 Q7, Q8, Q17 and Q18 (the files are
+attached to the registration, because OSF no longer creates projects).
 
 Draft of the 25 answers of the OSF Secondary Data Preregistration template, in the order of the form, to be
 reviewed and pasted field by field. Text in brackets is still to be completed.
@@ -28,9 +29,10 @@ reviewed and pasted field by field. Text in brackets is still to be completed.
   and Ward et al. (2019) was read on 15 November 2026
 - [x] AI-assistance statement in Q18: kept and extended to the analysis code, the citation check and the
   supporting documents (author's decision, 16 November 2026)
-- [ ] Upload the OSF package (`resultados/osf_glp1_<date>.zip`, built by `scripts/build_osf_package.py`) before
-  registering. **Blocked on 14 November 2026:** the new OSF account returns "Account not valid"; waiting for OSF
-  Support. The project link for Q7 is also pending.
+- [ ] Attach the OSF package (`resultados/osf_glp1_2026-11-25.zip`, built by `scripts/build_osf_package.py`) to the
+  registration draft before submitting. The OSF account was blocked from 14 to 24 November 2026 ("Account not
+  valid", fixed by OSF Support). OSF stopped creating projects on 16 November 2026, so there is no project link:
+  the registration is started from scratch and the files are attached to it (Q7).
 
 ## Part 1. Study information
 
@@ -85,7 +87,7 @@ All sources are free. BRFSS, MEPS, CMS, CDC open data, Census and ACS files are 
 - Medicaid State Drug Utilization Data: https://catalog.data.gov/dataset/state-drug-utilization-data-2025
 - CDC open data: https://catalog.data.gov/dataset/nutrition-physical-activity-and-obesity-behavioral-risk-factor-surveillance-system
 - NHANES (measured BMI, used only for the Q24 self-report correction): https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/YEAR/DataFiles/FILE.xpt, demographics (DEMO) and body measures (BMX) files of the 2011–2012, 2013–2014, 2015–2016, 2017–March 2020 and August 2021–August 2023 cycles
-- Download scripts (brfss_microdata.py, meps_microdata.py, brfss_hf_download.py, brfss_extract_parquet.py, cms_glp1_download.py, census_download.py, nhanes_download.py), the MEPS SHA-256 manifest and the provenance files of BRFSS, CMS, Census/ACS and NHANES are in this OSF project: [OSF link].
+- Download scripts (brfss_microdata.py, meps_microdata.py, brfss_hf_download.py, brfss_extract_parquet.py, cms_glp1_download.py, census_download.py, nhanes_download.py), the MEPS SHA-256 manifest and the provenance files of BRFSS, CMS, Census/ACS and NHANES are in the package attached to this registration (osf_glp1_2026-11-25.zip; its MANIFEST_sha256.csv lists the SHA-256 of every file). OSF stopped creating projects on 16 November 2026, so the files are attached to the registration itself instead of a linked project.
 
 ### Q8. Download and access dates
 
@@ -93,7 +95,7 @@ Marsel Eleutério, the only author:
 
 - Aggregated tables used in the pilot (CDC open data, Census estimates, the CMS-derived state tables published by The RX Index, KFF and Gallup reports): accessed 12–13 November 2026.
 - BRFSS microdata 2011–2025: downloaded 14 November 2026 (route in Q7). Validated the same day against the CDC open-data aggregates: 792 state-years compared, mean absolute difference 0.025 pp, maximum 0.12 pp; the national series matches within 0.05 pp in every year.
-- MEPS files: downloaded 14 November 2026 from meps.ahrq.gov (16 Stata files; SHA-256 manifest in the OSF project). Codebook checks: 24 of 24 comparable counts match, no mismatch.
+- MEPS files: downloaded 14 November 2026 from meps.ahrq.gov (16 Stata files; SHA-256 manifest in the package attached to this registration). Codebook checks: 24 of 24 comparable counts match, no mismatch.
 - Medicare Part D and Medicaid files from CMS: downloaded 14 November 2026 through the official APIs (cms_glp1_download.py). Medicare Part D by Geography and Drug 2019–2024: all state-level rows (2024 file released 21 May 2026). Medicaid State Drug Utilization Data 2021–2025 (versions of 13 July 2026): GLP-1 rows selected by product-name prefix, every name kept listed for review. Medicaid and CHIP monthly enrollment 2021–2025. Every row count matches the API count; dataset ids, release dates and SHA-256 in provenance_cms.csv.
 - ACS PUMS: 1-year person files 2011–2019, experimental 2020 and 2021–2024 downloaded 14 November 2026, before any BMI analysis, and reduced to post-stratification cell counts (census_download.py; the 2025 file is not yet released, so 2024 is used for 2025 as stated in Q19). Census state population estimates, Vintage 2025, downloaded the same day. SHA-256 in provenance_census.csv.
 - NHANES DEMO and BMX files, five cycles 2011–2023: downloaded 15 November 2026 from wwwn.cdc.gov (nhanes_download.py; SHA-256 in provenance_nhanes.csv). Check: the age-adjusted obesity prevalence of adults 20+ reproduces NCHS Data Brief 508 within 0.04 pp for 2013–2014, 2015–2016, 2017–March 2020 and 2021–2023 (nhanes_check.csv).
@@ -153,18 +155,18 @@ Yes. BRFSS: _LLCPWT with _STSTR and _PSU (strata nested within year) and Taylor 
 
 ### Q17. Prior publications and presentations
 
-None. The author has not published or presented work based on BRFSS or MEPS. The pilot described in Q18 is unpublished; its code and outputs are in this OSF project.
+None. The author has not published or presented work based on BRFSS or MEPS. The pilot described in Q18 is unpublished; its code and outputs are in the package attached to this registration.
 
 ### Q18. Prior knowledge of the data
 
-On 12–13 November 2026 the author ran a pilot on aggregated data only (BRFSS tables from the CDC open-data API, state use tables, Census estimates, published polls). Its main results are listed here; the complete output (pilot_output.txt and pilot_extra_output.txt) is in the OSF project.
+On 12–13 November 2026 the author ran a pilot on aggregated data only (BRFSS tables from the CDC open-data API, state use tables, Census estimates, published polls). Its main results are listed here; the complete output (pilot_output.txt and pilot_extra_output.txt) is in the package attached to this registration.
 
 1. **National series (relevant to H1).** Obesity rose about 0.49–0.50 percentage points a year in 2011–2019. The national estimate was 33.3% in 2022 and 33.5% in 2025, or 32.9% after adjusting for the states missing in 2025. In 2025 the departure from the 2011–2019 trend was −0.73 pp in the unadjusted series and −1.18 pp in a state-composition-adjusted series (−1.75 pp against a 2011–2022 trend); the adjusted departures correspond to about 3.1 to 4.7 million adults.
 2. **BMI categories (relevant to H3).** Overweight (BMI 25–29.9) stayed close to its 2011–2019 trend in 2023–2025 (+0.1 pp in 2025), while the share with BMI below 25 was 0.5–0.6 pp above its trend. BMI quantiles were not computed.
 3. **Age and sex (relevant to the secondary H2 gradients).** Departures by age group did not follow published use by age: their correlations with use across six age groups ranged from −0.40 to +0.67, depending on the use source and the departure measure. The 2025 departure was −0.90 pp for women and −0.44 pp for men.
 4. **States (relevant to H4).** With the 2024 all-payer use measure, the change in obesity from 2021–22 to 2024–25 was 0.33 pp lower per standard deviation of use (HC3 standard error 0.16; permutation p = 0.05; r = −0.28). The slope was driven by West Virginia, Kentucky, Louisiana and Oklahoma: −0.03 pp per SD without them. The Medicaid measure showed no association. Alternative specifications (Medicare claims per adult or claim share, a 2019–2022 baseline, precision weights, adjustment for or residualization on the 2015–2019 level, dropping states missing a post-period year) gave slopes between −0.18 and −0.52 pp per SD. With the deviation from each state's own 2011–2019 trend as outcome, the slope was −0.93 pp per SD, falling to −0.43 (p = 0.11) after adjusting for the 2015–2019 obesity level. Placebo periods gave −0.06 pp per SD for 2015/16 to 2018/19 (p = 0.71), +0.35 for 2012/13 to 2015/16 (p = 0.008), and −0.40 for the deviation-from-trend placebo (p = 0.07). In an event study, the slopes were negative in 2011–2014 (−0.62 to −0.23), close to zero in 2015–2019, and −0.35 and −0.39 in 2024 and 2025; after removing the linear pre-trend in the slopes, the post-period slopes were −0.44 (2023), −0.82 (2024) and −0.93 (2025). A power check gave about 74% power if a 1.5 pp national departure were proportional to all-payer use. By tercile of all-payer use, the mean deviation from the states' own 2011–2019 trend in 2024–25 was +0.01 pp (low use), −1.03 pp (middle) and −1.81 pp (high).
 5. **Published reports.** The author has read earlier reports on the same question: Rader et al. (2024), who found a fall in measured BMI and obesity in 2023 in records of 16.7 million adults, largest in the South, where GLP-1 dispensing was highest; Gallup (2025, 2026), with obesity at 39.9% in 2022 and 37.0% in 2025 and the largest declines at ages 40–64; Epic Research (2026); state counts from Trust for America's Health (2025) and the CDC maps (2026); NHANES estimates to 2023; and published GLP-1 use rates by age, sex, diabetes, BMI class and insurance (KFF, Gallup, NCHS). These reports motivated the hypotheses and the parameter ranges in Q19 and Q20. None analyses BMI by diabetes status, BMI quantiles or within-person change in the datasets used here.
-6. **Microdata.** On 14 November 2026 BRFSS and MEPS microdata were downloaded and processed only by the scripts in this project. They reproduce published aggregates (state-year obesity prevalence and codebook counts) and count cases (adults with BMI, GLP-1 users per year, initiators per panel). The MEPS extraction also printed the weighted share of adults with a GLP-1 purchase per year, overall and among adults with diagnosed diabetes (0.84% and 7.2% in 2018, 4.99% and 30.4% in 2024); this is exposure, not outcome. The BRFSS coverage report led to adding source names for sex (SEX, SEX1) and health-care coverage (_HLTHPL2) to brfss_microdata.py, after checking in the CDC dictionaries that their codes match; this change is documented in the OSF project. On 15 November 2026 the NHANES measured-BMI files were downloaded for the Q24 self-report correction and used only to reproduce the published age-adjusted obesity prevalence by cycle (within 0.04 pp); NHANES BMI quantiles were not computed, and the correction was written and tested on simulated data and has not been applied to BRFSS. No BMI analysis by diabetes status, BMI quantile, height trend or GLP-1 use has been run.
+6. **Microdata.** On 14 November 2026 BRFSS and MEPS microdata were downloaded and processed only by the scripts in this project. They reproduce published aggregates (state-year obesity prevalence and codebook counts) and count cases (adults with BMI, GLP-1 users per year, initiators per panel). The MEPS extraction also printed the weighted share of adults with a GLP-1 purchase per year, overall and among adults with diagnosed diabetes (0.84% and 7.2% in 2018, 4.99% and 30.4% in 2024); this is exposure, not outcome. The BRFSS coverage report led to adding source names for sex (SEX, SEX1) and health-care coverage (_HLTHPL2) to brfss_microdata.py, after checking in the CDC dictionaries that their codes match; this change is documented in the package attached to this registration. On 15 November 2026 the NHANES measured-BMI files were downloaded for the Q24 self-report correction and used only to reproduce the published age-adjusted obesity prevalence by cycle (within 0.04 pp); NHANES BMI quantiles were not computed, and the correction was written and tested on simulated data and has not been applied to BRFSS. No BMI analysis by diabetes status, BMI quantile, height trend or GLP-1 use has been run.
 
 Not yet examined: anything by diagnosed diabetes (H2), BMI quantiles (H3), BMI change in MEPS (H6), self-reported height (NC1), and the 2017 pseudo-break in the microdata (NC2).
 

@@ -254,7 +254,7 @@ re-release would not be reflected. Several states are missing in some years, inc
 # Data and code availability
 
 All data are public. Download scripts with checksums, provenance records, the analysis code and its tests, and the
-pre-registration are in {{REPO.URL}} and in the OSF project ({{OSF.DOI}}).
+pre-registration are in {{REPO.URL}} and attached to the OSF registration ({{OSF.DOI}}).
 
 # Use of AI assistance
 

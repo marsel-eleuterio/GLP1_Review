@@ -1,4 +1,4 @@
-"""Assemble the files to upload to the OSF project before registration.
+"""Assemble the files to attach to the OSF registration (OSF no longer creates projects).
 
 Copies documents, code, pilot, download manifests/provenance and the count-only check outputs into
 resultados/osf/ and zips them as resultados/osf_glp1_<date>.zip, with MANIFEST_sha256.csv listing every file.
