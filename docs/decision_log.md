@@ -190,3 +190,33 @@ Not changed: the H4 permutation test refits the event study for each of the 20,0
 each; roughly 15 minutes for H4 and 2-3 hours with the Q24 variants). It is slow but correct, and a faster version
 would be new code to verify; it stays as is.
 
+## 9. OSF registration (25 November 2026)
+
+Registered on OSF on 25 November 2026 at 16:56 UTC as a Secondary Data Preregistration, public from the start:
+https://osf.io/xw7zg/, DOI 10.17605/OSF.IO/XW7ZG. OSF stopped creating projects on 16 November 2026, so the
+registration was started without a project and the package was attached to the "Data collection procedures
+documentation" field. No outcome microdata had been analysed before this date (Q18). The analysis code was
+unlocked by writing the DOI to `docs/osf_registration.txt`.
+
+**Archived package.** `osf_glp1_2026-11-25.zip`, SHA-256
+`0d75fd0497cb98b2dbc45691d656d0efa8fd814db0a856340ccad257cdc997bf` (downloaded back from OSF and kept as
+`resultados/osf_glp1_2026-11-25_registered.zip`). It is the package built after commit bfc155f. A later rebuild
+(commit bfb6950) differs only in `1_documents/preregistro_osf_v2.md` (the references note in item 3 below) and
+in `MANIFEST_sha256.csv`; it was not the one registered.
+
+**Errata in the registered form.** Three clerical differences between the registered form and
+`preregistro_osf_v2.md`, found by comparing the archived responses (OSF API) with the source text. None changes a
+hypothesis, model, threshold or decision rule, so none is a deviation:
+
+1. *Q3 (research questions).* The pasted text was cut after "ages 40–6": research question 4 should end "…which
+   show a decline concentrated at ages 40–64, and with measured NHANES estimates? (descriptive)". The complete
+   text is in `preregistro_osf_v2.md` inside the archived package, and the question corresponds to H0, which is
+   descriptive.
+2. *References note.* The registered reference list keeps an outdated note saying that the methods references
+   without a link were cited from memory. They had already been checked against Crossref (`citation_check.md`,
+   item C2, also in the archived package).
+3. *Escaped symbols.* OSF stores "<" and ">" as "&lt;" and "&gt;" in Q19 and Q22 (for example
+   "P(D_2025 &lt; D_2023)"); the page displays them correctly.
+
+**Not done before registration.** The simulated precision analysis planned on 18 November 2026 was not run; Q21
+gives analytic power only. If it is run, it is reported in the preprint as a check made after registration.

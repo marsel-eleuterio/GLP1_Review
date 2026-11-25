@@ -20,10 +20,10 @@ measurement artefact.
 
 Negative controls: self-reported height and the 2015–2019 period must not show the same pattern.
 
-**Status (2026-11-16):** data downloaded and validated against published numbers (BRFSS, MEPS, CMS,
-Census/ACS, NHANES); pre-registered analysis code written and tested on simulated data; preprint skeleton in
-`paper/`. Next step: register on OSF (waiting for OSF Support to repair the account), then run
-`scripts/run_analysis.py`.
+**Status (2026-11-25):** pre-registered on OSF on 25 November 2026,
+[doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG), before any outcome analysis. Data
+downloaded and validated against published numbers (BRFSS, MEPS, CMS, Census/ACS, NHANES); analysis code written
+and tested on simulated data; preprint skeleton in `paper/`. Next step: run `scripts/run_analysis.py`.
 
 > Study documents are written in Portuguese; the OSF pre-registration answers are in English.
 

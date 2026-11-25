@@ -11,6 +11,10 @@ date-released: 2026-11-14
 license:
   - MIT        # code
   - CC-BY-4.0  # study documents (docs/)
+identifiers:
+  - type: doi
+    value: 10.17605/OSF.IO/XW7ZG
+    description: "OSF pre-registration (Secondary Data Preregistration, 25 November 2026)"
 repository-code: "https://github.com/marsel-eleuterio/GLP1_Review"
 keywords:
   - GLP-1 receptor agonists

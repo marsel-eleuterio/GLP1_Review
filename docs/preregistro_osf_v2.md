@@ -29,8 +29,10 @@ reviewed and pasted field by field. Text in brackets is still to be completed.
   and Ward et al. (2019) was read on 15 November 2026
 - [x] AI-assistance statement in Q18: kept and extended to the analysis code, the citation check and the
   supporting documents (author's decision, 16 November 2026)
-- [ ] Attach the OSF package (`resultados/osf_glp1_2026-11-25.zip`, built by `scripts/build_osf_package.py`) to the
-  registration draft before submitting. The OSF account was blocked from 14 to 24 November 2026 ("Account not
+- [x] Attach the OSF package (`resultados/osf_glp1_2026-11-25.zip`, built by `scripts/build_osf_package.py`) to the
+  registration draft before submitting. **Registered on 25 November 2026:**
+  https://doi.org/10.17605/OSF.IO/XW7ZG. The registered text differs from this file in three clerical points
+  (`decision_log.md` section 9). The OSF account was blocked from 14 to 24 November 2026 ("Account not
   valid", fixed by OSF Support). OSF stopped creating projects on 16 November 2026, so there is no project link:
   the registration is started from scratch and the files are attached to it (Q7).
 
