@@ -49,3 +49,7 @@ present (on the Q23 fallback series); H4 not supportive; H5 compatible; NC1, NC2
 
 Declared sensitivity of `decision_log.md` section 11. Started 26 November 2026 (H1 only, primary MRP model in every
 year, same seeds and sampler as the registered run).
+
+Note on the outputs of the full run: the Q24 row "external: observed change 2022-2025 (MRP)" takes the primary H1
+series of the run, which here is the Q23 fallback (composition-adjusted direct series), not MRP; "(MRP)" is a fixed
+label in `sensitivity.q24_external`. The manuscript labels it as the primary H1 series.

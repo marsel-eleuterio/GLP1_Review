@@ -11,23 +11,25 @@ abstract: |
   GLP-1 receptor agonists multiplied. Earlier reports showed that the two coincide in time, region and age; none
   tested whether the change carries the signatures the drugs would leave.
 
-  **Methods.** In a pre-registered study ({{OSF.DOI}}) we estimate the departure of adult obesity from its 2011–2019
-  trajectory with multilevel regression and post-stratification of 6.0 million BRFSS interviews, and test three
-  signatures that should appear together if the drugs explain the break: a larger departure among adults with
-  diagnosed diabetes (H2), a larger shift in the upper tail of the BMI distribution (H3), and a BMI decrease among
-  individuals who start a GLP-1 in the MEPS longitudinal panels (H6). A state dose–response analysis (H4), a
-  microsimulation of uptake, persistence and weight loss (H5), and two negative controls (self-reported height and
-  a placebo break in 2017) complete the design.
+  **Methods.** In a pre-registered study ([doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG)) we estimated the departure of adult obesity from its
+  2011–2019 trajectory in 6.0 million BRFSS interviews and tested three signatures that should appear if the drugs
+  explain the break: a larger departure among adults with diagnosed diabetes (H2), a larger shift in the upper tail
+  of the BMI distribution (H3), and a BMI decrease among adults who start a GLP-1 in the MEPS longitudinal panels
+  (H6). A state dose–response analysis (H4), a microsimulation of uptake, persistence and weight loss (H5), and two
+  negative controls (self-reported height and a placebo break in 2017) complete the design. Because the multilevel
+  model did not meet the pre-registered convergence criteria, the pre-specified composition-adjusted direct series
+  was used for the national trend.
 
-  **Results.** {{RESULTS.ABSTRACT}}
+  **Results.** In 2025 adult obesity was 1.4 percentage points below its projected trajectory (95% interval 0.5 to 2.2), about 3.7 million adults, and the departure was probably larger than in 2023 (probability 0.96); every alternative counterfactual trend gave a departure of the same sign. Self-reported height showed no departure, and a placebo break in 2017 showed none. The size of the departure was compatible with simulated GLP-1 uptake. States with higher use had larger departures (−0.69 percentage points per standard deviation of use), but the estimate was not robust to the pre-registered bounds on pre-existing trends. The three signature estimates had the predicted sign (diabetes differential −0.16 kg/m²; upper-tail contrast −0.06 kg/m²; initiators −1.0 kg/m²), but none was supported after multiplicity adjustment and none was ruled out: each was classified as inconclusive, and the overall pre-registered verdict is mixed.
 
-  **Conclusions.** {{CONCLUSIONS.ABSTRACT}}
+  **Conclusions.** The break in the US adult obesity trend is real, is not a reporting artefact detectable in self-reported height, and is of a size that GLP-1 receptor agonists could produce. Current survey data are not precise enough to confirm or exclude the signatures expected of a drug effect. Larger longitudinal samples of new users and measured BMI are needed to attribute the break.
 ---
 
 <!--
-Skeleton of 14 November 2026, written before the OSF registration. Placeholders in double braces are filled from
-the pipeline outputs (resultados/analysis/<run>/) after registration; paper/README.md maps every placeholder to its
-source file and key. Only the published-estimates part of H0 (section 5.1) contains numbers now.
+Skeleton of 14 November 2026, written before the OSF registration; results filled on 26 November 2026 from the
+full run resultados/analysis/full_20261125 (commit fda46d8). Still open: {{DATE}} and {{REPO.URL}} (at submission)
+and {{SENS.MRP}} (post-registration sensitivity, decision_log section 11). paper/README.md maps every placeholder to
+its source file and key.
 Convert with pandoc: see paper/README.md.
 -->
 
@@ -52,7 +54,7 @@ should start in the upper tail of the BMI distribution, where the drugs are pres
 states with higher use; it should match what uptake, persistence and per-user weight loss can produce; and
 individuals who start the drugs should lose BMI relative to those who do not. Each prediction can fail, and a
 measurement artefact would make them come apart. All hypotheses, models and decision rules were registered on the
-Open Science Framework before any outcome microdata were analysed ({{OSF.DOI}}).
+Open Science Framework before any outcome microdata were analysed ([doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG)).
 
 # Data
 
@@ -79,7 +81,7 @@ drug names, to self-reported BMI, which adults report in even years. We use the 
 prescribed-medicines files for 2018–2024 and the four-year longitudinal files of Panels 23 (2018–2021) and 24
 (2019–2022), in which the same person reports BMI twice. GLP-1 use is a purchase of semaglutide, tirzepatide,
 liraglutide, dulaglutide, exenatide, lixisenatide or albiglutide. The primary longitudinal sample has
-{{H6.N_INITIATORS}} initiators and {{H6.N_NEVER}} never-users (89 and 5,211 when counted before registration).
+89 initiators and 5,211 never-users (89 and 5,211 when counted before registration).
 
 ## State GLP-1 use, population and published comparators
 
@@ -92,11 +94,22 @@ Gallup's published estimates [@gallup2025; @gallup2026] and NHANES measured esti
 
 # Pre-registration
 
-The registration ({{OSF.DOI}}, {{OSF.DATE}}), which follows the secondary-data template of @vandenakker, fixed the hypotheses, models, smallest effects of interest, inference
+The registration ([doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG), 25 November 2026), which follows the secondary-data template of @vandenakker, fixed the hypotheses, models, smallest effects of interest, inference
 criteria and sensitivity analyses below, and the analysis code, written and tested on simulated data, was archived
 with it. Before registration the microdata were used only to reproduce published aggregates and to count cases.
 Changes made to the first draft before registration, each with its reason, are listed in Appendix A.
-{{DEVIATIONS.AFTER_REGISTRATION}}
+**After registration.** No hypothesis, model, threshold or decision rule was changed. Four things are reported
+here. (i) Three clerical differences between the registered form and the archived plan: research question 4 was
+cut short when pasted, an outdated note on the reference list was kept, and the form stores "<" and ">" as HTML
+entities; the archived plan has the complete text. (ii) Two implementation fixes found by smoke tests on the real
+data before the main run: the survey-variance and bootstrap helpers were rewritten for the BRFSS design (about
+36,000 strata), with bit-for-bit identical estimates and random draws and a design covariance equal to rounding
+error; and the composition reweighting of one H2 sensitivity analysis now treats a missing age group as its own
+cell. (iii) The multilevel model of H1 failed the registered convergence rule in 13 of 15 years, so the
+composition-adjusted direct series is the primary H1 series, as the registration prescribes. (iv) One analysis was
+added after registration and is labelled as such: the multilevel model fitted in every year without the
+convergence gate, reported with its diagnostics (Appendix B). Details are in the decision log of the repository
+(sections 9–11).
 
 | | Hypothesis | Prediction | Role |
 | --- | --- | --- | --- |
@@ -131,7 +144,13 @@ Group effects are normal with half-normal scales and constrained to sum to zero,
 the model is fitted with the No-U-Turn sampler in PyMC (4 chains × 1,000 draws). Post-stratification to ACS adult
 counts gives posterior draws of national prevalence. For each draw a linear trend in the logit of prevalence is
 fitted to 2011–2019 and projected to 2023–2025 with its closed-form posterior predictive (Student-t, 7 degrees of
-freedom); the departure is observed minus projected prevalence.
+freedom); the departure is observed minus projected prevalence. Each year's fit had to meet a convergence rule
+(R-hat below 1.01, bulk effective sample size above 400 and no divergent transitions, for every parameter), with a
+registered sequence of remedies (more tuning, a higher target acceptance, dropping the age × sex interaction, then
+education). If any year failed every step, the registration made the composition-adjusted direct series the primary
+national series: weighted two-way fixed effects (state and year) on the direct state estimates, with the national
+value of each year the population-weighted mean over all states, which also fills states missing in a year. That
+series has no posterior draws; its departure carries the Student-t predictive uncertainty of the trend projection.
 
 ## H2: diabetes contrast
 
@@ -198,63 +217,94 @@ September 2026; NHANES ends before the period of the decline.
 
 ![US adult obesity by source. Panel A: long-run published series. Panel B: level in 2022 and 2025 and change.](../docs/figures/h0_published_series.png){#fig:h0}
 
-{{H0.AGE_COMPARISON}} *(BRFSS change from 2022 to 2025 in Gallup's age groups, against Gallup's published
-changes: −4.3 points at 40–49 and −5.0 at 50–64.)*
+In BRFSS, obesity did not fall at the ages where Gallup reports its largest declines: from 2022 to 2025 it changed by 0.3 points at 30–39 (SE 0.6), 0.5 at 40–49 (0.7) and 0.9 at 50–64 (0.5), against Gallup's −2.2, −4.3 and −5.0; overall, 0.1 against −2.9.
 
 ## The departure from the 2011–2019 trajectory (H1)
 
-{{H1.TEXT}} In 2025, obesity was {{H1.D2025}} percentage points (95% credible interval {{H1.D2025_CI}}) from its
-projected value, about {{H1.D2025_MILLIONS}} million adults; the probability that the 2025 departure exceeds the
-2023 departure is {{H1.P_WIDENING}}. Classification: {{H1.CLASS}}.
+The multilevel model met the pre-registered convergence rule in only two years (2021 and 2024); in the other 13 it failed every step of the registered sequence, by small margins (maximum R-hat 1.008–1.026, minimum bulk effective sample size 210–520, 0–6 divergent transitions). As registered, the national series is therefore the composition-adjusted direct series: weighted two-way fixed effects on the state estimates, which also fills states missing in a year. Its uncertainty comes only from the trend projection. The departure was −0.41 points in 2023 and −0.64 in 2024, with intervals that include zero. In 2025, obesity was −1.37 percentage points (95% predictive interval −2.23 to −0.54) from its
+projected value, about 3.7 million fewer adults with obesity than projected (95% interval 1.5 to 6.0); the probability that the 2025 departure exceeds the
+2023 departure is 0.96. The alternative counterfactual trends give −1.77 (linear, 2011–2021), −2.33 (linear, 2015–2019), −2.87 (quadratic, 2011–2019) and −1.95 points (2022 level with the 2011–2019 slope). Classification: break present.
 
 ## Diabetes contrast (H2)
 
-{{H2.TEXT}} π̄ = {{H2.EST}} kg/m² (SE {{H2.SE}}; Holm-adjusted one-sided p {{H2.P_HOLM}}): {{H2.CLASS}}.
+The diabetes gap in mean BMI fell below its 2011–2019 trend in 2023–2025 in the predicted direction, but by less than the smallest effect of interest (−0.2 kg/m²). The one-sided p-value was 0.044 before adjustment, and the 90% confidence interval (−0.32 to −0.01) does not exclude effects of interest. π̄ = −0.16 kg/m² (SE 0.08; Holm-adjusted one-sided p 0.13): inconclusive.
 
 ## Upper tail (H3)
 
-{{H3.TEXT}} C = {{H3.EST}} kg/m² (SE {{H3.SE}}; Holm-adjusted p {{H3.P_HOLM}}): {{H3.CLASS}}.
+The 90th percentile of BMI departed from its trend by about as much as the median. The 90% confidence interval (−0.40 to 0.28) is wide enough to include both no effect and the smallest effect of interest (−0.3 kg/m²). C = −0.06 kg/m² (SE 0.21; Holm-adjusted p 0.39): inconclusive.
 
 ## States (H4)
 
-{{H4.TEXT}} β* = {{H4.EST}} percentage points per standard deviation of use (permutation p {{H4.P_PERM}};
-smoothness-bound interval at M = 0.02: {{H4.RR002}}). Without West Virginia, Kentucky, Louisiana and Oklahoma:
-{{H4.NO4}}. Classification: {{H4.CLASS}}.
+States with higher GLP-1 use departed more from their own 2011–2019 trajectories after 2022. The gradient did not depend on the four states that drove the pilot estimate, on the weighting or on any single state (although the Medicaid indicator alone showed none), and the top tercile of use fell 1.70 points further below its trajectory than the bottom tercile (average causal response −0.73). The yearly slopes were already negative in 2011–2014 (−0.57 to −0.23), however, and once departures from a linear pre-trend of the size allowed by the registration are admitted, the interval includes zero; by the registered rule the result is not supportive, and the gradient is a causal response only under strong parallel trends. β* = −0.69 percentage points per standard deviation of use (permutation p < 0.001;
+smoothness-bound interval at M = 0.02: −1.82 to 0.44). Without West Virginia, Kentucky, Louisiana and Oklahoma:
+−0.70 (SE 0.20). Classification: not supportive.
 
 ## Individual change (H6)
 
-{{H6.TEXT}} Initiators changed BMI by {{H6.EST}} kg/m² relative to never-users over two years (SE {{H6.SE}};
-Holm-adjusted p {{H6.P_HOLM}}); late initiators (placebo): {{H6.LATE}}. Classification: {{H6.CLASS}}.
+Adults who started a GLP-1 between the two BMI measurements lost BMI relative to never-users, by an amount within the range expected (−0.5 to −3 kg/m²), but with a standard error close to two-thirds of the estimate; the 90% confidence interval (−2.05 to 0.01) includes zero. Adults who started only after the second measurement did not lose BMI beforehand. Compared with those late initiators, who also chose the drug, initiators changed by −1.93 kg/m² (SE 0.85; secondary contrast, Panel 23 only). Initiators changed BMI by −1.02 kg/m² relative to never-users over two years (SE 0.63;
+Holm-adjusted p 0.13); late initiators (placebo): 1.29 kg/m² (SE 0.91), not significantly negative. Classification: inconclusive.
 
 ## Mechanical plausibility (H5)
 
-{{H5.TEXT}} The microsimulation gives a reduction of {{H5.MEDIAN}} percentage points (90% range {{H5.RANGE}}),
-against the observed departure of {{H1.D2025}}: {{H5.CLASS}}.
+Applying GLP-1 use, persistence and per-user weight loss to the 2025 BMI distribution gives a reduction in obesity of the same order as the observed departure. The microsimulation gives a reduction of −1.15 percentage points (90% range −1.81 to −0.67),
+against the observed departure of −1.37: compatible.
 
 ## Negative controls
 
-Height: {{NC1.EST}} cm (90% CI {{NC1.CI90}}); {{NC1.CLASS}}. Placebo break in 2017: {{NC2.TEXT}}.
+Height: −0.11 cm (90% CI −0.21 to −0.004); equivalence within ±0.5 cm established: passes. Placebo break in 2017: with the trend fitted to 2011–2015, the departures of the national series in 2017–2019 were 0.19 (−1.00 to 1.32), 0.66 (−0.88 to 1.97), 0.51 (−0.89 to 2.00) points, and the placebo diabetes differential was −0.05 kg/m² (SE 0.11); both pass.
 
 ## Overall verdict
 
-{{VERDICT.OVERALL}}
+**Mixed.** None of the three confirmatory signatures was supported and none was contradicted, and the height control passed. The pre-registered rule therefore classifies the evidence for a GLP-1 signature as mixed: the data neither confirm nor exclude it.
 
 # Discussion
 
-{{DISCUSSION}}
+The pre-registered question was not whether US adult obesity stopped rising, but whether the change has the shape
+GLP-1 receptor agonists would give it. The answer is in two parts. The break is clear: in 2025 obesity was about
+1.4 percentage points, or 3.7 million adults, below its 2011–2019 trajectory, under every
+counterfactual trend we registered, with no departure in self-reported height and no break at a placebo date. And
+its size is what the drugs could produce: a microsimulation built from observed uptake, persistence and weight
+loss gives a reduction of the same order. The shape, however, is not resolved. The three signatures that should
+distinguish a drug effect from other causes all had the predicted sign, but each was estimated with too little
+precision to be supported or ruled out. The state gradient was strong and stable across specifications but did not
+survive the registered allowance for pre-existing trends.
+
+Three features of the data limit what they can show. The diabetes contrast (H2) is estimated from a gap that varies
+from year to year more than its sampling error, and with nine pre-period years the projected gap is uncertain; the
+estimate (−0.16 kg/m²) lies between no effect and the smallest effect of interest. For the upper tail (H3), the bootstrap
+interval is wider than the smallest effect of interest, and the point estimate is close to zero. The MEPS panels (H6) end in 2022, before the largest rise in use,
+and contain 89 initiators; the registration anticipated that H6 would be underpowered at its smallest effect
+of interest, and the estimate (−1.0 kg/m²) is larger than that threshold but not distinguishable from zero.
+
+Two results bear on alternatives to a drug effect. Self-reported height did not change, which argues against a
+shift in how respondents report their body size large enough to move BMI. And BRFSS does not reproduce the
+age pattern that Gallup reports: obesity did not fall among adults aged 40–64, where use is highest (Section H0).
+The sources differ in mode, frame and weighting, and the registered design cannot say which is closer to the
+truth; NHANES measurements after 2023 would settle it.
+
+The multilevel model did not meet the registered convergence criteria, which were strict (every one of several
+hundred parameters had to reach R-hat below 1.01, an effective sample size above 400 and no divergent
+transition). The registered fallback, the composition-adjusted direct series used in the pilot, is therefore the
+primary national series; the multilevel estimates are reported as a sensitivity analysis added after registration
+(Appendix B).
+
+Attributing the break will need data that track individuals who start the drugs over longer periods, with measured
+weight, and a larger number of years after 2022 to estimate the diabetes and upper-tail contrasts precisely. Until
+then, the honest summary is that the bend in the curve is real and of a plausible size for a drug effect, but its
+cause is not established.
 
 **Limitations known before the results.** BMI in BRFSS and MEPS is self-reported, and its bias may change with
 the interview mode, which shifted from landline to cell phone over the period. State use measures count claims or
 prescriptions, not people; Medicare counts by prescriber state, and only one measure, from a commercial source,
 covers private insurance. The MEPS panels end in 2022, before the largest increase in use, and include
-{{H6.N_INITIATORS}} initiators, so H6 has limited power at its smallest effect of interest. The BRFSS files were
+89 initiators, so H6 has limited power at its smallest effect of interest. The BRFSS files were
 obtained through a mirror of Internet Archive captures, validated against the CDC aggregates, and a later CDC
 re-release would not be reflected. Several states are missing in some years, including three in 2025.
 
 # Data and code availability
 
 All data are public. Download scripts with checksums, provenance records, the analysis code and its tests, and the
-pre-registration are in {{REPO.URL}} and attached to the OSF registration ({{OSF.DOI}}).
+pre-registration are in {{REPO.URL}} and attached to the OSF registration ([doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG)).
 
 # Use of AI assistance
 
@@ -280,7 +330,7 @@ national use in H5.
 The RIF variant of H3 follows @firpo2009. The observed change from 2022 to 2025 is compared with the change implied by two projections made before the
 rise in use. @ward2019 forecast national adult obesity (ages 18+) rising from 42.0% in 2020 to 48.9% in 2030,
 about 2.1 points over 2022-2025; @decleene2026 forecast 42.5% in 2022 and 46.9% in 2035 (ages 20+), about 1.0
-point: {{Q24.EXTERNAL}}. Changes are compared, not levels, because both projections are calibrated to measured
+point: the primary national series changed by −0.37 points from 2022 to 2025, against projected increases of 2.07 (Ward et al.) and 1.02 points (DeCleene et al.), shortfalls of −2.44 and −1.38 points. Changes are compared, not levels, because both projections are calibrated to measured
 BMI.
 
 Self-reported BMI was also corrected with NHANES measurements, following @ward2019. Within each sex and period,
@@ -289,8 +339,73 @@ with a cubic spline, and added to each respondent's BMI at their percentile, wit
 rounding of reported height and weight. The periods pair BRFSS 2011-2016, 2017-2020 and 2021-2025 with the
 NHANES cycles of 2011-2016, 2017-March 2020 and August 2021-August 2023; no NHANES data cover 2024-2025, so the
 last calibration is carried forward. A variant applies one calibration, from 2011-2020, to every year:
-{{Q24.SELFREPORT}}.
+the 2025 departure of the corrected direct series is −5.84 points with period-specific calibrations (corrected prevalence 39.6% in 2022 and 39.8% in 2025) and −1.00 point with the fixed calibration (42.4% and 42.5%). The period-specific calibration changes in 2017 and 2021, inside and after the trend window, so part of its larger departure reflects the change of calibration; the fixed calibration is the cleaner comparison.
 
-{{Q24.TABLE}}
+**Multilevel model without the convergence gate (added after registration).** {{SENS.MRP}}
+
+| Hypothesis | Variant | Estimate | SE | 95% interval | Note |
+| --- | --- | --- | --- | --- | --- |
+| H1 | primary (direct weighted series, for comparison) | −0.92 |  |  | D2025, pp, predictive mean |
+| H1 | balanced panel of states (direct series) | −1.66 |  |  | 43 states |
+| H1 | interview mode: cell only (direct series) | −2.27 |  |  | combined-frame weights |
+| H1 | interview mode: landline only (direct series) | −4.95 |  |  | combined-frame weights |
+| H1 | share with missing BMI: departure from 2011-2019 trend, mean 2023-2025 | −2.63 |  |  | pp; a rise could mimic a decline |
+| H1 | multiple imputation of BMI (20), direct series | −0.94 | 0.09 |  | se = between-imputation SD |
+| H1 | pandemic years removed |  |  |  | not applicable: the primary trend uses 2011-2019 and each year is fitted separately |
+| H1 | external: observed change 2022-2025 (primary H1 series) | −0.37 |  |  | pp |
+| H1 | external: observed minus projected change, DeCleene et al. 2026 (IHME; data to 2022; ages 20+, bias-corrected) | −1.38 |  |  | projected change 2022-2025 = +1.02 pp (42.5% in 2022 to 46.9% in 2035) |
+| H1 | external: observed minus projected change, Ward et al. 2019 (BRFSS 1993-2016, NHANES-corrected; ages 18+) | −2.44 |  |  | projected change 2022-2025 = +2.07 pp (42.0% in 2020 to 48.9% in 2030) |
+| H1 | self-report correction (NHANES-calibrated, by sex and period, as in Ward et al. 2019), direct series | −5.84 |  |  | D2025, pp; corrected prevalence 39.6% (2022), 39.8% (2025); KS distance to NHANES 0.123 before, 0.014 after (max over sex x period) |
+| H1 | self-report correction (NHANES-calibrated, calibration fixed at 2011-2020), direct series | −1.00 |  |  | D2025, pp; corrected prevalence 42.4% (2022), 42.5% (2025); KS distance to NHANES 0.105 before, 0.021 after (max over sex x period) |
+| H2 | without age and sex interactions | −0.11 | 0.07 | −0.28 to 0.07 |  |
+| H2 | ages 45-74 only | −0.14 | 0.12 | −0.43 to 0.15 |  |
+| H2 | diabetes group reweighted to its 2017-2019 age x sex composition | −0.16 | 0.08 | −0.37 to 0.05 |  |
+| H2 | single regression, wild cluster bootstrap by state (Webb) | −0.16 | 0.11 | −0.37 to 0.05 | 51 clusters |
+| H2 | item-change term off | −0.20 | 0.09 | −0.40 to 0.01 |  |
+| H2 | pandemic years removed | −0.16 | 0.08 | −0.36 to 0.03 |  |
+| H2 | balanced panel of states | −0.27 | 0.14 | −0.61 to 0.08 |  |
+| H2 | interview mode: cell only | −0.21 | 0.18 | −0.64 to 0.23 |  |
+| H2 | interview mode: landline only | −0.32 | 0.08 | −0.50 to −0.13 |  |
+| H2 | multiple imputation of BMI (20) | −0.19 | 0.09 | −0.36 to −0.02 | Rubin's rules |
+| H3 | 75th percentile in place of the 90th | 0.04 | 0.14 | −0.25 to 0.32 |  |
+| H3 | 95th percentile in place of the 90th | 0.14 | 0.23 | −0.32 to 0.60 |  |
+| H3 | reweighting to the 2011 composition | −0.02 | 0.18 | −0.38 to 0.34 |  |
+| H3 | reweighting to the 2022 composition | −0.16 | 0.18 | −0.51 to 0.19 |  |
+| H3 | RIF regression with covariates instead of reweighting | −0.08 |  |  | point estimate |
+| H3 | balanced panel of states | 0.06 | 0.20 | −0.34 to 0.46 |  |
+| H3 | interview mode: cell only | −0.09 | 0.22 | −0.53 to 0.34 |  |
+| H3 | interview mode: landline only | 0.19 | 0.24 | −0.28 to 0.66 |  |
+| H3 | multiple imputation of BMI (20) | −0.13 | 0.05 |  | point estimates; se = between-imputation SD |
+| H3 | pandemic years removed |  |  |  | not applicable: the trend uses 2011-2019 and the contrast 2023-2025 |
+| NC1 | all adults 18+ | −0.04 | 0.05 | −0.14 to 0.07 |  |
+| NC1 | by sex: Female | −0.16 |  |  | point estimate |
+| NC1 | by sex: Male | −0.05 |  |  | point estimate |
+| H4 | indicator alone: medicare_claims_per100_adults_2024 | −0.67 | 0.20 | −1.07 to −0.28 | permutation p 0.000 |
+| H4 | indicator alone: medicaid_rx_per1000_enrollees_2025 | −0.03 | 0.17 | −0.36 to 0.31 | permutation p 0.889 |
+| H4 | indicator alone: allpayer_rx_per100_2024 | −0.74 | 0.17 | −1.07 to −0.41 | permutation p 0.000 |
+| H4 | population weights | −0.76 | 0.27 | −1.28 to −0.23 | permutation p 0.002 |
+| H4 | precision weights (1 / sampling variance, Kish n) | −0.67 | 0.17 | −1.01 to −0.34 | permutation p 0.000 |
+| H4 | leave-one-state-out (range) | −0.72 |  | −0.83 to −0.60 | estimate = mean of the 50 fits |
+| H4 | without WV, KY, LA and OK | −0.70 | 0.20 | −1.09 to −0.31 | permutation p 0.001 |
+| H4 | without states missing a post-period year | −0.63 | 0.23 | −1.07 to −0.19 | permutation p 0.001 |
+| H4 | Rambachan-Roth relative magnitude, Mbar = 0.5 | −0.72 | 0.19 | −2.08 to 0.63 | conservative |
+| H4 | Rambachan-Roth relative magnitude, Mbar = 1.0 | −0.72 | 0.19 | −3.06 to 1.62 | conservative |
+| H4 | dose-response, quartiles (top minus bottom) | −1.87 |  |  |  |
+| H4 | dose-response, cubic fit (average causal response) | −0.71 |  |  |  |
+| H4 | pandemic years removed | −0.72 | 0.19 | −1.09 to −0.35 | permutation p 0.000 |
+| H4 | balanced panel of states | −0.65 | 0.23 | −1.09 to −0.20 | permutation p 0.001 |
+| H5 | loss of non-persistent users U(0%, 4%) | −0.97 |  | −1.58 to −0.55 | compatible |
+| H5 | persistence fixed at 35.2% and 53.5% | −1.16 |  | −1.80 to −0.68 | compatible |
+| H5 | national use fixed at the MEPS 2024 rate | −0.69 |  | −0.89 to −0.50 | compatible |
+| H6 | prevalent users as a third group | −1.00 | 0.62 | −2.22 to 0.22 |  |
+| H6 | LONGWT instead of LSAQWT | −1.36 | 0.65 | −2.63 to −0.10 |  |
+| H6 | persons not present in all rounds included | −0.97 | 0.60 | −2.14 to 0.20 |  |
+| H6 | changes larger than 10 kg/m2 excluded | −1.07 | 0.59 | −2.23 to 0.09 |  |
+| H6 | by diabetes status: with diabetes | −0.74 | 0.66 | −2.04 to 0.56 | 71 initiators |
+| H6 | by diabetes status: without diabetes | −0.67 | 1.08 | −2.79 to 1.46 | 18 initiators |
+| H6 | Panel 23 only | −1.62 | 0.82 | −3.24 to −0.01 | 44 initiators |
+| H6 | Panel 24 only | −0.44 | 0.87 | −2.14 to 1.25 | 45 initiators |
+
+: Pre-registered sensitivity analyses (Q24), full table. Units: H1 percentage points (departure in 2025 unless stated); H2, H3 and H6 kg/m²; H4 percentage points per SD of use; H5 percentage points; NC1 cm. {#tbl:q24}
 
 # References {-}

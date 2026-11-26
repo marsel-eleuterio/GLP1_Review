@@ -17,7 +17,8 @@ on outcome microdata is a placeholder, filled after registration from the pipeli
 | --- | --- | --- |
 | `{{OSF.DOI}}`, `{{OSF.DATE}}` | `docs/osf_registration.txt` | registration DOI and date |
 | `{{REPO.URL}}` | — | public repository URL at submission |
-| `{{DEVIATIONS.AFTER_REGISTRATION}}` | — | any change made after registration, with reason (none so far) |
+| `{{DEVIATIONS.AFTER_REGISTRATION}}` | `docs/decision_log.md` sections 9-11 | filled 26 November 2026 |
+| `{{SENS.MRP}}` | `resultados/analysis/sens_mrp_nogate_20261126/h1.json` | post-registration sensitivity (decision_log 11) |
 | `{{H0.AGE_COMPARISON}}` | `h0_age_changes.csv` | BRFSS change 2022-2025 by Gallup group vs Gallup |
 | `{{H1.D2025}}`, `{{H1.D2025_CI}}` | `h1.json` | `D2025_pp` (median; 2.5 and 97.5 percentiles) |
 | `{{H1.D2025_MILLIONS}}` | `h1.json` | `D_millions[2025]` |
