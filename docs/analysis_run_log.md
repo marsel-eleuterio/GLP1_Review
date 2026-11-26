@@ -36,3 +36,11 @@ minimum bulk ESS 210-520 and 0-6 divergences. As Q23 prescribes, the composition
 primary H1 series ("Q23 fallback; MRP failed in [2011-2020, 2022, 2023, 2025]", `h1.json`). This is the registered
 procedure, not a run failure, so the run was not stopped or changed. The full per-step diagnostics are in
 `h1.json` (`fit_log`).
+
+### Completion (26 November 2026, 13:17)
+
+The run finished with exit code 0 at 13:17 (13 h 27 min; Q24 alone 6 h 24 min), with no traceback, no stall and
+no restart. All outputs are in `resultados/analysis/full_20261125/` (`summary.md`, `verdicts.json`, one file per
+step, `q24.csv` with 60 rows; the two rows without estimates are the variants marked "not applicable" in the code).
+Classifications under the registered rules (Q22): H2, H3 and H6 inconclusive, overall verdict "mixed"; H1 break
+present (on the Q23 fallback series); H4 not supportive; H5 compatible; NC1, NC2 (H1) and NC2 (H2) pass.
