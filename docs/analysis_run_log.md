@@ -26,3 +26,13 @@ imputation 31 s, one H4 permutation 38 ms. Expected length of the full run: 9-10
   `resultados/analysis_full.log`.
 - Monitoring every 30 minutes overnight. If a run fails or stalls, the cause, the fix and the restart are
   recorded below.
+
+### H1 convergence (26 November 2026, 06:15)
+
+H1 took 6 h 25 min (68 MCMC fits). The MRP model passed the Q23 convergence rule (R-hat < 1.01, bulk ESS > 400
+and no divergent transitions, on every parameter) only in 2021 (after 2,000 tuning steps) and 2024 (primary
+model). In the other 13 years it failed all five Q23 steps, typically by small margins: maximum R-hat 1.008-1.026,
+minimum bulk ESS 210-520 and 0-6 divergences. As Q23 prescribes, the composition-adjusted direct series became the
+primary H1 series ("Q23 fallback; MRP failed in [2011-2020, 2022, 2023, 2025]", `h1.json`). This is the registered
+procedure, not a run failure, so the run was not stopped or changed. The full per-step diagnostics are in
+`h1.json` (`fit_log`).
