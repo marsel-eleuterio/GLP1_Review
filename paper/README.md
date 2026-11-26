@@ -44,7 +44,14 @@ on outcome microdata is a placeholder, filled after registration from the pipeli
 
 ## Converting
 
-With pandoc (not installed in this environment):
+PDF for review, with pandoc 3.14 and Typst 0.15 (Windows: `winget install JohnMacFarlane.Pandoc Typst.Typst`),
+from the `paper/` folder:
 
-    pandoc paper/manuscript.md --citeproc --bibliography paper/references.bib -o paper/manuscript.pdf
-    pandoc paper/manuscript.md --citeproc --bibliography paper/references.bib -s -o paper/manuscript.tex
+    pandoc manuscript.md --citeproc --bibliography references.bib --pdf-engine=typst --columns=1000 \
+      --include-in-header=typst-header.typ -V papersize=a4 -V margin.x=2.2cm -V margin.y=2.4cm \
+      -V fontsize=10.5pt -o manuscript.pdf
+
+`--columns=1000` lets the table columns take their natural widths; `typst-header.typ` lets long tables break across
+pages. `manuscript.pdf` is not committed. For the arXiv LaTeX source:
+
+    pandoc manuscript.md --citeproc --bibliography references.bib -s -o manuscript.tex

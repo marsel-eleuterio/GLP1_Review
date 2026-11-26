@@ -4,7 +4,7 @@ author:
   - name: Marsel Eleutério
     affiliation: Independent researcher
     orcid: 0009-0008-0021-8866
-date: "{{DATE}}"
+date: "26 November 2026"
 bibliography: references.bib
 abstract: |
   **Background.** Self-reported adult obesity in the United States stopped rising after 2022, while the use of
@@ -27,7 +27,7 @@ abstract: |
 
 <!--
 Skeleton of 14 November 2026, written before the OSF registration; results filled on 26 November 2026 from the
-full run resultados/analysis/full_20261125 (commit fda46d8). Still open: {{DATE}} and {{REPO.URL}} (at submission).
+full run resultados/analysis/full_20261125 (commit fda46d8). Date and repository URL filled on 26 November 2026; the repository must be public before submission.
 The post-registration MRP sensitivity is in Appendix B. paper/README.md maps every placeholder to
 its source file and key.
 Convert with pandoc: see paper/README.md.
@@ -202,7 +202,7 @@ pre-registered sensitivity analyses (alternative counterfactual trends, pandemic
 states, multiple imputation of missing BMI, interview mode, and hypothesis-specific variants) are reported in full
 in Appendix B.
 
-All code, from download to tables, is in the project repository and the OSF archive ({{REPO.URL}}).
+All code, from download to tables, is in the project repository and the OSF archive (<https://github.com/marsel-eleuterio/GLP1_Review>).
 
 # Results
 
@@ -304,7 +304,7 @@ re-release would not be reflected. Several states are missing in some years, inc
 # Data and code availability
 
 All data are public. Download scripts with checksums, provenance records, the analysis code and its tests, and the
-pre-registration are in {{REPO.URL}} and attached to the OSF registration ([doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG)).
+pre-registration are in <https://github.com/marsel-eleuterio/GLP1_Review> and attached to the OSF registration ([doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG)).
 
 # Use of AI assistance
 
@@ -355,11 +355,11 @@ the 2025 departure of the corrected direct series is −5.84 points with period-
 | H1 | external: observed change 2022-2025 (primary H1 series) | −0.37 |  |  | pp |
 | H1 | external: observed minus projected change, DeCleene et al. 2026 (IHME; data to 2022; ages 20+, bias-corrected) | −1.38 |  |  | projected change 2022-2025 = +1.02 pp (42.5% in 2022 to 46.9% in 2035) |
 | H1 | external: observed minus projected change, Ward et al. 2019 (BRFSS 1993-2016, NHANES-corrected; ages 18+) | −2.44 |  |  | projected change 2022-2025 = +2.07 pp (42.0% in 2020 to 48.9% in 2030) |
-| H1 | self-report correction (NHANES-calibrated, by sex and period, as in Ward et al. 2019), direct series | −5.84 |  |  | D2025, pp; corrected prevalence 39.6% (2022), 39.8% (2025); KS distance to NHANES 0.123 before, 0.014 after (max over sex x period) |
-| H1 | self-report correction (NHANES-calibrated, calibration fixed at 2011-2020), direct series | −1.00 |  |  | D2025, pp; corrected prevalence 42.4% (2022), 42.5% (2025); KS distance to NHANES 0.105 before, 0.021 after (max over sex x period) |
+| H1 | self-report correction (NHANES-calibrated, by sex and period, as in Ward et al. 2019), direct series | −5.84 |  |  | D2025, pp; corrected prevalence 39.6% (2022), 39.8% (2025); KS distance to NHANES 0.123 before, 0.014 after (max over sex × period) |
+| H1 | self-report correction (NHANES-calibrated, calibration fixed at 2011-2020), direct series | −1.00 |  |  | D2025, pp; corrected prevalence 42.4% (2022), 42.5% (2025); KS distance to NHANES 0.105 before, 0.021 after (max over sex × period) |
 | H2 | without age and sex interactions | −0.11 | 0.07 | −0.28 to 0.07 |  |
 | H2 | ages 45-74 only | −0.14 | 0.12 | −0.43 to 0.15 |  |
-| H2 | diabetes group reweighted to its 2017-2019 age x sex composition | −0.16 | 0.08 | −0.37 to 0.05 |  |
+| H2 | diabetes group reweighted to its 2017-2019 age × sex composition | −0.16 | 0.08 | −0.37 to 0.05 |  |
 | H2 | single regression, wild cluster bootstrap by state (Webb) | −0.16 | 0.11 | −0.37 to 0.05 | 51 clusters |
 | H2 | item-change term off | −0.20 | 0.09 | −0.40 to 0.01 |  |
 | H2 | pandemic years removed | −0.16 | 0.08 | −0.36 to 0.03 |  |
@@ -380,19 +380,19 @@ the 2025 departure of the corrected direct series is −5.84 points with period-
 | NC1 | all adults 18+ | −0.04 | 0.05 | −0.14 to 0.07 |  |
 | NC1 | by sex: Female | −0.16 |  |  | point estimate |
 | NC1 | by sex: Male | −0.05 |  |  | point estimate |
-| H4 | indicator alone: medicare_claims_per100_adults_2024 | −0.67 | 0.20 | −1.07 to −0.28 | permutation p 0.000 |
-| H4 | indicator alone: medicaid_rx_per1000_enrollees_2025 | −0.03 | 0.17 | −0.36 to 0.31 | permutation p 0.889 |
-| H4 | indicator alone: allpayer_rx_per100_2024 | −0.74 | 0.17 | −1.07 to −0.41 | permutation p 0.000 |
+| H4 | indicator alone: Medicare Part D claims per 100 adults (2024) | −0.67 | 0.20 | −1.07 to −0.28 | permutation p < 0.001 |
+| H4 | indicator alone: Medicaid prescriptions per 1,000 enrollees (2025) | −0.03 | 0.17 | −0.36 to 0.31 | permutation p 0.889 |
+| H4 | indicator alone: all-payer prescriptions per 100 residents (2024) | −0.74 | 0.17 | −1.07 to −0.41 | permutation p < 0.001 |
 | H4 | population weights | −0.76 | 0.27 | −1.28 to −0.23 | permutation p 0.002 |
-| H4 | precision weights (1 / sampling variance, Kish n) | −0.67 | 0.17 | −1.01 to −0.34 | permutation p 0.000 |
+| H4 | precision weights (1 / sampling variance, Kish n) | −0.67 | 0.17 | −1.01 to −0.34 | permutation p < 0.001 |
 | H4 | leave-one-state-out (range) | −0.72 |  | −0.83 to −0.60 | estimate = mean of the 50 fits |
 | H4 | without WV, KY, LA and OK | −0.70 | 0.20 | −1.09 to −0.31 | permutation p 0.001 |
 | H4 | without states missing a post-period year | −0.63 | 0.23 | −1.07 to −0.19 | permutation p 0.001 |
-| H4 | Rambachan-Roth relative magnitude, Mbar = 0.5 | −0.72 | 0.19 | −2.08 to 0.63 | conservative |
-| H4 | Rambachan-Roth relative magnitude, Mbar = 1.0 | −0.72 | 0.19 | −3.06 to 1.62 | conservative |
+| H4 | Rambachan-Roth relative magnitude, M̄ = 0.5 | −0.72 | 0.19 | −2.08 to 0.63 | conservative |
+| H4 | Rambachan-Roth relative magnitude, M̄ = 1.0 | −0.72 | 0.19 | −3.06 to 1.62 | conservative |
 | H4 | dose-response, quartiles (top minus bottom) | −1.87 |  |  |  |
 | H4 | dose-response, cubic fit (average causal response) | −0.71 |  |  |  |
-| H4 | pandemic years removed | −0.72 | 0.19 | −1.09 to −0.35 | permutation p 0.000 |
+| H4 | pandemic years removed | −0.72 | 0.19 | −1.09 to −0.35 | permutation p < 0.001 |
 | H4 | balanced panel of states | −0.65 | 0.23 | −1.09 to −0.20 | permutation p 0.001 |
 | H5 | loss of non-persistent users U(0%, 4%) | −0.97 |  | −1.58 to −0.55 | compatible |
 | H5 | persistence fixed at 35.2% and 53.5% | −1.16 |  | −1.80 to −0.68 | compatible |
@@ -400,7 +400,7 @@ the 2025 departure of the corrected direct series is −5.84 points with period-
 | H6 | prevalent users as a third group | −1.00 | 0.62 | −2.22 to 0.22 |  |
 | H6 | LONGWT instead of LSAQWT | −1.36 | 0.65 | −2.63 to −0.10 |  |
 | H6 | persons not present in all rounds included | −0.97 | 0.60 | −2.14 to 0.20 |  |
-| H6 | changes larger than 10 kg/m2 excluded | −1.07 | 0.59 | −2.23 to 0.09 |  |
+| H6 | changes larger than 10 kg/m² excluded | −1.07 | 0.59 | −2.23 to 0.09 |  |
 | H6 | by diabetes status: with diabetes | −0.74 | 0.66 | −2.04 to 0.56 | 71 initiators |
 | H6 | by diabetes status: without diabetes | −0.67 | 1.08 | −2.79 to 1.46 | 18 initiators |
 | H6 | Panel 23 only | −1.62 | 0.82 | −3.24 to −0.01 | 44 initiators |
