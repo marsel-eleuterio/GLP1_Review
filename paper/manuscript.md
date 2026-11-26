@@ -27,8 +27,8 @@ abstract: |
 
 <!--
 Skeleton of 14 November 2026, written before the OSF registration; results filled on 26 November 2026 from the
-full run resultados/analysis/full_20261125 (commit fda46d8). Still open: {{DATE}} and {{REPO.URL}} (at submission)
-and {{SENS.MRP}} (post-registration sensitivity, decision_log section 11). paper/README.md maps every placeholder to
+full run resultados/analysis/full_20261125 (commit fda46d8). Still open: {{DATE}} and {{REPO.URL}} (at submission).
+The post-registration MRP sensitivity is in Appendix B. paper/README.md maps every placeholder to
 its source file and key.
 Convert with pandoc: see paper/README.md.
 -->
@@ -223,7 +223,7 @@ In BRFSS, obesity did not fall at the ages where Gallup reports its largest decl
 
 The multilevel model met the pre-registered convergence rule in only two years (2021 and 2024); in the other 13 it failed every step of the registered sequence, by small margins (maximum R-hat 1.008–1.026, minimum bulk effective sample size 210–520, 0–6 divergent transitions). As registered, the national series is therefore the composition-adjusted direct series: weighted two-way fixed effects on the state estimates, which also fills states missing in a year. Its uncertainty comes only from the trend projection. The departure was −0.41 points in 2023 and −0.64 in 2024, with intervals that include zero. In 2025, obesity was −1.37 percentage points (95% predictive interval −2.23 to −0.54) from its
 projected value, about 3.7 million fewer adults with obesity than projected (95% interval 1.5 to 6.0); the probability that the 2025 departure exceeds the
-2023 departure is 0.96. The alternative counterfactual trends give −1.77 (linear, 2011–2021), −2.33 (linear, 2015–2019), −2.87 (quadratic, 2011–2019) and −1.95 points (2022 level with the 2011–2019 slope). Classification: break present.
+2023 departure is 0.96. The alternative counterfactual trends give −1.77 (linear, 2011–2021), −2.33 (linear, 2015–2019), −2.87 (quadratic, 2011–2019) and −1.95 points (2022 level with the 2011–2019 slope). A multilevel estimate fitted without the convergence gate, added after registration, gives a larger departure (−2.09 points; Appendix B). Classification: break present.
 
 ## Diabetes contrast (H2)
 
@@ -341,7 +341,7 @@ NHANES cycles of 2011-2016, 2017-March 2020 and August 2021-August 2023; no NHAN
 last calibration is carried forward. A variant applies one calibration, from 2011-2020, to every year:
 the 2025 departure of the corrected direct series is −5.84 points with period-specific calibrations (corrected prevalence 39.6% in 2022 and 39.8% in 2025) and −1.00 point with the fixed calibration (42.4% and 42.5%). The period-specific calibration changes in 2017 and 2021, inside and after the trend window, so part of its larger departure reflects the change of calibration; the fixed calibration is the cleaner comparison.
 
-**Multilevel model without the convergence gate (added after registration).** {{SENS.MRP}}
+**Multilevel model without the convergence gate (added after registration).** Fitting the multilevel model with its primary specification in every year and no convergence gate (same priors, sampler settings and seeds as the registered run; decision log section 11) gives a 2025 departure of −2.09 percentage points (95% credible interval −3.09 to −1.09), about 5.6 million adults (2.9 to 8.3), against −1.37 for the primary series; the probability that the 2025 departure exceeds the 2023 departure is 0.96, the alternative counterfactual trends give −2.06 to −2.23, and the 2017 placebo passes. The interval still overlaps the central 90% of the H5 microsimulation (−1.81 to −0.67). The fits are those whose diagnostics fail the registered rule: maximum R-hat 1.009−1.026, minimum bulk effective sample size 210−481 and 0−6 divergent transitions per year (2021: 1.016, 421, 3; 2024: 1.009, 464, 0). The direction and the classification of H1 do not change; the size of the departure is larger with the multilevel model.
 
 | Hypothesis | Variant | Estimate | SE | 95% interval | Note |
 | --- | --- | --- | --- | --- | --- |
