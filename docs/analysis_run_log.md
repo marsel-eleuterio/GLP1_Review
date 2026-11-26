@@ -44,3 +44,8 @@ no restart. All outputs are in `resultados/analysis/full_20261125/` (`summary.md
 step, `q24.csv` with 60 rows; the two rows without estimates are the variants marked "not applicable" in the code).
 Classifications under the registered rules (Q22): H2, H3 and H6 inconclusive, overall verdict "mixed"; H1 break
 present (on the Q23 fallback series); H4 not supportive; H5 compatible; NC1, NC2 (H1) and NC2 (H2) pass.
+
+## Sensitivity: MRP without the Q23 gate (`sens_mrp_nogate_20261126`)
+
+Declared sensitivity of `decision_log.md` section 11. Started 26 November 2026 (H1 only, primary MRP model in every
+year, same seeds and sampler as the registered run).

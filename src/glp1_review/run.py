@@ -103,7 +103,9 @@ def step_h1(b, src, cfg, out) -> dict:
             idata, _ = h1_mrp.fit_year(
                 inp["cells"], inp["z"], DIVISION, seed=cfg.seed + y, sampler_kwargs=cfg.mrp_sampler
             )
-            label, diag, opts = "primary (no Q23 check)", [], {}
+            # diagnostics are recorded but do not gate the fit (smoke tests, and the declared sensitivity of
+            # decision_log section 11)
+            label, diag, opts = "primary (no Q23 check)", [("primary", h1_mrp.converged(idata))], {}
         P[y] = h1_mrp.poststratify(
             idata, inp["frame"], inp["use_race"], **{k: v for k, v in opts.items() if k in ("agesex", "educ")}
         )

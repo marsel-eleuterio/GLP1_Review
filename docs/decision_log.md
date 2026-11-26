@@ -251,3 +251,22 @@ Related, not changed: in the H2 regressions the same pandas behaviour gives resp
 (about 0.6-1.1% a year) or education (about 0.2-0.3%) zeros in those indicator sets, i.e. they share the reference
 category of that covariate. This is how the registered code and environment behave, and Q12/Q14 do not state
 another rule for missing covariates, so it is kept and reported as an implementation detail.
+
+## 11. Declared sensitivity: MRP without the Q23 convergence gate (26 November 2026)
+
+**Deviation, added after the full run.** In the full run (`resultados/analysis/full_20261125`) the H1 MRP model
+met the Q23 convergence rule (R-hat < 1.01, bulk ESS > 400 and no divergences, on every parameter) only in 2021
+and 2024, so the composition-adjusted direct series became the primary H1 series, as Q23 prescribes. That stays
+the primary H1 result.
+
+As a sensitivity analysis decided after seeing that the rule failed (and after the quick smoke tests had shown
+MRP point estimates), the MRP is also reported with the primary model in every year and no convergence gate:
+same specification, priors, sampler settings (4 chains × 1,000 draws after 1,000 tuning steps, target acceptance
+0.95) and seeds (20261114 + year) as the first Q23 step of the registered run, so the fits are those whose
+diagnostics are already in `full_20261125/h1.json`. No new threshold was chosen after seeing the diagnostics;
+instead, each year's maximum R-hat, minimum bulk ESS and number of divergences are reported next to the
+estimates. The result is labelled as a post-registration sensitivity in the preprint and does not change any
+Q22 classification.
+
+Run with `scripts/run_analysis.py --steps h1 --no-q23-gate` (new flag; the no-gate path now also records the
+diagnostics it does not act on).
