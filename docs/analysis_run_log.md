@@ -53,3 +53,9 @@ year, same seeds and sampler as the registered run).
 Note on the outputs of the full run: the Q24 row "external: observed change 2022-2025 (MRP)" takes the primary H1
 series of the run, which here is the Q23 fallback (composition-adjusted direct series), not MRP; "(MRP)" is a fixed
 label in `sensitivity.q24_external`. The manuscript labels it as the primary H1 series.
+
+Completed 26 November 2026, 15:03 (56 min), exit 0, commit 34505c7. Each year's diagnostics are identical to
+the first Q23 step of the registered run, which confirms that the fits are the same. 2025 departure −2.09 pp
+(95% credible interval −3.09 to −1.09), about 5.6 million adults, against −1.37 for the registered fallback
+series; probability of widening 0.96; alternative trends −2.06 to −2.23; NC2 passes. Reported in Appendix B of the
+preprint and in one sentence of the H1 results; no Q22 classification changes.
