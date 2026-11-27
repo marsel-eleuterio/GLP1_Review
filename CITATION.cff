@@ -6,11 +6,11 @@ authors:
   - family-names: "Eleutério"
     given-names: "Marsel"
     orcid: "https://orcid.org/0009-0008-0021-8866"
-version: 0.1.0
-date-released: 2026-11-14
+version: 0.2.0
+date-released: 2026-11-27
 license:
   - MIT        # code
-  - CC-BY-4.0  # study documents (docs/)
+  - CC-BY-4.0  # study documents (docs/) and preprint (paper/)
 identifiers:
   - type: doi
     value: 10.17605/OSF.IO/XW7ZG

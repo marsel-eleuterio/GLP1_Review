@@ -117,8 +117,8 @@ Utilization Data, U.S. Census Bureau population estimates and ACS PUMS, NCHS NHA
 © 2026 Marsel Eleutério.
 
 - **Code** (`*.py`, configuration, tests): [MIT](LICENSE).
-- **Study documents** (`docs/`, `piloto/LEIAME.md`: study plan, pre-registration, literature review):
-  [CC BY 4.0](LICENSE-docs). You may share and adapt them with attribution.
+- **Study documents** (`docs/`, `paper/`, `piloto/LEIAME.md`: study plan, pre-registration, literature review,
+  preprint text and figures): [CC BY 4.0](LICENSE-docs). You may share and adapt them with attribution.
 - **Third-party data** (`piloto/dados/`, downloaded microdata): original terms of each source, listed in
   [LICENSE](LICENSE).
 

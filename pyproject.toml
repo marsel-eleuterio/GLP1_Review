@@ -1,9 +1,9 @@
 [project]
 name = "glp1-review"
-version = "0.1.0"
+version = "0.2.0"
 description = "Is the break in the US adult obesity trend a GLP-1 effect? Pre-registered secondary-data study (BRFSS, MEPS, CMS)."
 readme = "README.md"
-license = { file = "LICENSE" }  # code: MIT; documents in docs/ are CC BY 4.0 (LICENSE-docs)
+license = { file = "LICENSE" }  # code: MIT; documents in docs/ and paper/ are CC BY 4.0 (LICENSE-docs)
 authors = [{ name = "Marsel Eleutério" }]
 requires-python = ">=3.11"
 dependencies = [

@@ -27,7 +27,7 @@ abstract: |
 
 <!--
 Skeleton of 14 November 2026, written before the OSF registration; results filled on 26 November 2026 from the
-full run resultados/analysis/full_20261125 (commit fda46d8). Date and repository URL filled on 26 November 2026; the repository must be public before submission.
+full run resultados/analysis/full_20261125 (commit fda46d8). Date and repository URL filled on 26 November 2026; the repository was made public on 27 November 2026.
 The post-registration MRP sensitivity is in Appendix B. paper/README.md maps every placeholder to
 its source file and key.
 Convert with pandoc: see paper/README.md.

@@ -26,10 +26,11 @@ Scope
 This MIT license covers the source code of this repository (*.py files,
 configuration and tests).
 
-The study documents (everything in docs/, piloto/LEIAME.md and the original
-material in initial_docs/ other than code and data) are licensed separately
-under Creative Commons Attribution 4.0 International (CC BY 4.0); see
-LICENSE-docs or https://creativecommons.org/licenses/by/4.0/.
+The study documents (everything in docs/, the preprint in paper/ with its
+text, figures and references, piloto/LEIAME.md and the original material in
+initial_docs/ other than code and data) are licensed separately under
+Creative Commons Attribution 4.0 International (CC BY 4.0); see LICENSE-docs
+or https://creativecommons.org/licenses/by/4.0/.
 
 ---------------------------------------------------------------------------
 Third-party data

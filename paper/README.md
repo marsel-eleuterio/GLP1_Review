@@ -11,6 +11,8 @@ declared sensitivity (`sens_mrp_nogate_20261126`).
 | `figures/` | Figures 1–6, drawn by `scripts/make_figures.py` (module `glp1_review.figures`) from the full run |
 | `typst-header.typ` | Table layout for the PDF built with Typst |
 
+The text, figures and references are under [CC BY 4.0](../LICENSE-docs); the code that draws the figures is MIT.
+
 ## Where the numbers come from
 
 Each number in the manuscript was filled from the pipeline outputs in `resultados/analysis/<run>/`
