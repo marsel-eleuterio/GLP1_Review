@@ -3,29 +3,44 @@
 **Is the break in the US adult obesity trend a GLP-1 effect?**
 
 A pre-registered, secondary-data study. US adult obesity stopped rising after 2022 while GLP-1 use
-(semaglutide, tirzepatide) multiplied. That the curve bent is already published; nobody has tested
-whether the change carries the *signature* of the drugs. This project tests seven falsifiable
-predictions that should appear together if GLP-1s explain the break, and come apart if it is a
-measurement artefact.
+(semaglutide, tirzepatide) multiplied. That the curve bent is already published; nobody had tested whether the
+change carries the *signature* of the drugs. This project tests predictions that should hold together if GLP-1
+drugs explain the break, and come apart if it has another cause, such as a measurement artefact.
 
-| # | Hypothesis | Prediction that can fail | Data |
+| # | Hypothesis | Prediction | Role |
 | --- | --- | --- | --- |
-| H0 | Sources agree | The Gallup (decline) vs BRFSS (plateau) gap is explained by sample, mode and weighting | Gallup, BRFSS, NHANES |
-| H1 | Trend break | After 2022 obesity falls below the 2011–2019 trajectory, and the gap grows each year | BRFSS 2011–2025 |
-| H2 | Gradient by profile | Larger deviation where use is higher; primary contrast: diagnosed diabetes vs others | BRFSS microdata + KFF, Gallup, MEPS |
-| H3 | BMI signature | The BMI 90th percentile departs from trend more than the median | BRFSS microdata |
-| H4 | State dose-response | States with more use deviate more, net of baseline level and prior trend | BRFSS + state-level use (CMS, RX Index) |
-| H5 | Mechanical plausibility | The observed deviation fits use × persistence × weight loss | Trials, real-world studies, MEPS |
-| H6 | Individual loss | New GLP-1 users lose BMI relative to non-users, with no pre-trend | MEPS panels 23 and 24 |
+| H0 | Source reconciliation | Describe why Gallup falls and BRFSS does not | Descriptive |
+| H1 | Trend break | Obesity in 2023–2025 below its 2011–2019 trajectory, gap widening | Estimation target |
+| H2 | Diabetes contrast | Larger departure in mean BMI among adults with diagnosed diabetes | Confirmatory |
+| H3 | Upper-tail signature | 90th percentile of BMI departs more than the median | Confirmatory |
+| H4 | State dose–response | Larger departure where use is higher | Estimation target |
+| H5 | Mechanical plausibility | Departure within what uptake × persistence × loss can produce | Consistency check |
+| H6 | Individual change | GLP-1 initiators lose BMI relative to never-users; no change before initiation | Confirmatory |
+| NC1 | Height | No departure in self-reported height (±0.5 cm) | Negative control |
+| NC2 | Placebo break | No departure at a pseudo-break in 2017 | Negative control |
 
-Negative controls: self-reported height and the 2015–2019 period must not show the same pattern.
+Data: BRFSS 2011–2025 (6.0 million interviews), MEPS 2018–2024 and its longitudinal panels 23–24, state GLP-1 use
+from CMS Medicare Part D, Medicaid SDUD and The RX Index, ACS and Census population, NHANES and Gallup published
+estimates.
 
-**Status (2026-11-25):** pre-registered on OSF on 25 November 2026,
-[doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG), before any outcome analysis. Data
-downloaded and validated against published numbers (BRFSS, MEPS, CMS, Census/ACS, NHANES); analysis code written
-and tested on simulated data; preprint skeleton in `paper/`. Next step: run `scripts/run_analysis.py`.
+## Status (27 November 2026)
 
-> Study documents are written in Portuguese; the OSF pre-registration answers are in English.
+- **Pre-registered** on OSF on 25 November 2026,
+  [doi:10.17605/OSF.IO/XW7ZG](https://doi.org/10.17605/OSF.IO/XW7ZG), before any outcome microdata were analysed.
+- **Analysed:** the full pre-registered run finished on 26 November 2026 (`docs/analysis_run_log.md`).
+- **Preprint** drafted in `paper/` (arXiv stat.AP), with figures and tables from the full run.
+
+Results under the registered decision rules:
+
+- **H1:** the break is present. In 2025 obesity was 1.37 percentage points below its 2011–2019 trajectory (95%
+  predictive interval −2.23 to −0.54), about 3.7 million adults.
+- **H5:** the size is compatible with what GLP-1 use could produce (simulated −1.15 pp).
+- **NC1 and NC2:** both negative controls pass.
+- **H2, H3 and H6:** all three signatures have the predicted sign but are inconclusive; the overall verdict is
+  **mixed**.
+- **H4:** the state gradient is not supportive once the registered allowance for pre-trends is applied.
+
+Changes after registration are listed in [docs/decision_log.md](docs/decision_log.md) (sections 9–11).
 
 ## Repository layout
 
@@ -33,14 +48,14 @@ and tested on simulated data; preprint skeleton in `paper/`. Next step: run `scr
 GLP1_Review/
 ├── projeto_glp1.zip   Original work package (2026-11-14), frozen
 ├── initial_docs/      The package extracted, frozen: read-only reference for the copies below
-├── docs/              Study plan, OSF pre-registration draft, literature review (.md + .pdf)
+├── docs/              Study plan, OSF pre-registration, decision and run logs, literature review
 ├── piloto/            Pilot of 2026-11-12: code, aggregated input data (dados/) and original outputs (saidas/)
 ├── dados_externos/    Published estimates (Gallup, NHANES) and source design table, each number sourced
-├── paper/             Preprint skeleton (English, pandoc Markdown) with result placeholders
-├── scripts/           Data download/extraction scripts and runners
-├── src/glp1_review/   Analysis package (shared paths, future models)
-├── tests/             Pytest suite (pilot reproducibility)
-├── dados_brutos/      Raw microdata downloads            (git-ignored, except sha256 manifests)
+├── paper/             Preprint (English, pandoc Markdown), figures and references
+├── scripts/           Download, extraction, analysis, figure and OSF-package scripts
+├── src/glp1_review/   Analysis package: one module per hypothesis, trend and survey helpers, figures
+├── tests/             Pytest suite (pilot reproducibility, every model on simulated data, figures)
+├── dados_brutos/      Raw microdata downloads            (git-ignored, except manifests and provenance)
 ├── dados_limpos/      Extracted study columns            (git-ignored)
 └── resultados/        Generated outputs                  (git-ignored)
 ```
@@ -51,7 +66,7 @@ Requires [uv](https://docs.astral.sh/uv/) (it installs the right Python automati
 
 ```powershell
 uv sync                     # creates .venv with Python 3.12 + numpy, pandas, requests, dev tools
-uv sync --extra analysis    # adds PyMC, ArviZ, statsmodels, matplotlib (modelling phase)
+uv sync --extra analysis    # adds PyMC, ArviZ, nutpie, statsmodels, matplotlib (models and figures)
 uv run pre-commit install   # optional: lint hooks on commit
 ```
 
@@ -61,36 +76,41 @@ Without uv: `python -m venv .venv`, activate it (`.venv\Scripts\activate` on Win
 ## Usage
 
 ```powershell
-uv run pytest                           # checks the pilot still reproduces piloto/saidas/
+uv run pytest                           # fast tests, including the pilot reproducing piloto/saidas/
+uv run pytest -m slow                   # end-to-end pipeline on simulated data (about 10 minutes)
 uv run python scripts/run_pilot.py      # re-runs the pilot into resultados/piloto/
-uv run python scripts/run_analysis.py   # after OSF registration: all pre-registered analyses
+uv run python scripts/run_analysis.py   # all pre-registered analyses (about 13 hours; --quick for a smoke test)
+uv run python scripts/make_figures.py   # preprint figures from the full run into paper/figures/
 ```
 
-Microdata workflow (BRFSS ≈ 1 GB from cdc.gov, MEPS ≈ 110 MB from meps.ahrq.gov) is described in
-[scripts/README.md](scripts/README.md) and [docs/pacote_de_trabalho.md](docs/pacote_de_trabalho.md).
-
+The data workflow (downloads, extraction and validation against published numbers) is described in
+[scripts/README.md](scripts/README.md); building the preprint PDF in [paper/README.md](paper/README.md).
 
 ## Pre-registration rule
 
-Until the OSF registration, microdata may only be used to **reproduce already-published numbers and
-count cases**. No BMI by diabetes, by quantile, by GLP-1 use, and no height trends. Sequence: run the
-scripts → complete the draft → register → analyse.
+Until the OSF registration, microdata were used only to **reproduce already-published numbers and count cases**:
+no BMI by diabetes, by quantile or by GLP-1 use, and no height trends. The sequence was: run the data scripts →
+complete the draft → register (25 November 2026) → analyse.
 
 ## Documents
 
+Study documents written after the work package are in English; the original plan, literature review and
+work-package README are in Portuguese.
+
 - [Study plan](docs/plano_de_estudo.md) ([PDF](docs/plano_de_estudo.pdf))
-- [OSF pre-registration, version 2 (current)](docs/preregistro_osf_v2.md); first draft:
+- [OSF pre-registration, version 2 (registered)](docs/preregistro_osf_v2.md); first draft:
   [version 1](docs/preregistro_osf_rascunho.md) ([PDF](docs/preregistro_osf_rascunho.pdf))
 - [Decision log](docs/decision_log.md), [implementation notes](docs/implementation_notes.md),
-  [citation check](docs/citation_check.md)
+  [analysis run log](docs/analysis_run_log.md), [citation check](docs/citation_check.md)
+- [Preprint](paper/manuscript.md)
 - [Literature review](docs/revisao_da_literatura.md) ([PDF](docs/revisao_da_literatura.pdf))
 - [Pilot notes](piloto/LEIAME.md)
 
 ## Data sources
 
 CDC BRFSS (microdata and open API `hn4x-zwk7`), AHRQ MEPS, CMS Medicare Part D and Medicaid State Drug
-Utilization Data, U.S. Census Bureau population estimates, The RX Index / PurpleLab (state-level GLP-1
-use), KFF and Gallup polls. Third-party data keep their original terms; see below.
+Utilization Data, U.S. Census Bureau population estimates and ACS PUMS, NCHS NHANES, The RX Index / PurpleLab
+(state-level GLP-1 use), KFF and Gallup polls. Third-party data keep their original terms; see below.
 
 ## Citation and license
 

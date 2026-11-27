@@ -1,19 +1,20 @@
 # paper/
 
-Preprint skeleton (English; arXiv stat.AP), written on 14 November 2026 before the OSF registration.
+Preprint (English; arXiv stat.AP). The skeleton was written on 14 November 2026, before the OSF registration, with
+placeholders for every result; they were filled on 26 November 2026 from the full run (`full_20261125`) and the
+declared sensitivity (`sens_mrp_nogate_20261126`).
 
 | File | Content |
 | --- | --- |
-| `manuscript.md` | Text with pandoc citations (`[@key]`) and result placeholders (`{{...}}`) |
+| `manuscript.md` | Text with pandoc citations (`[@key]`); no placeholders remain |
 | `references.bib` | References; entries marked `verify` must be checked against the original articles |
 | `figures/` | Figures 1–6, drawn by `scripts/make_figures.py` (module `glp1_review.figures`) from the full run |
 | `typst-header.typ` | Table layout for the PDF built with Typst |
 
-Only the published-estimates part of H0 (Results, first subsection) contains numbers now. Everything that depends
-on outcome microdata is a placeholder, filled after registration from the pipeline outputs in
-`resultados/analysis/<run>/` (`scripts/run_analysis.py`).
+## Where the numbers come from
 
-## Placeholders
+Each number in the manuscript was filled from the pipeline outputs in `resultados/analysis/<run>/`
+(`scripts/run_analysis.py`), through these placeholders:
 
 | Placeholder | Source file | Key or row |
 | --- | --- | --- |

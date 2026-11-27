@@ -2,10 +2,13 @@
 
 | File | Content | Language |
 | --- | --- | --- |
-| [preregistro_osf_v2](preregistro_osf_v2.md) | **Working version of the OSF pre-registration** (25 answers of the Secondary Data Preregistration template), with the script results filled in and the decisions of 14 November 2026 applied | English |
-| [decision_log](decision_log.md) | Every change from the first draft, with its reason (effect sizes, inference rules, H1 model, H2 inference, NC2 window, H4 inference) | English |
+| [preregistro_osf_v2](preregistro_osf_v2.md) | **OSF pre-registration as registered** on 25 November 2026 (25 answers of the Secondary Data Preregistration template); clerical differences from the OSF form in `decision_log.md` section 9 | English |
+| [osf_registration.txt](osf_registration.txt) | Registration DOI (10.17605/OSF.IO/XW7ZG) and date | English |
+| [decision_log](decision_log.md) | Every change from the first draft, with its reason (sections 1-8, before registration), and everything after registration: the registration itself, implementation fixes and the declared sensitivity (sections 9-11) | English |
+| [analysis_run_log](analysis_run_log.md) | Every run of the pre-registered analyses on the real data: smoke tests, the full run, the declared sensitivity and the figure-only quantities | English |
 | [implementation_notes](implementation_notes.md) | Steps the pre-registration does not fully specify and the choice the analysis code makes | English |
 | [h0_sources](h0_sources.md) | H0 source reconciliation, published-estimates part, with [figures/h0_published_series.png](figures/h0_published_series.png) | English |
+| [citation_check](citation_check.md) | Every external number in the pre-registration and the preprint, checked against its original | English |
 | [preregistro_osf_rascunho](preregistro_osf_rascunho.md) (.md and .pdf) | First pre-registration draft (13-14 November 2026), kept unchanged | English answers, Portuguese notes |
 | [plano_de_estudo](plano_de_estudo.md) (.md and .pdf) | Study plan, with the literature-review adjustments | Portuguese (original) |
 | [revisao_da_literatura](revisao_da_literatura.md) (.md and .pdf) | Literature review, closed on 14 November 2026 | Portuguese (original) |

@@ -43,6 +43,20 @@ the "not found" and MISMATCH lines are expected, because it runs on synthetic fi
     uv run python scripts/nhanes_download.py       # dados_brutos/nhanes/, dados_limpos/nhanes/ + provenance_nhanes.csv (15 Nov 2026)
     uv run python scripts/build_osf_package.py     # resultados/osf/ and resultados/osf_glp1_<date>.zip
 
+## Analysis, after registration (25-26 November 2026)
+
+Needs `uv sync --extra analysis`. Each run is recorded in `docs/analysis_run_log.md`.
+
+    # 5. smoke test, then the full pre-registered run (about 13 hours, most of it Q24)
+    uv run python scripts/run_analysis.py --quick --out resultados/analysis/smoke_quick_<date>
+    uv run python scripts/run_analysis.py --out resultados/analysis/full_20261125
+
+    # 6. declared sensitivity (decision_log section 11): H1 with MRP in every year, no Q23 convergence gate
+    uv run python scripts/run_analysis.py --steps h1 --no-q23-gate --out resultados/analysis/sens_mrp_nogate_20261126
+
+    # 7. preprint figures (--recompute once, to derive and check the figure-only quantities)
+    uv run python scripts/make_figures.py --recompute
+
 ## Why BRFSS was not downloaded from cdc.gov
 
 Attempts on 14 November 2026, in order:
