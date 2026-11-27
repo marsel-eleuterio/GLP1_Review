@@ -54,7 +54,19 @@ Note on the outputs of the full run: the Q24 row "external: observed change 2022
 series of the run, which here is the Q23 fallback (composition-adjusted direct series), not MRP; "(MRP)" is a fixed
 label in `sensitivity.q24_external`. The manuscript labels it as the primary H1 series.
 
-Completed 26 November 2026, 15:03 (56 min), exit 0, commit 34505c7. Each year's diagnostics are identical to
+Completed 26 November 2026, 15:03 (56 min), exit 0, commit 34505c7.
+
+## Figure-only quantities (`full_20261125/figdata/`)
+
+26 November 2026. `scripts/make_figures.py --recompute` (module `figure_data`) loaded the BRFSS microdata again
+and saved three quantities that the full run computed but did not keep, needed only by the preprint figures:
+the NC1 height departure by year (same adjustment, trend and 500 Rao–Wu replicates as NC1), the H4 event-study
+standard errors and state departures, and all 10,000 H5 draws. Each was checked against the registered output it
+must reproduce: H4 coefficients (to 1e-9), H5 5th/50th/95th percentiles (exact) and the NC1 2023–2025 mean
+(to 1e-9). No estimate or classification changes. Log: `resultados/figdata_recompute.log`.
+
+Note on the outputs of the full run (continued): the column `brfss_mrp_median` of `h0_national.csv` holds the
+primary H1 series of the run, which here is the Q23 fallback, not MRP. Each year's diagnostics are identical to
 the first Q23 step of the registered run, which confirms that the fits are the same. 2025 departure −2.09 pp
 (95% credible interval −3.09 to −1.09), about 5.6 million adults, against −1.37 for the registered fallback
 series; probability of widening 0.96; alternative trends −2.06 to −2.23; NC2 passes. Reported in Appendix B of the

@@ -125,6 +125,20 @@ convergence gate, reported with its diagnostics (Appendix B). Details are in the
 
 : Pre-registered hypotheses. {#tbl:hypotheses}
 
+A break in the trend (H1) does not identify its cause, because other explanations would produce one too. The
+signatures and the height control separate them (Table 2): only an effect of the drugs predicts all of them.
+
+| Test | GLP-1 effect | Reporting artefact | Population composition | Common shock |
+| --- | --- | --- | --- | --- |
+| H1 departure in 2023–2025 | yes | yes | removed by adjustment | yes |
+| H2 larger with diabetes | yes | not expected | removed by adjustment | not necessarily |
+| H3 larger in the upper tail | yes | not necessarily | removed by adjustment | not necessarily |
+| H4 larger where use is higher | yes | no | no | only if linked to use |
+| H6 BMI loss after starting a GLP-1 | yes | no | no | no |
+| NC1 departure in self-reported height | no | possible | no | no |
+
+: What each test would show under a GLP-1 effect and under three alternative explanations of the break. Reporting artefact: a change in how weight is reported, for example with the interview mode; population composition: a change in who is surveyed; common shock: any cause that lowered weight across the population. {#tbl:predictions}
+
 **Inference.** The three confirmatory predictions are directional and tested one-sided with Holm's adjustment
 [@holm1979]. A hypothesis is *supported* if its Holm-adjusted p-value is below 0.05; *contradicted* if the whole
 90% confidence interval lies above minus its smallest effect of interest (−0.2 kg/m² for H2, −0.3 for H3, −0.5
@@ -206,6 +220,22 @@ All code, from download to tables, is in the project repository and the OSF arch
 
 # Results
 
+Table 3 summarizes the results; the subsections below give the details.
+
+| Test | Estimate | Interval | SESOI | p | Classification |
+| --- | --- | --- | --- | --- | --- |
+| H1 departure in 2025 (pp) | −1.37 | −2.23 to −0.54 (95% PI) | — | — | break present |
+| H2 diabetes contrast (kg/m²) | −0.16 | −0.32 to −0.01 (90% CI) | 0.2 | 0.13 | inconclusive |
+| H3 upper tail (kg/m²) | −0.06 | −0.40 to 0.28 (90% CI) | 0.3 | 0.39 | inconclusive |
+| H6 initiators vs never-users (kg/m²) | −1.02 | −2.05 to 0.01 (90% CI) | 0.5 | 0.13 | inconclusive |
+| H4 states (pp per SD of use) | −0.69 | −1.82 to 0.44 (bound, M = 0.02) | — | < 0.001 | not supportive |
+| H5 simulated effect (pp) | −1.15 | −1.81 to −0.67 (90% range) | — | — | compatible |
+| NC1 height (cm) | −0.11 | −0.21 to −0.004 (90% CI) | ±0.5 | — | passes |
+| NC2 placebo break in 2017 | — | — | — | — | passes |
+| **Overall verdict** | | | | | **mixed** |
+
+: Summary of the pre-registered results. SESOI: smallest effect size of interest. p: Holm-adjusted one-sided for H2, H3 and H6; two-sided permutation for H4. PI: predictive interval. {#tbl:summary}
+
 ## Sources disagree on the trend, not only on the level (H0)
 
 The three sources differ in level, as expected from self-report against measurement: NHANES, which measures height
@@ -215,19 +245,23 @@ rose 0.2 points as published and fell 0.4 points once the states missing in 2025
 peak rests on 3,035 interviews collected in one January week (margin ±2.0 points), and its weights were revised in
 September 2026; NHANES ends before the period of the decline.
 
-![US adult obesity by source. Panel A: long-run published series. Panel B: level in 2022 and 2025 and change.](../docs/figures/h0_published_series.png){#fig:h0}
+![US adult obesity in three surveys. Gallup's 2022 estimate comes from 3,035 interviews collected in one week of January 2022 (margin ±2.0 points), and Gallup revised its weighting in September 2026; the last NHANES cycle ends in August 2023.](figures/fig1_sources.png){#fig:h0}
 
-In BRFSS, obesity did not fall at the ages where Gallup reports its largest declines: from 2022 to 2025 it changed by 0.3 points at 30–39 (SE 0.6), 0.5 at 40–49 (0.7) and 0.9 at 50–64 (0.5), against Gallup's −2.2, −4.3 and −5.0; overall, 0.1 against −2.9.
+In BRFSS, obesity did not fall at the ages where Gallup reports its largest declines: from 2022 to 2025 it changed by 0.3 points at 30–39 (SE 0.6), 0.5 at 40–49 (0.7) and 0.9 at 50–64 (0.5), against Gallup's −2.2, −4.3 and −5.0; overall, 0.1 against −2.9 (Figure 1C).
 
 ## The departure from the 2011–2019 trajectory (H1)
 
 The multilevel model met the pre-registered convergence rule in only two years (2021 and 2024); in the other 13 it failed every step of the registered sequence, by small margins (maximum R-hat 1.008–1.026, minimum bulk effective sample size 210–520, 0–6 divergent transitions). As registered, the national series is therefore the composition-adjusted direct series: weighted two-way fixed effects on the state estimates, which also fills states missing in a year. Its uncertainty comes only from the trend projection. The departure was −0.41 points in 2023 and −0.64 in 2024, with intervals that include zero. In 2025, obesity was −1.37 percentage points (95% predictive interval −2.23 to −0.54) from its
 projected value, about 3.7 million fewer adults with obesity than projected (95% interval 1.5 to 6.0); the probability that the 2025 departure exceeds the
-2023 departure is 0.96. The alternative counterfactual trends give −1.77 (linear, 2011–2021), −2.33 (linear, 2015–2019), −2.87 (quadratic, 2011–2019) and −1.95 points (2022 level with the 2011–2019 slope). A multilevel estimate fitted without the convergence gate, added after registration, gives a larger departure (−2.09 points; Appendix B). Classification: break present.
+2023 departure is 0.96. The alternative counterfactual trends give −1.77 (linear, 2011–2021), −2.33 (linear, 2015–2019), −2.87 (quadratic, 2011–2019) and −1.95 points (2022 level with the 2011–2019 slope). A multilevel estimate fitted without the convergence gate, added after registration, gives a larger departure (−2.09 points; Appendix B). Classification: break present (Figure 2).
+
+![Departure of adult obesity from its 2011–2019 trajectory (H1) and the two negative controls: the placebo break in 2017 (NC2, panel B) and self-reported height (NC1, panel C).](figures/fig2_h1.png){#fig:h1}
 
 ## Diabetes contrast (H2)
 
-The diabetes gap in mean BMI fell below its 2011–2019 trend in 2023–2025 in the predicted direction, but by less than the smallest effect of interest (−0.2 kg/m²). The one-sided p-value was 0.044 before adjustment, and the 90% confidence interval (−0.32 to −0.01) does not exclude effects of interest. π̄ = −0.16 kg/m² (SE 0.08; Holm-adjusted one-sided p 0.13): inconclusive.
+The diabetes gap in mean BMI fell below its 2011–2019 trend in 2023–2025 in the predicted direction, but by less than the smallest effect of interest (−0.2 kg/m²). The one-sided p-value was 0.044 before adjustment, and the 90% confidence interval (−0.32 to −0.01) does not exclude effects of interest. π̄ = −0.16 kg/m² (SE 0.08; Holm-adjusted one-sided p 0.13): inconclusive. Figure 3 shows the three signatures against the decision rule.
+
+![Confirmatory signatures (H2, H3, H6) against the pre-registered decision rule (Q22). A signature is supported if its Holm-adjusted p-value is below 0.05 and contradicted if its whole 90% interval lies in the shaded zone, above minus its smallest effect of interest.](figures/fig3_signatures.png){#fig:signatures}
 
 ## Upper tail (H3)
 
@@ -237,7 +271,9 @@ The 90th percentile of BMI departed from its trend by about as much as the media
 
 States with higher GLP-1 use departed more from their own 2011–2019 trajectories after 2022. The gradient did not depend on the four states that drove the pilot estimate, on the weighting or on any single state (although the Medicaid indicator alone showed none), and the top tercile of use fell 1.70 points further below its trajectory than the bottom tercile (average causal response −0.73). The yearly slopes were already negative in 2011–2014 (−0.57 to −0.23), however, and once departures from a linear pre-trend of the size allowed by the registration are admitted, the interval includes zero; by the registered rule the result is not supportive, and the gradient is a causal response only under strong parallel trends. β* = −0.69 percentage points per standard deviation of use (permutation p < 0.001;
 smoothness-bound interval at M = 0.02: −1.82 to 0.44). Without West Virginia, Kentucky, Louisiana and Oklahoma:
-−0.70 (SE 0.20). Classification: not supportive.
+−0.70 (SE 0.20). Classification: not supportive (Figure 4).
+
+![State dose–response (H4). Panel A: event-study coefficients of obesity on state GLP-1 use, by year. Panel B: each state's 2023–2025 departure from its own trend against its use.](figures/fig4_h4.png){#fig:h4}
 
 ## Individual change (H6)
 
@@ -247,15 +283,17 @@ Holm-adjusted p 0.13); late initiators (placebo): 1.29 kg/m² (SE 0.91), not sig
 ## Mechanical plausibility (H5)
 
 Applying GLP-1 use, persistence and per-user weight loss to the 2025 BMI distribution gives a reduction in obesity of the same order as the observed departure. The microsimulation gives a reduction of −1.15 percentage points (90% range −1.81 to −0.67),
-against the observed departure of −1.37: compatible.
+against the observed departure of −1.37: compatible (Figure 5).
+
+![Mechanical plausibility (H5): distribution of the simulated effect of GLP-1 use on adult obesity in 2025 against the observed departure.](figures/fig5_h5.png){#fig:h5}
 
 ## Negative controls
 
-Height: −0.11 cm (90% CI −0.21 to −0.004); equivalence within ±0.5 cm established: passes. Placebo break in 2017: with the trend fitted to 2011–2015, the departures of the national series in 2017–2019 were 0.19 (−1.00 to 1.32), 0.66 (−0.88 to 1.97), 0.51 (−0.89 to 2.00) points, and the placebo diabetes differential was −0.05 kg/m² (SE 0.11); both pass.
+Height: −0.11 cm (90% CI −0.21 to −0.004); equivalence within ±0.5 cm established: passes. Placebo break in 2017: with the trend fitted to 2011–2015, the departures of the national series in 2017–2019 were 0.19 (−1.00 to 1.32), 0.66 (−0.88 to 1.97), 0.51 (−0.89 to 2.00) points, and the placebo diabetes differential was −0.05 kg/m² (SE 0.11); both pass (Figure 2B–C).
 
 ## Overall verdict
 
-**Mixed.** None of the three confirmatory signatures was supported and none was contradicted, and the height control passed. The pre-registered rule therefore classifies the evidence for a GLP-1 signature as mixed: the data neither confirm nor exclude it.
+**Mixed.** None of the three confirmatory signatures was supported and none was contradicted, and the height control passed. The pre-registered rule therefore classifies the evidence for a GLP-1 signature as mixed: the data neither confirm nor exclude it (Figure 3).
 
 # Discussion
 
@@ -342,6 +380,10 @@ last calibration is carried forward. A variant applies one calibration, from 201
 the 2025 departure of the corrected direct series is −5.84 points with period-specific calibrations (corrected prevalence 39.6% in 2022 and 39.8% in 2025) and −1.00 point with the fixed calibration (42.4% and 42.5%). The period-specific calibration changes in 2017 and 2021, inside and after the trend window, so part of its larger departure reflects the change of calibration; the fixed calibration is the cleaner comparison.
 
 **Multilevel model without the convergence gate (added after registration).** Fitting the multilevel model with its primary specification in every year and no convergence gate (same priors, sampler settings and seeds as the registered run; decision log section 11) gives a 2025 departure of −2.09 percentage points (95% credible interval −3.09 to −1.09), about 5.6 million adults (2.9 to 8.3), against −1.37 for the primary series; the probability that the 2025 departure exceeds the 2023 departure is 0.96, the alternative counterfactual trends give −2.06 to −2.23, and the 2017 placebo passes. The interval still overlaps the central 90% of the H5 microsimulation (−1.81 to −0.67). The fits are those whose diagnostics fail the registered rule: maximum R-hat 1.009−1.026, minimum bulk effective sample size 210−481 and 0−6 divergent transitions per year (2021: 1.016, 421, 3; 2024: 1.009, 464, 0). The direction and the classification of H1 do not change; the size of the departure is larger with the multilevel model.
+
+Figure 6 shows the primary estimate and every variant with the same estimand; Table 4 lists all the variants.
+
+![Pre-registered sensitivity analyses (Q24) and the multilevel model without the convergence gate (added after registration).](figures/fig6_q24.png){#fig:q24}
 
 | Hypothesis | Variant | Estimate | SE | 95% interval | Note |
 | --- | --- | --- | --- | --- | --- |

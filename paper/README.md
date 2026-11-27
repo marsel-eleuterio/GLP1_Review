@@ -6,6 +6,8 @@ Preprint skeleton (English; arXiv stat.AP), written on 14 November 2026 before t
 | --- | --- |
 | `manuscript.md` | Text with pandoc citations (`[@key]`) and result placeholders (`{{...}}`) |
 | `references.bib` | References; entries marked `verify` must be checked against the original articles |
+| `figures/` | Figures 1–6, drawn by `scripts/make_figures.py` (module `glp1_review.figures`) from the full run |
+| `typst-header.typ` | Table layout for the PDF built with Typst |
 
 Only the published-estimates part of H0 (Results, first subsection) contains numbers now. Everything that depends
 on outcome microdata is a placeholder, filled after registration from the pipeline outputs in

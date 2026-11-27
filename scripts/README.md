@@ -11,6 +11,7 @@
 | `census_download.py` | Adult population by state (Census, Vintage 2025) and ACS PUMS 2011-2024 post-stratification cells (H1) |
 | `nhanes_download.py` | NHANES measured BMI, 2011-2023 cycles, for the Q24 self-report correction; reproduces the published age-adjusted prevalence |
 | `run_analysis.py` | **After registration:** runs all pre-registered analyses and writes tables, draws, verdicts and a summary (`--quick` for a smoke test) |
+| `make_figures.py` | **After the full run:** draws the preprint figures into `paper/figures/` from `resultados/analysis/full_20261125/`; `--recompute` first derives, from the microdata, the figure-only quantities the run did not keep (NC1 by year, H4 event-study SEs and state departures, all H5 draws) and checks them against the registered results |
 | `build_osf_package.py` | Assembles `resultados/osf/` and the zip to upload to OSF, with a sha256 manifest |
 | `run_pilot.py` | Re-runs the 12 November 2026 pilot into `resultados/piloto/` |
 
