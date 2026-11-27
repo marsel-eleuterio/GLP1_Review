@@ -128,16 +128,16 @@ convergence gate, reported with its diagnostics (Appendix B). Details are in the
 A break in the trend (H1) does not identify its cause, because other explanations would produce one too. The
 signatures and the height control separate them (Table 2): only an effect of the drugs predicts all of them.
 
-| Test | GLP-1 effect | Reporting artefact | Population composition | Common shock |
+| Test | GLP-1 effect | Reporting artefact | Sample composition | Common shock |
 | --- | --- | --- | --- | --- |
-| H1 departure in 2023–2025 | yes | yes | removed by adjustment | yes |
-| H2 larger with diabetes | yes | not expected | removed by adjustment | not necessarily |
-| H3 larger in the upper tail | yes | not necessarily | removed by adjustment | not necessarily |
-| H4 larger where use is higher | yes | no | no | only if linked to use |
+| H1 departure in 2023–2025 | yes | yes | only via unobserved traits | yes |
+| H2 larger with diabetes | yes | not expected: affects both groups | only via unobserved traits | not expected: affects both groups |
+| H3 larger in the upper tail | yes | not expected: shifts the whole distribution | only via unobserved traits | not expected: shifts the whole distribution |
+| H4 larger where use is higher | yes | only if linked to use | only if linked to use | only if linked to use |
 | H6 BMI loss after starting a GLP-1 | yes | no | no | no |
-| NC1 departure in self-reported height | no | possible | no | no |
+| NC1 departure in self-reported height | no | possible | possible | no |
 
-: What each test would show under a GLP-1 effect and under three alternative explanations of the break. Reporting artefact: a change in how weight is reported, for example with the interview mode; population composition: a change in who is surveyed; common shock: any cause that lowered weight across the population. {#tbl:predictions}
+: What each test would show under a GLP-1 effect and under three alternative explanations of the break, following the rationale registered for each hypothesis. Reporting artefact: a change in how weight is reported, for example with the interview mode. Sample composition: a change in who responds, beyond the characteristics held fixed by the survey weights (H1), the covariates (H2) or the reweighting (H3, NC1). Common shock: any cause that lowered weight across the population, such as the end of the pandemic. H6 compares changes within the same people, initiators against never-users. {#tbl:predictions}
 
 **Inference.** The three confirmatory predictions are directional and tested one-sided with Holm's adjustment
 [@holm1979]. A hypothesis is *supported* if its Holm-adjusted p-value is below 0.05; *contradicted* if the whole
@@ -273,7 +273,7 @@ States with higher GLP-1 use departed more from their own 2011–2019 trajectori
 smoothness-bound interval at M = 0.02: −1.82 to 0.44). Without West Virginia, Kentucky, Louisiana and Oklahoma:
 −0.70 (SE 0.20). Classification: not supportive (Figure 4).
 
-![State dose–response (H4). Panel A: event-study coefficients of obesity on state GLP-1 use, by year. Panel B: each state's 2023–2025 departure from its own trend against its use.](figures/fig4_h4.png){#fig:h4}
+![State dose–response (H4). Panel A: event-study coefficients of obesity on state GLP-1 use, by year; the dashed line is the linear trend of the 2011–2019 coefficients, projected, and β* is the mean distance of the 2023–2025 coefficients below it. Panel B: each state's 2023–2025 departure from its own trend against its use.](figures/fig4_h4.png){#fig:h4}
 
 ## Individual change (H6)
 

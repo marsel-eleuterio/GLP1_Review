@@ -53,7 +53,7 @@ from the `paper/` folder:
       --include-in-header=typst-header.typ -V papersize=a4 -V margin.x=2.2cm -V margin.y=2.4cm \
       -V fontsize=10.5pt -o manuscript.pdf
 
-`--columns=1000` lets the table columns take their natural widths; `typst-header.typ` lets long tables break across
-pages. `manuscript.pdf` is not committed. For the arXiv LaTeX source:
+`--columns=1000` lets the table columns take their natural widths; `typst-header.typ` keeps short tables whole, floating
+to the top or bottom of a page, and lets the long Q24 table break across pages. `manuscript.pdf` is not committed. For the arXiv LaTeX source:
 
     pandoc manuscript.md --citeproc --bibliography references.bib -s -o manuscript.tex
